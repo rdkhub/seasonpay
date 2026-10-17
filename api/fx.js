@@ -50,16 +50,24 @@ export async function GET(request) {
   const from = shift(date, -12);
   const source = `https://estadisticas.bcrp.gob.pe/estadisticas/series/api/${series}/json/${from}/${date}/esp`;
   try {
-    const r = await fetch(source, { headers: { accept: 'application/json' } });
-    if (!r.ok) return Response.json({ error: 'upstream', status: r.status }, { status: 502 });
-    const json = await r.json();
+    const r = await fetch(source, {
+      headers: { accept: 'application/json,text/plain,*/*', 'user-agent': 'SeasonPay/1.0 (+https://seasonpay.vercel.app)' },
+    });
+    const body = await r.text();
+    if (!r.ok) return Response.json({ error: 'upstream', status: r.status, detail: body.slice(0, 200) }, { status: 502 });
+    let json;
+    try {
+      json = JSON.parse(body);
+    } catch {
+      return Response.json({ error: 'upstream_format', detail: body.slice(0, 200) }, { status: 502 });
+    }
     const best = pickRate(json, date);
     if (!best) return Response.json({ error: 'no_data' }, { status: 404 });
     return Response.json(
       { ...best, series, name: json?.config?.series?.[0]?.name ?? null, source },
       { headers: { 'cache-control': 'public, s-maxage=3600, stale-while-revalidate=86400' } },
     );
-  } catch {
-    return Response.json({ error: 'upstream' }, { status: 502 });
+  } catch (e) {
+    return Response.json({ error: 'upstream', detail: String(e?.cause?.code ?? e?.message ?? e) }, { status: 502 });
   }
 }
