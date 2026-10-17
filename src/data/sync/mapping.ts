@@ -1,4 +1,4 @@
-import type { EmployerRow, ProfileRow, ShiftRow, SyncTable } from '../db';
+import type { EmployerRow, PaystubRow, ProfileRow, ShiftRow, SyncTable } from '../db';
 
 /**
  * Conversión entre filas locales (camelCase, epoch ms) y filas de Postgres
@@ -18,6 +18,7 @@ export function profileToRemote(p: ProfileRow, userId: string): Remote {
     visa_type: p.visaType,
     arrival_year: p.arrivalYear,
     work_state: p.workState,
+    fj_prior_years: p.fjPriorYears,
     onboarded_at: iso(p.onboardedAt),
     created_at: iso(p.createdAt),
     updated_at: iso(p.updatedAt),
@@ -31,6 +32,7 @@ export function profileFromRemote(r: Remote): ProfileRow {
     visaType: (r.visa_type as ProfileRow['visaType']) ?? null,
     arrivalYear: (r.arrival_year as number | null) ?? null,
     workState: (r.work_state as string | null) ?? null,
+    fjPriorYears: (r.fj_prior_years as number | null) ?? null,
     onboardedAt: ms(r.onboarded_at as string | null),
     createdAt: ms(r.created_at as string) ?? Date.now(),
     updatedAt: ms(r.updated_at as string) ?? 0,
@@ -107,5 +109,54 @@ export function shiftFromRemote(r: Remote): ShiftRow {
   };
 }
 
-/** Orden de subida: primero perfil y empleadores, después turnos (por la FK). */
-export const PUSH_ORDER: SyncTable[] = ['profiles', 'employers', 'shifts'];
+export function paystubToRemote(p: PaystubRow, userId: string): Remote {
+  return {
+    id: p.id,
+    user_id: userId,
+    employer_id: p.employerId,
+    period_start: p.periodStart,
+    period_end: p.periodEnd,
+    pay_date: p.payDate,
+    regular_minutes: p.regularMinutes,
+    overtime_minutes: p.overtimeMinutes,
+    gross_cents: p.grossCents,
+    tips_cents: p.tipsCents,
+    federal_tax_cents: p.federalTaxCents,
+    state_tax_cents: p.stateTaxCents,
+    social_security_cents: p.socialSecurityCents,
+    medicare_cents: p.medicareCents,
+    other_deductions_cents: p.otherDeductionsCents,
+    net_cents: p.netCents,
+    note: p.note,
+    created_at: iso(p.createdAt),
+    updated_at: iso(p.updatedAt),
+    deleted_at: iso(p.deletedAt),
+  };
+}
+
+export function paystubFromRemote(r: Remote): PaystubRow {
+  return {
+    id: r.id as string,
+    employerId: r.employer_id as string,
+    periodStart: r.period_start as string,
+    periodEnd: r.period_end as string,
+    payDate: r.pay_date as string,
+    regularMinutes: r.regular_minutes as number,
+    overtimeMinutes: r.overtime_minutes as number,
+    grossCents: r.gross_cents as number,
+    tipsCents: r.tips_cents as number,
+    federalTaxCents: r.federal_tax_cents as number,
+    stateTaxCents: r.state_tax_cents as number,
+    socialSecurityCents: r.social_security_cents as number,
+    medicareCents: r.medicare_cents as number,
+    otherDeductionsCents: r.other_deductions_cents as number,
+    netCents: r.net_cents as number,
+    note: (r.note as string) ?? '',
+    createdAt: ms(r.created_at as string) ?? Date.now(),
+    updatedAt: ms(r.updated_at as string) ?? 0,
+    deletedAt: ms(r.deleted_at as string | null),
+  };
+}
+
+/** Orden de subida: perfil y empleadores primero; turnos y boletas después (por la FK). */
+export const PUSH_ORDER: SyncTable[] = ['profiles', 'employers', 'shifts', 'paystubs'];

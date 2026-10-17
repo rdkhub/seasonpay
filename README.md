@@ -57,6 +57,12 @@ Reglas de la arquitectura:
 - Montana (MCA 39-3-405) usa el mismo umbral de 40 h y 1.5x. Para estudiantes en áreas recreativas de temporada con alojamiento o comida del empleador, la ley sube el umbral a 48 h: la app lo muestra como aviso en el empleador y deja aplicarlo con un toque, pero no lo decide sola.
 - El pago es un estimado bruto: tarifa base como "regular rate", sin impuestos ni deducciones.
 
+## Boletas y FICA (Fase 2)
+
+- Cada boleta guarda horas, bruto, propinas, retenciones y neto. Nunca SSN ni datos bancarios.
+- `src/domain/paystubs.ts` compara la boleta con los turnos del periodo (horas, overtime, sueldo sin propinas y propinas con tarjeta) y marca diferencias con una tolerancia de 15 min y $1.
+- `src/domain/fica.ts` evalúa, solo como información, si Social Security y Medicare podrían no aplicar (J-1 no residente). Los límites de años y el flujo de reembolso (empleador primero, luego Form 843 con sus adjuntos) salen de `tax_rules`, fuente IRS Publication 519 (2025).
+
 ## Reglas oficiales (tax_rules)
 
 Cada regla tiene `key`, `value` (jsonb), `year`, `jurisdiction` (`federal` o código de estado), `source_url`, `verified_at` y `reviewed_by`.

@@ -19,6 +19,8 @@ export interface ProfileRow {
   visaType: VisaType | null;
   arrivalYear: number | null;
   workState: string | null;
+  /** Años calendario anteriores al actual en EE. UU. con visa F, J, M o Q (para FICA) */
+  fjPriorYears: number | null;
   onboardedAt: number | null;
   createdAt: number;
   updatedAt: number;
@@ -56,6 +58,32 @@ export interface ShiftRow {
   deletedAt: number | null;
 }
 
+export interface PaystubRow {
+  id: string;
+  employerId: string;
+  /** yyyy-mm-dd inclusive */
+  periodStart: string;
+  /** yyyy-mm-dd inclusive */
+  periodEnd: string;
+  /** yyyy-mm-dd */
+  payDate: string;
+  regularMinutes: number;
+  overtimeMinutes: number;
+  grossCents: number;
+  /** Propinas que aparecen en la boleta */
+  tipsCents: number;
+  federalTaxCents: number;
+  stateTaxCents: number;
+  socialSecurityCents: number;
+  medicareCents: number;
+  otherDeductionsCents: number;
+  netCents: number;
+  note: string;
+  createdAt: number;
+  updatedAt: number;
+  deletedAt: number | null;
+}
+
 export interface TaxRuleRow {
   /** `${jurisdiction}:${key}:${year}` */
   id: string;
@@ -68,7 +96,7 @@ export interface TaxRuleRow {
   reviewedBy: string | null;
 }
 
-export type SyncTable = 'profiles' | 'employers' | 'shifts';
+export type SyncTable = 'profiles' | 'employers' | 'shifts' | 'paystubs';
 
 export interface OutboxRow {
   seq?: number;
@@ -86,6 +114,7 @@ export class SeasonPayDB extends Dexie {
   profile!: EntityTable<ProfileRow, 'id'>;
   employers!: EntityTable<EmployerRow, 'id'>;
   shifts!: EntityTable<ShiftRow, 'id'>;
+  paystubs!: EntityTable<PaystubRow, 'id'>;
   taxRules!: EntityTable<TaxRuleRow, 'id'>;
   outbox!: EntityTable<OutboxRow, 'seq'>;
   meta!: EntityTable<MetaRow, 'key'>;
@@ -99,6 +128,10 @@ export class SeasonPayDB extends Dexie {
       taxRules: 'id, key, [key+jurisdiction]',
       outbox: '++seq, table, rowId',
       meta: 'key',
+    });
+    // v2 (Fase 2): boletas de pago.
+    this.version(2).stores({
+      paystubs: 'id, employerId, periodEnd, updatedAt',
     });
   }
 }

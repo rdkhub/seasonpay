@@ -15,6 +15,7 @@ export async function saveProfile(patch: Partial<Omit<ProfileRow, 'id' | 'create
       visaType: null,
       arrivalYear: null,
       workState: null,
+      fjPriorYears: null,
       onboardedAt: null,
       createdAt: current?.createdAt ?? now,
       ...current,

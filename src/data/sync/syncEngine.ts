@@ -2,6 +2,8 @@ import { db, type SyncTable } from '../db';
 import {
   employerFromRemote,
   employerToRemote,
+  paystubFromRemote,
+  paystubToRemote,
   profileFromRemote,
   profileToRemote,
   PUSH_ORDER,
@@ -69,9 +71,12 @@ async function push(userId: string): Promise<void> {
     } else if (table === 'employers') {
       const rows = await db.employers.bulkGet(ids);
       payload = rows.filter((r) => !!r).map((r) => employerToRemote(r!, userId));
-    } else {
+    } else if (table === 'shifts') {
       const rows = await db.shifts.bulkGet(ids);
       payload = rows.filter((r) => !!r).map((r) => shiftToRemote(r!, userId));
+    } else {
+      const rows = await db.paystubs.bulkGet(ids);
+      payload = rows.filter((r) => !!r).map((r) => paystubToRemote(r!, userId));
     }
     if (payload.length === 0) continue;
     const { error } = await sb.from(table).upsert(payload, { onConflict: 'id' });
@@ -91,7 +96,7 @@ async function pull(): Promise<void> {
     if (error) throw error;
     if (!data || data.length === 0) continue;
 
-    await db.transaction('rw', [db.profile, db.employers, db.shifts, db.meta], async () => {
+    await db.transaction('rw', [db.profile, db.employers, db.shifts, db.paystubs, db.meta], async () => {
       for (const r of data) {
         if (table === 'profiles') {
           const remote = profileFromRemote(r);
@@ -101,10 +106,14 @@ async function pull(): Promise<void> {
           const remote = employerFromRemote(r);
           const local = await db.employers.get(remote.id);
           if (!local || remote.updatedAt > local.updatedAt) await db.employers.put(remote);
-        } else {
+        } else if (table === 'shifts') {
           const remote = shiftFromRemote(r);
           const local = await db.shifts.get(remote.id);
           if (!local || remote.updatedAt > local.updatedAt) await db.shifts.put(remote);
+        } else {
+          const remote = paystubFromRemote(r);
+          const local = await db.paystubs.get(remote.id);
+          if (!local || remote.updatedAt > local.updatedAt) await db.paystubs.put(remote);
         }
       }
       await db.meta.put({ key: cursorKey, value: data[data.length - 1]!.synced_at });

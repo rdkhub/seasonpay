@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from './db';
 import { listEmployers } from './repos/employers';
+import { listPaystubs } from './repos/paystubs';
 import { listRules } from './repos/rules';
 import { activeShift, shiftsInRange } from './repos/shifts';
 
@@ -32,4 +33,13 @@ export function useRules() {
 
 export function usePendingSyncCount() {
   return useLiveQuery(() => db.outbox.count(), []);
+}
+
+export function usePaystubs() {
+  return useLiveQuery(() => listPaystubs(), []);
+}
+
+/** Turnos de todos los empleadores entre dos fechas (para comparar boletas). */
+export function useAllShiftsBetween(from: number, to: number) {
+  return useLiveQuery(() => shiftsInRange(from, to), [from, to]);
 }

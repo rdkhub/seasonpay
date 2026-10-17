@@ -12,7 +12,7 @@ export function RulesSheet({ open, onClose, rules }: { open: boolean; onClose: (
       <div className="flex flex-col gap-3 pb-2">
         {rules.map((r) => {
           const host = safeHost(r.sourceUrl);
-          const summary = summarize(r);
+          const summary = summarize(r, t);
           return (
             <div key={r.id} className="rounded-2xl bg-surface-2 p-4">
               <div className="flex items-start justify-between gap-3">
@@ -50,9 +50,13 @@ function safeHost(url: string) {
   }
 }
 
-function summarize(r: TaxRuleRow): string | null {
+function summarize(r: TaxRuleRow, t: (k: string, o?: Record<string, unknown>) => string): string | null {
   const v = r.value as Record<string, unknown>;
   if (typeof v.threshold_hours === 'number' && typeof v.multiplier === 'number') return `${v.threshold_hours} h · ${v.multiplier}x`;
   if (typeof v.flsa_section === 'string') return `FLSA ${v.flsa_section}`;
+  if (typeof v.calendar_years_limit === 'number') return `${t('rules.sumYears', { n: v.calendar_years_limit })} · ${String(v.edition ?? '')}`;
+  if (typeof v.max_prior_years === 'number') return `${t('rules.sumPrior', { n: v.max_prior_years, w: v.preceding_years_window })} · ${String(v.edition ?? '')}`;
+  if (Array.isArray(v.visa_classes)) return `${(v.visa_classes as string[]).join(', ')} · ${String(v.edition ?? '')}`;
+  if (typeof v.edition === 'string') return v.edition;
   return null;
 }

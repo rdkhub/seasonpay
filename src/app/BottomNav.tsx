@@ -17,7 +17,7 @@ export function BottomNav() {
   const items: Item[] = [
     { to: '/', label: t('nav.today'), icon: <Timer /> },
     { to: '/week', label: t('nav.week'), icon: <CalendarRange /> },
-    { to: '/paystubs', label: t('nav.paystubs'), icon: <Receipt />, disabled: true },
+    { to: '/paystubs', label: t('nav.paystubs'), icon: <Receipt /> },
     { to: '/settings', label: t('nav.settings'), icon: <Settings2 /> },
   ];
 

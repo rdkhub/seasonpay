@@ -56,6 +56,95 @@
       "source_url": "https://mca.legmt.gov/bills/mca/title_0390/chapter_0030/part_0040/section_0050/0390-0030-0040-0050.html",
       "verified_at": "2026-10-17",
       "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "fica_exemption_nonresident_fjmq",
+      "jurisdiction": "federal",
+      "year": 2025,
+      "source_url": "https://www.irs.gov/publications/p519",
+      "verified_at": "2026-10-17",
+      "reviewed_by": "pendiente Enrolled Agent",
+      "value": {
+        "edition": "Publication 519 (2025)",
+        "visa_classes": [
+          "F",
+          "J",
+          "M",
+          "Q"
+        ],
+        "requires_nonresident_alien": true,
+        "requires_purpose_of_visa": true,
+        "j_requires_sponsor_authorization_letter": true,
+        "not_covered": [
+          "F-2",
+          "J-2",
+          "M-2",
+          "Q-3"
+        ]
+      }
+    },
+    {
+      "key": "exempt_individual_student",
+      "jurisdiction": "federal",
+      "year": 2025,
+      "source_url": "https://www.irs.gov/publications/p519",
+      "verified_at": "2026-10-17",
+      "reviewed_by": "pendiente Enrolled Agent",
+      "value": {
+        "edition": "Publication 519 (2025)",
+        "calendar_years_limit": 5,
+        "visa_classes": [
+          "F",
+          "J",
+          "M",
+          "Q"
+        ],
+        "exception": "may remain exempt if no intent to reside permanently and substantial compliance with visa"
+      }
+    },
+    {
+      "key": "exempt_individual_teacher_trainee",
+      "jurisdiction": "federal",
+      "year": 2025,
+      "source_url": "https://www.irs.gov/publications/p519",
+      "verified_at": "2026-10-17",
+      "reviewed_by": "pendiente Enrolled Agent",
+      "value": {
+        "edition": "Publication 519 (2025)",
+        "preceding_years_window": 6,
+        "max_prior_years": 2,
+        "visa_classes": [
+          "J",
+          "Q"
+        ],
+        "exception": "foreign employer paid all compensation (3 or fewer of 6 preceding years)"
+      }
+    },
+    {
+      "key": "fica_refund_procedure",
+      "jurisdiction": "federal",
+      "year": 2025,
+      "source_url": "https://www.irs.gov/publications/p519",
+      "verified_at": "2026-10-17",
+      "reviewed_by": "pendiente Enrolled Agent",
+      "value": {
+        "edition": "Publication 519 (2025)",
+        "steps": [
+          "ask_employer",
+          "form_843"
+        ],
+        "attachments": [
+          "form_w2",
+          "visa_copy",
+          "form_i94",
+          "form_ds2019_if_j1",
+          "employer_statement_or_form_8316",
+          "pay_statements_if_partial_year"
+        ],
+        "mail_to": "Department of the Treasury, Internal Revenue Service Center, Ogden, UT 84201-0038",
+        "form_843_url": "https://www.irs.gov/forms-pubs/about-form-843",
+        "form_8316_url": "https://www.irs.gov/forms-pubs/about-form-8316"
+      }
     }
   ]
 }
