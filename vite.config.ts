@@ -52,6 +52,9 @@ export default defineConfig({
         globIgnores: ['**/inter-{cyrillic,cyrillic-ext,greek,greek-ext,vietnamese}-*.woff2', '**/splash/*.png'],
         navigateFallback: '/index.html',
         cleanupOutdatedCaches: true,
+        // Las versiones nuevas se activan solas (sin quedar "en espera").
+        skipWaiting: true,
+        clientsClaim: true,
       },
       devOptions: { enabled: false },
     }),
