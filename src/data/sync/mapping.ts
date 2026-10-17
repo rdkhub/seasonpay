@@ -1,4 +1,4 @@
-import type { EmployerRow, PaystubRow, ProfileRow, ShiftRow, SyncTable } from '../db';
+import type { EmployerRow, PaystubRow, ProfileRow, SavingsRow, ShiftRow, SyncTable } from '../db';
 
 /**
  * Conversión entre filas locales (camelCase, epoch ms) y filas de Postgres
@@ -19,6 +19,8 @@ export function profileToRemote(p: ProfileRow, userId: string): Remote {
     arrival_year: p.arrivalYear,
     work_state: p.workState,
     fj_prior_years: p.fjPriorYears,
+    savings_goal_cents: p.savingsGoalCents,
+    checklist_done: p.checklistDone,
     onboarded_at: iso(p.onboardedAt),
     created_at: iso(p.createdAt),
     updated_at: iso(p.updatedAt),
@@ -33,6 +35,8 @@ export function profileFromRemote(r: Remote): ProfileRow {
     arrivalYear: (r.arrival_year as number | null) ?? null,
     workState: (r.work_state as string | null) ?? null,
     fjPriorYears: (r.fj_prior_years as number | null) ?? null,
+    savingsGoalCents: (r.savings_goal_cents as number | null) ?? null,
+    checklistDone: (r.checklist_done as string[] | null) ?? [],
     onboardedAt: ms(r.onboarded_at as string | null),
     createdAt: ms(r.created_at as string) ?? Date.now(),
     updatedAt: ms(r.updated_at as string) ?? 0,
@@ -158,5 +162,38 @@ export function paystubFromRemote(r: Remote): PaystubRow {
   };
 }
 
-/** Orden de subida: perfil y empleadores primero; turnos y boletas después (por la FK). */
-export const PUSH_ORDER: SyncTable[] = ['profiles', 'employers', 'shifts', 'paystubs'];
+export function savingsToRemote(s: SavingsRow, userId: string): Remote {
+  return {
+    id: s.id,
+    user_id: userId,
+    kind: s.kind,
+    date: s.date,
+    amount_cents: s.amountCents,
+    fx_rate: s.fxRate,
+    fx_date: s.fxDate,
+    fx_source: s.fxSource,
+    note: s.note,
+    created_at: iso(s.createdAt),
+    updated_at: iso(s.updatedAt),
+    deleted_at: iso(s.deletedAt),
+  };
+}
+
+export function savingsFromRemote(r: Remote): SavingsRow {
+  return {
+    id: r.id as string,
+    kind: r.kind as SavingsRow['kind'],
+    date: r.date as string,
+    amountCents: r.amount_cents as number,
+    fxRate: r.fx_rate === null || r.fx_rate === undefined ? null : Number(r.fx_rate),
+    fxDate: (r.fx_date as string | null) ?? null,
+    fxSource: (r.fx_source as SavingsRow['fxSource']) ?? null,
+    note: (r.note as string) ?? '',
+    createdAt: ms(r.created_at as string) ?? Date.now(),
+    updatedAt: ms(r.updated_at as string) ?? 0,
+    deletedAt: ms(r.deleted_at as string | null),
+  };
+}
+
+/** Orden de subida: perfil y empleadores primero; turnos, boletas y ahorro después (por la FK). */
+export const PUSH_ORDER: SyncTable[] = ['profiles', 'employers', 'shifts', 'paystubs', 'savings'];

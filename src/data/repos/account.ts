@@ -9,8 +9,8 @@ import { signOutAndDeleteRemote } from '../sync/syncEngine';
  */
 export async function deleteAllMyData(): Promise<void> {
   await signOutAndDeleteRemote();
-  await db.transaction('rw', [db.profile, db.employers, db.shifts, db.paystubs, db.outbox, db.meta, db.taxRules], async () => {
-    await Promise.all([db.profile.clear(), db.employers.clear(), db.shifts.clear(), db.paystubs.clear(), db.outbox.clear(), db.meta.clear(), db.taxRules.clear()]);
+  await db.transaction('rw', [db.profile, db.employers, db.shifts, db.paystubs, db.savings, db.outbox, db.meta, db.taxRules], async () => {
+    await Promise.all([db.profile.clear(), db.employers.clear(), db.shifts.clear(), db.paystubs.clear(), db.savings.clear(), db.outbox.clear(), db.meta.clear(), db.taxRules.clear()]);
   });
   try {
     for (const k of Object.keys(localStorage)) if (k.startsWith('seasonpay.')) localStorage.removeItem(k);

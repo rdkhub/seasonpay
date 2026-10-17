@@ -1,4 +1,4 @@
-import { CalendarRange, Receipt, Settings2, Timer } from 'lucide-react';
+import { CalendarRange, PiggyBank, Receipt, Settings2, Timer } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
@@ -18,17 +18,18 @@ export function BottomNav() {
     { to: '/', label: t('nav.today'), icon: <Timer /> },
     { to: '/week', label: t('nav.week'), icon: <CalendarRange /> },
     { to: '/paystubs', label: t('nav.paystubs'), icon: <Receipt /> },
+    { to: '/season', label: t('nav.season'), icon: <PiggyBank /> },
     { to: '/settings', label: t('nav.settings'), icon: <Settings2 /> },
   ];
 
-  const itemClass = 'flex h-[64px] flex-col items-center justify-center gap-1 rounded-2xl text-[12px] font-semibold transition-colors';
+  const itemClass = 'flex h-[64px] flex-col items-center justify-center gap-1 rounded-2xl text-[11px] font-semibold transition-colors';
 
   return (
     <nav
       aria-label="Main"
       className="fixed inset-x-0 bottom-0 z-40 border-t border-line/70 bg-surface/85 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl backdrop-saturate-150"
     >
-      <ul className="mx-auto grid max-w-lg grid-cols-4 gap-1 px-2 py-1.5">
+      <ul className="mx-auto grid max-w-lg grid-cols-5 gap-0.5 px-1.5 py-1.5">
         {items.map((it) => (
           <li key={it.to}>
             {it.disabled ? (
@@ -50,7 +51,7 @@ export function BottomNav() {
                   <>
                     <span
                       className={cn(
-                        'grid h-8 w-14 place-items-center rounded-full transition-all duration-200 ease-out [&>svg]:h-6 [&>svg]:w-6',
+                        'grid h-8 w-12 place-items-center rounded-full transition-all duration-200 ease-out [&>svg]:h-6 [&>svg]:w-6',
                         isActive ? 'bg-accent-soft' : 'bg-transparent',
                       )}
                     >

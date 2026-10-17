@@ -3,6 +3,7 @@ import { db } from './db';
 import { listEmployers } from './repos/employers';
 import { listPaystubs } from './repos/paystubs';
 import { listRules } from './repos/rules';
+import { listSavings } from './repos/savings';
 import { activeShift, shiftsInRange } from './repos/shifts';
 
 /**
@@ -42,4 +43,8 @@ export function usePaystubs() {
 /** Turnos de todos los empleadores entre dos fechas (para comparar boletas). */
 export function useAllShiftsBetween(from: number, to: number) {
   return useLiveQuery(() => shiftsInRange(from, to), [from, to]);
+}
+
+export function useSavings() {
+  return useLiveQuery(() => listSavings(), []);
 }

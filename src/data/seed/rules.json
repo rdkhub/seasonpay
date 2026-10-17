@@ -145,6 +145,47 @@
         "form_843_url": "https://www.irs.gov/forms-pubs/about-form-843",
         "form_8316_url": "https://www.irs.gov/forms-pubs/about-form-8316"
       }
+    },
+    {
+      "key": "fx_usd_pen_series",
+      "jurisdiction": "PE",
+      "year": 2026,
+      "value": {
+        "provider": "BCRP",
+        "series": "PD04638PD",
+        "name": "TC Interbancario (S/ por US$) - Venta",
+        "frequency": "daily",
+        "api": "https://estadisticas.bcrp.gob.pe/estadisticas/series/api/{series}/json/{from}/{to}/esp"
+      },
+      "source_url": "https://estadisticas.bcrp.gob.pe/estadisticas/series/diarias/tipo-de-cambio",
+      "verified_at": "2026-10-17",
+      "reviewed_by": null
+    },
+    {
+      "key": "form_8843_filing",
+      "jurisdiction": "federal",
+      "year": 2025,
+      "value": {
+        "edition": "Form 8843 (2025)",
+        "who": "alien individuals who were exempt individuals (or unable to leave due to a medical condition)",
+        "with_1040nr": "attach to Form 1040-NR",
+        "without_return_mail_to": "Department of the Treasury, Internal Revenue Service Center, Austin, TX 73301-0215",
+        "deadline": "due date (including extensions) for filing Form 1040-NR"
+      },
+      "source_url": "https://www.irs.gov/pub/irs-pdf/f8843.pdf",
+      "verified_at": "2026-10-17",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "form_1040nr_purpose",
+      "jurisdiction": "federal",
+      "year": 2025,
+      "value": {
+        "who": "nonresident alien individuals, estates, and trusts file a U.S. income tax return"
+      },
+      "source_url": "https://www.irs.gov/forms-pubs/about-form-1040-nr",
+      "verified_at": "2026-10-17",
+      "reviewed_by": "pendiente Enrolled Agent"
     }
   ]
 }

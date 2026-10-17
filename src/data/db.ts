@@ -21,6 +21,10 @@ export interface ProfileRow {
   workState: string | null;
   /** Años calendario anteriores al actual en EE. UU. con visa F, J, M o Q (para FICA) */
   fjPriorYears: number | null;
+  /** Meta de ahorro en centavos de dólar */
+  savingsGoalCents: number | null;
+  /** Ids de los pasos del checklist de fin de temporada que ya hizo */
+  checklistDone: string[];
   onboardedAt: number | null;
   createdAt: number;
   updatedAt: number;
@@ -84,6 +88,26 @@ export interface PaystubRow {
   deletedAt: number | null;
 }
 
+export type SavingsKind = 'save' | 'withdraw';
+
+export interface SavingsRow {
+  id: string;
+  kind: SavingsKind;
+  /** yyyy-mm-dd */
+  date: string;
+  /** Dólares, en centavos */
+  amountCents: number;
+  /** Soles por dólar usado en este movimiento (BCRP, interbancario venta) */
+  fxRate: number | null;
+  /** Fecha del tipo de cambio (yyyy-mm-dd): puede ser el día hábil anterior */
+  fxDate: string | null;
+  fxSource: 'bcrp' | 'manual' | null;
+  note: string;
+  createdAt: number;
+  updatedAt: number;
+  deletedAt: number | null;
+}
+
 export interface TaxRuleRow {
   /** `${jurisdiction}:${key}:${year}` */
   id: string;
@@ -96,7 +120,7 @@ export interface TaxRuleRow {
   reviewedBy: string | null;
 }
 
-export type SyncTable = 'profiles' | 'employers' | 'shifts' | 'paystubs';
+export type SyncTable = 'profiles' | 'employers' | 'shifts' | 'paystubs' | 'savings';
 
 export interface OutboxRow {
   seq?: number;
@@ -115,6 +139,7 @@ export class SeasonPayDB extends Dexie {
   employers!: EntityTable<EmployerRow, 'id'>;
   shifts!: EntityTable<ShiftRow, 'id'>;
   paystubs!: EntityTable<PaystubRow, 'id'>;
+  savings!: EntityTable<SavingsRow, 'id'>;
   taxRules!: EntityTable<TaxRuleRow, 'id'>;
   outbox!: EntityTable<OutboxRow, 'seq'>;
   meta!: EntityTable<MetaRow, 'key'>;
@@ -132,6 +157,10 @@ export class SeasonPayDB extends Dexie {
     // v2 (Fase 2): boletas de pago.
     this.version(2).stores({
       paystubs: 'id, employerId, periodEnd, updatedAt',
+    });
+    // v3 (Fase 3): ahorro USD/PEN.
+    this.version(3).stores({
+      savings: 'id, date, updatedAt',
     });
   }
 }

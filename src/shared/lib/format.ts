@@ -106,3 +106,15 @@ export function formatDateISO(isoDate: string, lang: string): string {
   const [y, m, d] = isoDate.split('-').map(Number) as [number, number, number];
   return new Intl.DateTimeFormat(localeFor(lang), { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(y, m - 1, d));
 }
+
+const penCache = new Map<string, Intl.NumberFormat>();
+/** Céntimos de sol → "S/ 3,438.00" (Intl muestra "PEN" en algunos idiomas; usamos el símbolo local). */
+export function formatPen(cents: number, lang: string): string {
+  let f = penCache.get(lang);
+  if (!f) {
+    f = new Intl.NumberFormat(localeFor(lang), { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    penCache.set(lang, f);
+  }
+  const sign = cents < 0 ? '−' : '';
+  return `${sign}S/ ${f.format(Math.abs(cents) / 100)}`;
+}

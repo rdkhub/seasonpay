@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { OnboardingScreen } from '@/features/onboarding/OnboardingScreen';
 import { PaystubsScreen } from '@/features/paystubs/PaystubsScreen';
+import { SeasonScreen } from '@/features/season/SeasonScreen';
 import { SettingsScreen } from '@/features/settings/SettingsScreen';
 import { TodayScreen } from '@/features/shifts/TodayScreen';
 import { WeekScreen } from '@/features/week/WeekScreen';
@@ -18,6 +19,7 @@ export const router = createBrowserRouter([
           { index: true, element: <TodayScreen /> },
           { path: 'week', element: <WeekScreen /> },
           { path: 'paystubs', element: <PaystubsScreen /> },
+          { path: 'season', element: <SeasonScreen /> },
           { path: 'settings', element: <SettingsScreen /> },
         ],
       },

@@ -16,6 +16,8 @@ export async function saveProfile(patch: Partial<Omit<ProfileRow, 'id' | 'create
       arrivalYear: null,
       workState: null,
       fjPriorYears: null,
+      savingsGoalCents: null,
+      checklistDone: [],
       onboardedAt: null,
       createdAt: current?.createdAt ?? now,
       ...current,

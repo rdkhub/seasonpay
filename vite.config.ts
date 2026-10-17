@@ -51,6 +51,7 @@ export default defineConfig({
         // Solo precacheamos la fuente latina; las otras escrituras no se usan.
         globIgnores: ['**/inter-{cyrillic,cyrillic-ext,greek,greek-ext,vietnamese}-*.woff2', '**/splash/*.png'],
         navigateFallback: '/index.html',
+        navigateFallbackDenylist: [/^\/api\//],
         cleanupOutdatedCaches: true,
         // Las versiones nuevas se activan solas (sin quedar "en espera").
         skipWaiting: true,
@@ -61,7 +62,7 @@ export default defineConfig({
   ],
   test: {
     environment: 'node',
-    include: ['src/**/*.test.ts'],
+    include: ['src/**/*.test.ts', 'api/**/*.test.js'],
     env: { TZ: 'America/Denver' },
   },
 });

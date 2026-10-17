@@ -63,6 +63,13 @@ Reglas de la arquitectura:
 - `src/domain/paystubs.ts` compara la boleta con los turnos del periodo (horas, overtime, sueldo sin propinas y propinas con tarjeta) y marca diferencias con una tolerancia de 15 min y $1.
 - `src/domain/fica.ts` evalúa, solo como información, si Social Security y Medicare podrían no aplicar (J-1 no residente). Los límites de años y el flujo de reembolso (empleador primero, luego Form 843 con sus adjuntos) salen de `tax_rules`, fuente IRS Publication 519 (2025).
 
+## Ahorro, checklist y exportación (Fase 3)
+
+- Ahorro en dólares con su equivalente en soles. Cada movimiento guarda el tipo de cambio del BCRP de ese día (serie `PD04638PD`, TC interbancario venta, tomada de `tax_rules`); nunca se recalcula. Sin señal, el movimiento se guarda y el tipo de cambio se completa al volver internet. También se puede escribir a mano.
+- El API del BCRP no permite llamadas desde el navegador, así que pasa por `api/fx.js` (Vercel Function).
+- Checklist de fin de temporada guardado en el perfil, con enlaces a las fuentes del IRS (Form 8843, 1040-NR, reembolso de FICA).
+- Exporta un PDF con el resumen (jsPDF, se carga solo al usarlo) y tres CSV (turnos, boletas, ahorro). En el celular se abre el menú de compartir.
+
 ## Reglas oficiales (tax_rules)
 
 Cada regla tiene `key`, `value` (jsonb), `year`, `jurisdiction` (`federal` o código de estado), `source_url`, `verified_at` y `reviewed_by`.
