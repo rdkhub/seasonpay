@@ -6,3 +6,4 @@ export * from './pay';
 export * from './paystubs';
 export * from './fica';
 export * from './savings';
+export * from './remit';

@@ -13,6 +13,7 @@ import {
   shiftToRemote,
 } from './mapping';
 import { getSupabase, hasSupabaseConfig, SYNC_ENABLED } from './supabaseClient';
+import { providerFromRemote } from '../repos/remit';
 
 /**
  * Motor de sincronización offline-first.
@@ -164,6 +165,19 @@ async function pullRules(): Promise<void> {
   });
 }
 
+async function pullProviders(): Promise<void> {
+  const sb = (await getSupabase())!;
+  const cursorKey = 'pull:remit_providers';
+  const cursor = ((await db.meta.get(cursorKey))?.value as string | undefined) ?? '1970-01-01T00:00:00Z';
+  const { data, error } = await sb.from('remit_providers').select('*').gt('synced_at', cursor).order('synced_at').limit(200);
+  if (error) throw error;
+  if (!data || data.length === 0) return;
+  await db.transaction('rw', db.remitProviders, db.meta, async () => {
+    await db.remitProviders.bulkPut(data.map((r) => providerFromRemote(r)));
+    await db.meta.put({ key: cursorKey, value: data[data.length - 1]!.synced_at });
+  });
+}
+
 let running: Promise<void> | null = null;
 let again = false;
 
@@ -178,6 +192,7 @@ export async function syncNow(): Promise<void> {
     try {
       setStatus('syncing');
       await pullRules().catch((e) => console.warn('[sync] rules', e));
+      await pullProviders().catch((e) => console.warn('[sync] providers', e));
       const userId = await currentUserId();
       if (!userId) return setStatus('signed_out');
       await push(userId);
@@ -230,10 +245,10 @@ export function startAutoSync(intervalMs = 60_000): () => void {
 
 /** Borra los datos personales de este celular (las reglas oficiales se quedan). */
 export async function clearLocalPersonalData(): Promise<void> {
-  await db.transaction('rw', [db.profile, db.employers, db.shifts, db.paystubs, db.savings, db.outbox, db.meta], async () => {
-    await Promise.all([db.profile.clear(), db.employers.clear(), db.shifts.clear(), db.paystubs.clear(), db.savings.clear(), db.outbox.clear()]);
-    // Cursores de datos personales; el de reglas se conserva.
-    const keys = (await db.meta.toArray()).map((m) => m.key).filter((k) => k.startsWith('pull:') && k !== 'pull:tax_rules');
+  await db.transaction('rw', [db.profile, db.employers, db.shifts, db.paystubs, db.savings, db.remitQuotes, db.outbox, db.meta], async () => {
+    await Promise.all([db.profile.clear(), db.employers.clear(), db.shifts.clear(), db.paystubs.clear(), db.savings.clear(), db.remitQuotes.clear(), db.outbox.clear()]);
+    // Cursores de datos personales; los de datos públicos (reglas, proveedores) se conservan.
+    const keys = (await db.meta.toArray()).map((m) => m.key).filter((k) => k.startsWith('pull:') && k !== 'pull:tax_rules' && k !== 'pull:remit_providers');
     await db.meta.bulkDelete(keys);
   });
 }

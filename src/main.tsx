@@ -5,12 +5,14 @@ import '@fontsource-variable/inter';
 import './index.css';
 import './shared/i18n';
 import { App } from './app/App';
+import { ensureProvidersSeeded } from './data/repos/remit';
 import { ensureRulesSeeded } from './data/repos/rules';
 import { listenForInstallPrompt } from './shared/lib/installPrompt';
 import { getSupabase } from './data/sync/supabaseClient';
 
 // Reglas oficiales incluidas en la app (para que todo funcione sin internet).
 void ensureRulesSeeded();
+void ensureProvidersSeeded();
 
 listenForInstallPrompt();
 

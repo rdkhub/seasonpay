@@ -4,6 +4,7 @@ import { getSyncSnapshot, onSyncChange } from './sync/syncEngine';
 import { db } from './db';
 import { listEmployers } from './repos/employers';
 import { listPaystubs } from './repos/paystubs';
+import { listProviders, listQuotes } from './repos/remit';
 import { listRules } from './repos/rules';
 import { listSavings } from './repos/savings';
 import { activeShift, shiftsInRange } from './repos/shifts';
@@ -49,6 +50,14 @@ export function useAllShiftsBetween(from: number, to: number) {
 
 export function useSavings() {
   return useLiveQuery(() => listSavings(), []);
+}
+
+export function useRemitProviders() {
+  return useLiveQuery(() => listProviders(), []);
+}
+
+export function useRemitQuotes() {
+  return useLiveQuery(() => listQuotes(), []);
 }
 
 /** Estado de la sincronización (sincronizando, al día, sin conexión…). */

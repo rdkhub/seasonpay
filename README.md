@@ -80,6 +80,16 @@ Reglas de la arquitectura:
 - **Correos:** el SMTP por defecto de Supabase solo entrega a miembros del equipo del proyecto y tiene un límite bajo por hora. Para el piloto con compañeros hay que configurar un SMTP propio (por ejemplo Resend) en Authentication → Emails → SMTP. Recién ahí se puede editar la plantilla "Magic link or OTP" para mostrar el código con `{{ .Token }}`.
 - **URLs de Auth (ya configuradas):** Site URL `https://seasonpay.vercel.app`; redirecciones `https://seasonpay.vercel.app/**` y `http://localhost:5173/**`.
 
+## Enviar plata a Perú (Fase 5)
+
+La app sigue gratis. En vez de pagos, la fase 5 agrega Temporada → "Enviar plata a Perú" (`/season/send`).
+
+- **Proveedores neutrales:** MoneyGram, Remitly, Western Union, Wise y Xoom, en orden alfabético. Solo datos de su página oficial (depósito a banco, efectivo, billetera, moneda de llegada), con link a la fuente y la fecha de verificación. No hay comisiones ni tipos de cambio en el código.
+- **Datos en `remit_providers`** (migraciones 0700 y 0710; copia local en `src/data/seed/remitProviders.json`). Lectura pública, escritura solo con service_role. La app los baja con la sincronización, igual que `tax_rules`.
+- **Comparador:** el usuario copia de cada app cuánto paga en total y cuánto llega. `compareQuotes` (`src/domain/remit.ts`) ordena por lo que llega por cada dólar y calcula la pérdida frente al interbancario BCRP del día. Las cotizaciones se guardan solo en el celular (tabla Dexie `remitQuotes`, no se sincronizan) y se borran al cerrar sesión o al borrar los datos.
+- **Links de referido:** columna `referral_url` (vacía por ahora). Si se llena, la tarjeta muestra "Link de referido", el link lleva `rel="sponsored"` y aparece el aviso de que eso no cambia el orden. Para ponerlo: `update public.remit_providers set referral_url = 'https://…' where id = 'wise';` desde el SQL Editor.
+- **Agregar o actualizar un proveedor:** verificar en su web oficial, editar la fila (con `verified_at` del día) y el JSON local con los mismos datos.
+
 ## Reglas oficiales (tax_rules)
 
 Cada regla tiene `key`, `value` (jsonb), `year`, `jurisdiction` (`federal` o código de estado), `source_url`, `verified_at` y `reviewed_by`.

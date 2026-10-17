@@ -1,4 +1,5 @@
 import { db } from '../db';
+import { ensureProvidersSeeded } from './remit';
 import { ensureRulesSeeded } from './rules';
 import { signOutAndDeleteRemote } from '../sync/syncEngine';
 
@@ -9,8 +10,19 @@ import { signOutAndDeleteRemote } from '../sync/syncEngine';
  */
 export async function deleteAllMyData(): Promise<void> {
   await signOutAndDeleteRemote();
-  await db.transaction('rw', [db.profile, db.employers, db.shifts, db.paystubs, db.savings, db.outbox, db.meta, db.taxRules], async () => {
-    await Promise.all([db.profile.clear(), db.employers.clear(), db.shifts.clear(), db.paystubs.clear(), db.savings.clear(), db.outbox.clear(), db.meta.clear(), db.taxRules.clear()]);
+  await db.transaction('rw', [db.profile, db.employers, db.shifts, db.paystubs, db.savings, db.remitQuotes, db.remitProviders, db.outbox, db.meta, db.taxRules], async () => {
+    await Promise.all([
+      db.profile.clear(),
+      db.employers.clear(),
+      db.shifts.clear(),
+      db.paystubs.clear(),
+      db.savings.clear(),
+      db.remitQuotes.clear(),
+      db.remitProviders.clear(),
+      db.outbox.clear(),
+      db.meta.clear(),
+      db.taxRules.clear(),
+    ]);
   });
   try {
     for (const k of Object.keys(localStorage)) if (k.startsWith('seasonpay.')) localStorage.removeItem(k);
@@ -18,4 +30,5 @@ export async function deleteAllMyData(): Promise<void> {
     /* almacenamiento bloqueado: no hay nada que limpiar */
   }
   await ensureRulesSeeded();
+  await ensureProvidersSeeded();
 }

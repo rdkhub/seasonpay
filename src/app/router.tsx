@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { LandingScreen } from '@/features/landing/LandingScreen';
 import { OnboardingScreen } from '@/features/onboarding/OnboardingScreen';
 import { PaystubsScreen } from '@/features/paystubs/PaystubsScreen';
+import { RemitScreen } from '@/features/remit/RemitScreen';
 import { SeasonScreen } from '@/features/season/SeasonScreen';
 import { SettingsScreen } from '@/features/settings/SettingsScreen';
 import { TodayScreen } from '@/features/shifts/TodayScreen';
@@ -22,6 +23,7 @@ export const router = createBrowserRouter([
           { path: 'week', element: <WeekScreen /> },
           { path: 'paystubs', element: <PaystubsScreen /> },
           { path: 'season', element: <SeasonScreen /> },
+          { path: 'season/send', element: <RemitScreen /> },
           { path: 'settings', element: <SettingsScreen /> },
         ],
       },

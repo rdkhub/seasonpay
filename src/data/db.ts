@@ -120,6 +120,32 @@ export interface TaxRuleRow {
   reviewedBy: string | null;
 }
 
+export type RemitMethod = 'bank' | 'cash' | 'wallet';
+
+export interface RemitProviderRow {
+  id: string;
+  name: string;
+  url: string;
+  methods: RemitMethod[];
+  receiveCurrencies: ('PEN' | 'USD')[];
+  wallets: string[];
+  /** Link de referido; la app siempre lo marca como tal */
+  referralUrl: string | null;
+  sourceUrls: string[];
+  verifiedAt: string;
+  active: boolean;
+}
+
+/** Cotización que el usuario copió de la app de un proveedor. Solo vive en este celular. */
+export interface RemitQuoteRow {
+  id: string;
+  providerId: string;
+  totalPaidCents: number;
+  receivedCents: number;
+  receiveCurrency: 'PEN' | 'USD';
+  createdAt: number;
+}
+
 export type SyncTable = 'profiles' | 'employers' | 'shifts' | 'paystubs' | 'savings';
 
 export interface OutboxRow {
@@ -141,6 +167,8 @@ export class SeasonPayDB extends Dexie {
   paystubs!: EntityTable<PaystubRow, 'id'>;
   savings!: EntityTable<SavingsRow, 'id'>;
   taxRules!: EntityTable<TaxRuleRow, 'id'>;
+  remitProviders!: EntityTable<RemitProviderRow, 'id'>;
+  remitQuotes!: EntityTable<RemitQuoteRow, 'id'>;
   outbox!: EntityTable<OutboxRow, 'seq'>;
   meta!: EntityTable<MetaRow, 'key'>;
 
@@ -161,6 +189,11 @@ export class SeasonPayDB extends Dexie {
     // v3 (Fase 3): ahorro USD/PEN.
     this.version(3).stores({
       savings: 'id, date, updatedAt',
+    });
+    // v4: proveedores para enviar plata a Perú y cotizaciones del comparador (solo locales).
+    this.version(4).stores({
+      remitProviders: 'id',
+      remitQuotes: 'id, createdAt',
     });
   }
 }
