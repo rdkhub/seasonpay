@@ -32,6 +32,8 @@ export async function fetchFx(date: string): Promise<FxQuote | null> {
     if (!r.ok) return null;
     const q = (await r.json()) as FxQuote;
     if (typeof q.value !== 'number' || !(q.value > 0)) return null;
+    // El BCRP publica el interbancario con muchos decimales; guardamos 4 (igual que la columna en Supabase).
+    q.value = Math.round(q.value * 10000) / 10000;
     await db.meta.put({ key: cacheKey, value: q });
     return q;
   } catch {
