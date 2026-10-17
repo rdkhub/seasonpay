@@ -1,0 +1,61 @@
+{
+  "_comment": "Copia local de tax_rules para que la app funcione sin internet. Debe coincidir con las migraciones seed de supabase/migrations (0300 federal, 0400 Montana). Cada valor se toma de la fuente oficial indicada; no se edita a mano sin revisar la fuente.",
+  "rules": [
+    {
+      "key": "overtime_weekly",
+      "jurisdiction": "federal",
+      "year": 2026,
+      "value": {
+        "threshold_hours": 40,
+        "multiplier": 1.5,
+        "averaging_allowed": false,
+        "workweek": "fixed 168-hour period (7 consecutive 24-hour periods); may start on any day and hour"
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/overtime",
+      "verified_at": "2026-10-17",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_seasonal_exemption_notice",
+      "jurisdiction": "federal",
+      "year": 2026,
+      "value": {
+        "flsa_section": "13(a)(3)",
+        "applies_to": "seasonal amusement or recreational establishments",
+        "effect": "employees may be exempt from federal minimum wage and overtime",
+        "show_as": "notice"
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/fact-sheets/18-flsa-seasonal-amusement",
+      "verified_at": "2026-10-17",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_weekly",
+      "jurisdiction": "MT",
+      "year": 2026,
+      "value": {
+        "threshold_hours": 40,
+        "multiplier": 1.5,
+        "statute": "MCA 39-3-405(1)"
+      },
+      "source_url": "https://mca.legmt.gov/bills/mca/title_0390/chapter_0030/part_0040/section_0050/0390-0030-0040-0050.html",
+      "verified_at": "2026-10-17",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_seasonal_student_notice",
+      "jurisdiction": "MT",
+      "year": 2026,
+      "value": {
+        "statute": "MCA 39-3-405(3)",
+        "threshold_hours": 48,
+        "multiplier": 1.5,
+        "applies_to": "students employed at an amusement or recreational area that operates on a seasonal basis, when the employer furnishes board, lodging or other facilities",
+        "show_as": "notice"
+      },
+      "source_url": "https://mca.legmt.gov/bills/mca/title_0390/chapter_0030/part_0040/section_0050/0390-0030-0040-0050.html",
+      "verified_at": "2026-10-17",
+      "reviewed_by": "pendiente Enrolled Agent"
+    }
+  ]
+}
