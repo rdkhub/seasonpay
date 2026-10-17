@@ -54,6 +54,7 @@ Reglas de la arquitectura:
 - Por empleador y por semana laboral de ese empleador (día de inicio configurable). Las horas con un empleador no suman al umbral de otro.
 - No se promedian semanas. Un turno que cruza el inicio de la semana laboral se parte entre las dos.
 - El umbral y el multiplicador **no están en el código**: salen de `tax_rules` (`overtime_weekly`, fuente DOL) y se copian al crear cada empleador. El usuario puede apagarlo o ajustarlo por empleador, porque algunos negocios de temporada pueden estar exentos (aviso `overtime_seasonal_exemption_notice`, DOL Fact Sheet #18).
+- Montana (MCA 39-3-405) usa el mismo umbral de 40 h y 1.5x. Para estudiantes en áreas recreativas de temporada con alojamiento o comida del empleador, la ley sube el umbral a 48 h: la app lo muestra como aviso en el empleador y deja aplicarlo con un toque, pero no lo decide sola.
 - El pago es un estimado bruto: tarifa base como "regular rate", sin impuestos ni deducciones.
 
 ## Reglas oficiales (tax_rules)
@@ -80,6 +81,9 @@ Copia `.env.example` a `.env.local`. En la Fase 1 no hace falta ninguna.
 Nunca pongas la `service_role` key en variables `VITE_`: terminan en el navegador.
 
 ## Supabase
+
+Proyecto: `seasonpay` (ref `qjmtgrxyjtomirzhdvdq`, región us-west-1). Las cuatro migraciones y la Edge Function `delete-account` ya están aplicadas.
+Para replicarlo en otro proyecto:
 
 ```bash
 npm i -g supabase
