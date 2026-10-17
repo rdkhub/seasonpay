@@ -1,6 +1,7 @@
 import { useEffect, type ReactNode } from 'react';
 import { useProfile } from '@/data/hooks';
-import { startAutoSync } from '@/data/sync/syncEngine';
+import { initAuth } from '@/data/sync/auth';
+import { startAutoSync, syncNow } from '@/data/sync/syncEngine';
 import { applyLanguagePref } from '@/shared/i18n';
 import { ToastProvider } from '@/shared/ui';
 
@@ -13,9 +14,12 @@ function LanguageSync() {
   return null;
 }
 
-/** Sincronización con Supabase. No hace nada hasta la Fase 4 (sin variables o sin sesión). */
+/** Sesión y sincronización con Supabase. Sin sesión solo baja reglas oficiales actualizadas. */
 function SyncRunner() {
-  useEffect(() => startAutoSync(), []);
+  useEffect(() => {
+    void initAuth(() => void syncNow());
+    return startAutoSync();
+  }, []);
   return null;
 }
 

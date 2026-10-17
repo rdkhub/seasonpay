@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { BookOpenCheck, Briefcase, Lock, Plus, Trash2, UserRound } from 'lucide-react';
+import { BookOpenCheck, Briefcase, Lock, Plus, Share2, Trash2, UserRound } from 'lucide-react';
 import type { EmployerRow, LanguagePref } from '@/data/db';
 import { useEmployers, useProfile, useRules } from '@/data/hooks';
 import { deleteAllMyData } from '@/data/repos/account';
@@ -9,6 +9,7 @@ import { formatMoney } from '@/shared/lib/format';
 import { tap } from '@/shared/lib/haptics';
 import { stateName } from '@/shared/lib/usStates';
 import { Badge, Button, Card, EmptyState, ListGroup, ListRow, SectionTitle, SegmentedControl, Sheet, useToast } from '@/shared/ui';
+import { AccountSection } from '@/features/account/AccountSection';
 import { EmployerSheet } from './EmployerSheet';
 import { ProfileSheet } from './ProfileSheet';
 import { RulesSheet } from './RulesSheet';
@@ -59,6 +60,8 @@ export function SettingsScreen() {
           { value: 'en', label: 'English' },
         ]}
       />
+
+      <AccountSection />
 
       <SectionTitle>{t('settings.profile')}</SectionTitle>
       <ListGroup>
@@ -122,6 +125,28 @@ export function SettingsScreen() {
       <SectionTitle>{t('settings.sources')}</SectionTitle>
       <ListGroup>
         <ListRow icon={<BookOpenCheck />} title={t('settings.sources')} subtitle={t('settings.sourcesSub')} onClick={() => setRulesOpen(true)} />
+      </ListGroup>
+
+      <SectionTitle>{t('settings.shareSection')}</SectionTitle>
+      <ListGroup>
+        <ListRow
+          icon={<Share2 />}
+          title={t('settings.share')}
+          subtitle={t('settings.shareSub')}
+          onClick={async () => {
+            const url = `${window.location.origin}/hola`;
+            const nav = navigator as Navigator & { share?: (d: ShareData) => Promise<void> };
+            try {
+              if (nav.share) await nav.share({ title: 'SeasonPay', text: t('settings.shareText'), url });
+              else {
+                await navigator.clipboard.writeText(url);
+                toast(t('settings.linkCopied'));
+              }
+            } catch {
+              /* el usuario canceló */
+            }
+          }}
+        />
       </ListGroup>
 
       <SectionTitle>{t('settings.privacy')}</SectionTitle>

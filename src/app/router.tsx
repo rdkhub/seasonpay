@@ -1,4 +1,5 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { LandingScreen } from '@/features/landing/LandingScreen';
 import { OnboardingScreen } from '@/features/onboarding/OnboardingScreen';
 import { PaystubsScreen } from '@/features/paystubs/PaystubsScreen';
 import { SeasonScreen } from '@/features/season/SeasonScreen';
@@ -12,6 +13,7 @@ export const router = createBrowserRouter([
   {
     element: <RootGate />,
     children: [
+      { path: '/hola', element: <LandingScreen /> },
       { path: '/welcome', element: <OnboardingScreen /> },
       {
         element: <AppLayout />,

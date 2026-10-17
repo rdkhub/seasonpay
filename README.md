@@ -70,6 +70,16 @@ Reglas de la arquitectura:
 - Checklist de fin de temporada guardado en el perfil, con enlaces a las fuentes del IRS (Form 8843, 1040-NR, reembolso de FICA).
 - Exporta un PDF con el resumen (jsPDF, se carga solo al usarlo) y tres CSV (turnos, boletas, ahorro). En el celular se abre el menú de compartir.
 
+## Cuenta, sincronización y landing (Fase 4)
+
+- **Login sin contraseña:** el usuario pone su correo y recibe un correo de Supabase. Entra escribiendo el código o tocando el enlace desde el mismo celular. Google es opcional (`VITE_GOOGLE_AUTH=true` cuando el proveedor esté configurado).
+- **La cuenta es opcional:** sin login todo sigue funcionando local. Con login se respalda en Supabase y se puede usar en otro celular.
+- **Sincronización:** cada cambio va a una cola local (outbox) en la misma transacción. Se envía al volver la señal, al abrir la app, cada 60 s y 2,5 s después de cada cambio. Gana el cambio más reciente (`updated_at`, lo hace cumplir un trigger en Postgres). Los borrados viajan como `deleted_at`.
+- **Cerrar sesión** borra los datos personales del celular, pero solo si no quedan cambios sin subir. Si no hay señal, avisa y no borra.
+- **Landing bilingüe** en `/hola`: qué es, privacidad e instrucciones para instalar en Android y iPhone. Desde Ajustes → "Invitar a mis compañeros" se comparte ese link.
+- **Correos:** el SMTP por defecto de Supabase solo entrega a miembros del equipo del proyecto y tiene un límite bajo por hora. Para el piloto con compañeros hay que configurar un SMTP propio (por ejemplo Resend) en Authentication → Emails → SMTP. Recién ahí se puede editar la plantilla "Magic link or OTP" para mostrar el código con `{{ .Token }}`.
+- **URLs de Auth (ya configuradas):** Site URL `https://seasonpay.vercel.app`; redirecciones `https://seasonpay.vercel.app/**` y `http://localhost:5173/**`.
+
 ## Reglas oficiales (tax_rules)
 
 Cada regla tiene `key`, `value` (jsonb), `year`, `jurisdiction` (`federal` o código de estado), `source_url`, `verified_at` y `reviewed_by`.
@@ -112,7 +122,7 @@ También puedes pegar las migraciones en orden en el SQL Editor del panel.
 
 1. Sube el proyecto a GitHub.
 2. En Vercel: Add New → Project → importa el repo. Detecta Vite solo (`vercel.json` ya trae build, carpeta `dist` y las reglas para el router y el service worker).
-3. (Fase 4) Agrega las variables de entorno en Settings → Environment Variables.
+3. Las variables públicas de producción ya vienen en `.env.production` (URL y llave publicable de Supabase, no son secretas).
 4. Deploy. Cada push a `main` vuelve a desplegar.
 
 ## Instalar la PWA en el celular

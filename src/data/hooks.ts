@@ -1,4 +1,6 @@
+import { useSyncExternalStore } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
+import { getSyncSnapshot, onSyncChange } from './sync/syncEngine';
 import { db } from './db';
 import { listEmployers } from './repos/employers';
 import { listPaystubs } from './repos/paystubs';
@@ -47,4 +49,9 @@ export function useAllShiftsBetween(from: number, to: number) {
 
 export function useSavings() {
   return useLiveQuery(() => listSavings(), []);
+}
+
+/** Estado de la sincronización (sincronizando, al día, sin conexión…). */
+export function useSyncState() {
+  return useSyncExternalStore(onSyncChange, getSyncSnapshot, getSyncSnapshot);
 }

@@ -1,14 +1,14 @@
-import { db, type SyncTable } from '../db';
+import { db, type SyncTable, type TaxRuleRow } from '../db';
 import {
   employerFromRemote,
   employerToRemote,
   paystubFromRemote,
   paystubToRemote,
-  savingsFromRemote,
-  savingsToRemote,
   profileFromRemote,
   profileToRemote,
   PUSH_ORDER,
+  savingsFromRemote,
+  savingsToRemote,
   shiftFromRemote,
   shiftToRemote,
 } from './mapping';
@@ -22,26 +22,35 @@ import { getSupabase, hasSupabaseConfig, SYNC_ENABLED } from './supabaseClient';
  * PULL: baja lo que cambió en el servidor desde el último cursor (synced_at, que pone
  *   el servidor) y lo aplica si es más nuevo que lo local (updated_at).
  * CONFLICTOS: last-write-wins por updated_at. En el servidor, un trigger ignora un
- *   upsert cuyo updated_at sea más viejo que el guardado (ver migración 0001).
- *
- * Está apagado hasta la Fase 4 (VITE_SYNC_ENABLED=false o sin sesión).
+ *   upsert cuyo updated_at sea más viejo que el guardado (migración 0100).
+ * REGLAS: tax_rules es de lectura pública; se baja aunque no haya sesión, así una regla
+ *   corregida en Supabase llega a todos sin publicar una versión nueva de la app.
  */
 
-export type SyncStatus = 'disabled' | 'idle' | 'syncing' | 'offline' | 'error';
+export type SyncStatus = 'disabled' | 'signed_out' | 'idle' | 'syncing' | 'offline' | 'error';
 
 let status: SyncStatus = 'disabled';
-const listeners = new Set<(s: SyncStatus) => void>();
+let lastSyncedAt: number | null = null;
+const listeners = new Set<() => void>();
 const setStatus = (s: SyncStatus) => {
   status = s;
-  listeners.forEach((l) => l(s));
+  if (s === 'idle') lastSyncedAt = Date.now();
+  listeners.forEach((l) => l());
 };
-export const getSyncStatus = () => status;
-export function onSyncStatus(fn: (s: SyncStatus) => void) {
+export interface SyncSnapshot {
+  status: SyncStatus;
+  lastSyncedAt: number | null;
+}
+let snapshot: SyncSnapshot = { status, lastSyncedAt };
+listeners.add(() => (snapshot = { status, lastSyncedAt }));
+export const getSyncSnapshot = () => snapshot;
+export function onSyncChange(fn: () => void) {
   listeners.add(fn);
   return () => listeners.delete(fn);
 }
 
 const BATCH = 500;
+const enabled = () => SYNC_ENABLED && hasSupabaseConfig();
 
 async function currentUserId(): Promise<string | null> {
   const sb = await getSupabase();
@@ -69,7 +78,7 @@ async function push(userId: string): Promise<void> {
     let payload: Record<string, unknown>[] = [];
     if (table === 'profiles') {
       const p = await db.profile.get('me');
-      if (p) payload = [profileToRemote(p, userId)];
+      if (p) payload = [profileToRemote({ ...p, checklistDone: p.checklistDone ?? [] }, userId)];
     } else if (table === 'employers') {
       const rows = await db.employers.bulkGet(ids);
       payload = rows.filter((r) => !!r).map((r) => employerToRemote(r!, userId));
@@ -127,20 +136,50 @@ async function pull(): Promise<void> {
       }
       await db.meta.put({ key: cursorKey, value: data[data.length - 1]!.synced_at });
     });
+    if (data.length === 1000) return pull();
   }
 }
 
+/** Baja las reglas oficiales actualizadas (no requiere sesión). */
+async function pullRules(): Promise<void> {
+  const sb = (await getSupabase())!;
+  const cursorKey = 'pull:tax_rules';
+  const cursor = ((await db.meta.get(cursorKey))?.value as string | undefined) ?? '1970-01-01T00:00:00Z';
+  const { data, error } = await sb.from('tax_rules').select('*').gt('synced_at', cursor).order('synced_at').limit(500);
+  if (error) throw error;
+  if (!data || data.length === 0) return;
+  const rows: TaxRuleRow[] = data.map((r) => ({
+    id: `${r.jurisdiction}:${r.key}:${r.year}`,
+    key: r.key as string,
+    jurisdiction: r.jurisdiction as string,
+    year: r.year as number,
+    value: r.value as Record<string, unknown>,
+    sourceUrl: r.source_url as string,
+    verifiedAt: String(r.verified_at),
+    reviewedBy: (r.reviewed_by as string | null) ?? null,
+  }));
+  await db.transaction('rw', db.taxRules, db.meta, async () => {
+    await db.taxRules.bulkPut(rows);
+    await db.meta.put({ key: cursorKey, value: data[data.length - 1]!.synced_at });
+  });
+}
+
 let running: Promise<void> | null = null;
+let again = false;
 
 export async function syncNow(): Promise<void> {
-  if (!SYNC_ENABLED || !hasSupabaseConfig()) return setStatus('disabled');
+  if (!enabled()) return setStatus('disabled');
   if (typeof navigator !== 'undefined' && !navigator.onLine) return setStatus('offline');
-  if (running) return running;
+  if (running) {
+    again = true;
+    return running;
+  }
   running = (async () => {
     try {
-      const userId = await currentUserId();
-      if (!userId) return setStatus('disabled');
       setStatus('syncing');
+      await pullRules().catch((e) => console.warn('[sync] rules', e));
+      const userId = await currentUserId();
+      if (!userId) return setStatus('signed_out');
       await push(userId);
       await pull();
       setStatus('idle');
@@ -149,14 +188,26 @@ export async function syncNow(): Promise<void> {
       setStatus('error');
     } finally {
       running = null;
+      if (again) {
+        again = false;
+        void syncNow();
+      }
     }
   })();
   return running;
 }
 
+let debounce: number | undefined;
+/** Pide sincronizar unos segundos después de un cambio (agrupa varios cambios seguidos). */
+export function requestSync(delayMs = 2500): void {
+  if (!enabled() || typeof window === 'undefined') return;
+  window.clearTimeout(debounce);
+  debounce = window.setTimeout(() => void syncNow(), delayMs);
+}
+
 /** Arranca la sincronización automática. Devuelve una función para detenerla. */
 export function startAutoSync(intervalMs = 60_000): () => void {
-  if (!SYNC_ENABLED || !hasSupabaseConfig()) {
+  if (!enabled()) {
     setStatus('disabled');
     return () => {};
   }
@@ -165,12 +216,44 @@ export function startAutoSync(intervalMs = 60_000): () => void {
   window.addEventListener('online', kick);
   document.addEventListener('visibilitychange', onVisible);
   const timer = window.setInterval(kick, intervalMs);
+  // Cada cambio local entra a la cola: sincronizamos poco después.
+  const onQueued = () => requestSync();
+  db.outbox.hook('creating', onQueued);
   kick();
   return () => {
     window.removeEventListener('online', kick);
     document.removeEventListener('visibilitychange', onVisible);
     window.clearInterval(timer);
+    db.outbox.hook('creating').unsubscribe(onQueued);
   };
+}
+
+/** Borra los datos personales de este celular (las reglas oficiales se quedan). */
+export async function clearLocalPersonalData(): Promise<void> {
+  await db.transaction('rw', [db.profile, db.employers, db.shifts, db.paystubs, db.savings, db.outbox, db.meta], async () => {
+    await Promise.all([db.profile.clear(), db.employers.clear(), db.shifts.clear(), db.paystubs.clear(), db.savings.clear(), db.outbox.clear()]);
+    // Cursores de datos personales; el de reglas se conserva.
+    const keys = (await db.meta.toArray()).map((m) => m.key).filter((k) => k.startsWith('pull:') && k !== 'pull:tax_rules');
+    await db.meta.bulkDelete(keys);
+  });
+}
+
+/**
+ * Cerrar sesión: sube lo pendiente, cierra la sesión y limpia este celular para que
+ * otra persona no vea tus datos. Todo queda respaldado en tu cuenta.
+ */
+export async function signOutAndClear(): Promise<'ok' | 'pending_offline'> {
+  const sb = await getSupabase();
+  if (!sb) return 'ok';
+  if ((await db.outbox.count()) > 0) {
+    if (typeof navigator !== 'undefined' && !navigator.onLine) return 'pending_offline';
+    await syncNow();
+    if ((await db.outbox.count()) > 0) return 'pending_offline';
+  }
+  await sb.auth.signOut();
+  await clearLocalPersonalData();
+  setStatus('signed_out');
+  return 'ok';
 }
 
 /**

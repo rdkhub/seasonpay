@@ -13,6 +13,8 @@ import { tap } from '@/shared/lib/haptics';
 import { Button, OptionList } from '@/shared/ui';
 import { LogoMark } from '@/shared/ui/Logo';
 import { StateSelect, VisaFields } from './ProfileFields';
+import { AuthSheet } from '@/features/account/AuthSheet';
+import { authAvailable } from '@/data/sync/auth';
 
 const TOTAL = 3;
 
@@ -27,6 +29,7 @@ export function OnboardingScreen() {
   const [employer, setEmployer] = useState(() => emptyEmployerForm());
   const [errors, setErrors] = useState<EmployerFormErrors & { state?: string }>({});
   const [saving, setSaving] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
 
   const chooseLang = (l: 'es' | 'en') => {
     setLang(l);
@@ -115,6 +118,9 @@ export function OnboardingScreen() {
         )}
       </div>
 
+      {/* Si ya tenía cuenta, al entrar baja su perfil y el router lo lleva a la app. */}
+      <AuthSheet open={authOpen} onClose={() => setAuthOpen(false)} />
+
       {/* Acciones abajo, al alcance del pulgar */}
       <div className="sticky bottom-0 -mx-5 bg-gradient-to-t from-bg from-75% to-transparent px-5 pb-[max(20px,env(safe-area-inset-bottom))] pt-5">
         <div className="flex gap-2.5">
@@ -127,7 +133,12 @@ export function OnboardingScreen() {
             {step < TOTAL - 1 ? t('common.continue') : t('onboarding.finish')}
           </Button>
         </div>
-        <p className="mt-3 flex items-center justify-center gap-1.5 text-[12px] text-ink-3">
+        {step === 0 && authAvailable() && (
+          <button type="button" onClick={() => setAuthOpen(true)} className="mt-2 h-11 w-full text-center text-[14px] font-semibold text-accent">
+            {t('account.haveAccount')}
+          </button>
+        )}
+        <p className="mt-2 flex items-center justify-center gap-1.5 text-[12px] text-ink-3">
           <Lock className="h-3.5 w-3.5" /> {t('onboarding.privacyNote')}
         </p>
       </div>
