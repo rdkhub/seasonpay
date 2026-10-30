@@ -8,6 +8,7 @@ import { fillPendingRates } from '@/data/fx';
 import { useProfile, useRules, useSavings } from '@/data/hooks';
 import { saveProfile } from '@/data/repos/profile';
 import { cn } from '@/shared/lib/cn';
+import { stateName } from '@/shared/lib/usStates';
 import { formatDateISO, formatMoney, formatPen } from '@/shared/lib/format';
 import { centsToInput, parseMoneyInput } from '@/shared/lib/money';
 import { tap } from '@/shared/lib/haptics';
@@ -127,6 +128,7 @@ export function SeasonScreen() {
                   {formatDateISO(s.date, lang)}
                   {s.fxRate ? <span className="tnum">· S/ {s.fxRate.toFixed(3)}</span> : <Badge tone="warn">{t('savings.pendingBadge')}</Badge>}
                   {s.fxSource === 'manual' && <Badge>{t('savings.manualBadge')}</Badge>}
+                  {s.fxSource === 'sunat' && <Badge>SUNAT</Badge>}
                 </span>
               </span>
               <span className="shrink-0 text-right">
@@ -182,7 +184,8 @@ export function SeasonScreen() {
               </button>
               <div className="min-w-0 flex-1">
                 <p className={cn('text-[15px] font-semibold', isDone ? 'text-ink-3 line-through' : 'text-ink')}>{t(`checklist.${item.id}.title`)}</p>
-                <p className="mt-0.5 text-[13px] leading-snug text-ink-2">{t(bodyKey, { address: addr8843, state: profile?.workState ?? '' })}</p>
+                <p className="mt-0.5 text-[13px] leading-snug text-ink-2">{(rule?.value as { summary?: Record<string, string> } | undefined)?.summary?.[lang.startsWith('en') ? 'en' : 'es'] ??
+                    t(bodyKey, { address: addr8843, state: profile?.workState ? stateName(profile.workState) : '' })}</p>
                 <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1">
                   {item.to && (
                     <button

@@ -111,7 +111,7 @@ export function RemitScreen() {
               <Landmark className="h-5 w-5" />
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block text-[13px] font-medium text-ink-3">{t('remit.refLabel')}</span>
+              <span className="block text-[13px] font-medium text-ink-3">{fx?.provider === 'sunat' ? t('remit.refLabelSunat') : t('remit.refLabel')}</span>
               {fx ? (
                 <>
                   <span className="tnum block text-[20px] font-semibold text-ink">S/ {fx.value.toFixed(4)}</span>

@@ -50,8 +50,8 @@ export function SavingsSheet({ open, onClose, entry, defaultKind = 'save' }: Pro
   // Tipo de cambio del BCRP para la fecha elegida.
   useEffect(() => {
     if (!open || manual) return;
-    if (entry && entry.date === date && entry.fxSource === 'bcrp' && entry.fxRate && entry.fxDate) {
-      setRate({ status: 'ok', quote: { date: entry.fxDate, value: entry.fxRate, series: '', source: '' } });
+    if (entry && entry.date === date && (entry.fxSource === 'bcrp' || entry.fxSource === 'sunat') && entry.fxRate && entry.fxDate) {
+      setRate({ status: 'ok', quote: { date: entry.fxDate, value: entry.fxRate, series: '', source: '', provider: entry.fxSource } });
       return;
     }
     if (!online) return setRate({ status: 'offline' });
@@ -78,7 +78,7 @@ export function SavingsSheet({ open, onClose, entry, defaultKind = 'save' }: Pro
     const fx = manual
       ? { fxRate: manualValue, fxDate: date, fxSource: 'manual' as const }
       : rate.status === 'ok'
-        ? { fxRate: rate.quote!.value, fxDate: rate.quote!.date, fxSource: 'bcrp' as const }
+        ? { fxRate: rate.quote!.value, fxDate: rate.quote!.date, fxSource: rate.quote!.provider }
         : { fxRate: null, fxDate: null, fxSource: null };
     const draft = { kind, amountCents: cents!, date, note, ...fx };
     if (entry) await updateSavings(entry.id, draft);
@@ -144,7 +144,7 @@ export function SavingsSheet({ open, onClose, entry, defaultKind = 'save' }: Pro
             <p className="flex items-center gap-2 text-[15px] text-ink">
               {rate.status === 'loading' && <Loader2 className="h-4 w-4 animate-spin" />}
               {rate.status === 'loading' && t('savings.rateLoading')}
-              {rate.status === 'ok' && t('savings.rateBcrp', { date: formatDateISO(rate.quote!.date, i18n.language), value: rate.quote!.value.toFixed(3) })}
+              {rate.status === 'ok' && t(rate.quote!.provider === 'sunat' ? 'savings.rateSunat' : 'savings.rateBcrp', { date: formatDateISO(rate.quote!.date, i18n.language), value: rate.quote!.value.toFixed(3) })}
               {rate.status === 'offline' && t('savings.rateOffline')}
               {rate.status === 'missing' && t('savings.rateMissing')}
             </p>

@@ -217,7 +217,11 @@
         "must_file_if": "federal filing requirement and Montana source income",
         "nonresident_wages_are_montana_source": true,
         "exclusion": "nonresidents who earned only wages for services performed in Montana for 30 days or less and worked in more than one state",
-        "seasonal_worker_is_not_part_year_resident": true
+        "seasonal_worker_is_not_part_year_resident": true,
+        "summary": {
+          "es": "Según el Montana Department of Revenue, los no residentes con ingresos de fuente de Montana y obligación de declarar a nivel federal también declaran en Montana. Hay una excepción si solo ganaste sueldo por trabajar ahí 30 días o menos y trabajaste en más de un estado.",
+          "en": "According to the Montana Department of Revenue, nonresidents with Montana-source income and a federal filing requirement also file in Montana. There is an exception if you only earned wages for 30 days or less there and worked in more than one state."
+        }
       },
       "source_url": "https://revenue.mt.gov/taxes/individual-income-tax/filing-requirements",
       "verified_at": "2026-10-17",
@@ -1329,6 +1333,150 @@
         "notes": []
       },
       "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "fx_usd_pen_fallback",
+      "jurisdiction": "PE",
+      "year": 2026,
+      "value": {
+        "provider": "sunat",
+        "format": "dd/mm/yyyy|compra|venta",
+        "use": "venta",
+        "reason": "BCRP API devuelve una página anti-bots a consultas automáticas desde oct-2026"
+      },
+      "source_url": "https://www.sunat.gob.pe/a/txt/tipoCambio.txt",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "state_return_nonresident",
+      "jurisdiction": "CO",
+      "year": 2026,
+      "value": {
+        "must_file_if": "nonresident with Colorado source income AND (required to file a federal return OR Colorado income tax liability)",
+        "summary": {
+          "es": "Según el Colorado Department of Revenue, los no residentes con ingresos de fuente de Colorado declaran si tienen que presentar declaración federal o si tienen impuesto de Colorado por pagar.",
+          "en": "According to the Colorado Department of Revenue, nonresidents with Colorado-source income must file if they are required to file a federal return or have a Colorado tax liability."
+        }
+      },
+      "source_url": "https://tax.colorado.gov/individual-income-tax-filing-requirements",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "state_return_nonresident",
+      "jurisdiction": "UT",
+      "year": 2026,
+      "value": {
+        "must_file_if": "nonresident with income from Utah sources who must file a federal return",
+        "form": "TC-40",
+        "summary": {
+          "es": "Según la Utah State Tax Commission, los no residentes con ingresos de fuente de Utah que deben presentar declaración federal presentan el Form TC-40.",
+          "en": "According to the Utah State Tax Commission, nonresidents with income from Utah sources who must file a federal return file Form TC-40."
+        }
+      },
+      "source_url": "https://incometax.utah.gov/instructions/who-must-file",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "state_return_nonresident",
+      "jurisdiction": "CA",
+      "year": 2026,
+      "value": {
+        "must_file_if": "generally, nonresident who receives income from a source in California (FTB filing thresholds apply)",
+        "summary": {
+          "es": "Según el Franchise Tax Board, en general un no residente debe declarar si recibe ingresos de fuente de California. Hay montos mínimos: revísalos en la fuente.",
+          "en": "According to the Franchise Tax Board, a nonresident generally must file if they receive income from a source in California. Minimum amounts apply: check the source."
+        }
+      },
+      "source_url": "https://www.ftb.ca.gov/file/personal/do-you-need-to-file.html",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "state_return_nonresident",
+      "jurisdiction": "ID",
+      "year": 2026,
+      "value": {
+        "must_file_if": "nonresident with total gross income from Idaho sources over 2500 USD",
+        "gross_income_threshold_usd": 2500,
+        "form": "Form 43",
+        "summary": {
+          "es": "Según la Idaho State Tax Commission, los no residentes declaran (Form 43) si sus ingresos brutos de fuente de Idaho pasan de $2,500.",
+          "en": "According to the Idaho State Tax Commission, nonresidents file (Form 43) if their gross income from Idaho sources is more than $2,500."
+        }
+      },
+      "source_url": "https://tax.idaho.gov/taxes/income-tax/individual-income/online-guide/",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "state_return_nonresident",
+      "jurisdiction": "VT",
+      "year": 2026,
+      "value": {
+        "must_file_if": "nonresident with Vermont net income over 100 USD or gross income over 1000 USD",
+        "net_income_threshold_usd": 100,
+        "gross_income_threshold_usd": 1000,
+        "form": "IN-111 + Schedule IN-113",
+        "summary": {
+          "es": "Según el Vermont Department of Taxes, los no residentes declaran (Form IN-111 con Schedule IN-113) si su ingreso neto de Vermont pasa de $100 o su ingreso bruto pasa de $1,000.",
+          "en": "According to the Vermont Department of Taxes, nonresidents file (Form IN-111 with Schedule IN-113) if their Vermont net income is more than $100 or gross income more than $1,000."
+        }
+      },
+      "source_url": "https://tax.vermont.gov/individuals/who-should-file/nonresident",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "state_return_due_date",
+      "jurisdiction": "CO",
+      "year": 2026,
+      "value": {
+        "calendar_year": "04-15",
+        "extension": "10-15"
+      },
+      "source_url": "https://tax.colorado.gov/index.php/income-tax-due-dates-filing-extension",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "state_return_due_date",
+      "jurisdiction": "CA",
+      "year": 2026,
+      "value": {
+        "calendar_year": "04-15",
+        "extension": "10-15",
+        "note": "Extension is automatic to file, not to pay"
+      },
+      "source_url": "https://www.ftb.ca.gov/file/when-to-file/due-dates-personal.html",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "state_return_due_date",
+      "jurisdiction": "ID",
+      "year": 2026,
+      "value": {
+        "calendar_year": "04-15",
+        "note": "Extensions do not extend time to pay"
+      },
+      "source_url": "https://tax.idaho.gov/taxes/income-tax/individual-income/filing-and-paying/",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "state_return_due_date",
+      "jurisdiction": "VT",
+      "year": 2026,
+      "value": {
+        "calendar_year": "04-15",
+        "extension": "10-15"
+      },
+      "source_url": "https://tax.vermont.gov/individuals/personal-income-tax",
       "verified_at": "2026-10-30",
       "reviewed_by": "pendiente Enrolled Agent"
     }

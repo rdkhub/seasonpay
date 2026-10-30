@@ -104,11 +104,11 @@ export interface SavingsRow {
   date: string;
   /** Dólares, en centavos */
   amountCents: number;
-  /** Soles por dólar usado en este movimiento (BCRP, interbancario venta) */
+  /** Soles por dólar usado en este movimiento (venta: BCRP interbancario o, de respaldo, SUNAT) */
   fxRate: number | null;
   /** Fecha del tipo de cambio (yyyy-mm-dd): puede ser el día hábil anterior */
   fxDate: string | null;
-  fxSource: 'bcrp' | 'manual' | null;
+  fxSource: 'bcrp' | 'sunat' | 'manual' | null;
   note: string;
   createdAt: number;
   updatedAt: number;
