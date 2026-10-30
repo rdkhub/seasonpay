@@ -116,6 +116,17 @@ La app sigue gratis. En vez de pagos, la fase 5 agrega Temporada → "Enviar pla
 - La app muestra la tarjeta "Overtime en tu estado" en Semana y en el empleador, con fuente y fecha. La regla federal (40 h) se mantiene como base.
 - No se calcula todavía: el doble tiempo de California (más de 12 h y 7.º día), el 7.º día de Kentucky ni las 12 horas seguidas de Colorado. La app lo avisa.
 
+## Tipo de cambio (BCRP con respaldo SUNAT)
+
+- Desde oct-2026 el API del BCRP responde a consultas automáticas con una página anti-bots. No se intenta saltar esa protección.
+- `/api/fx` prueba primero el BCRP. Si no responde, usa el archivo público de SUNAT (`fecha|compra|venta`, solo el día actual).
+- La Edge Function `fx-snapshot` guarda cada día (15:00 y 21:00 UTC) el valor de SUNAT en `public.fx_daily`, de lectura pública. Si `/api/fx` falla, la app lee de ahí el último valor de hasta 6 días antes. Así se completan los ahorros guardados sin señal.
+- Cada movimiento guarda su fuente (`bcrp`, `sunat` o `manual`) y la app muestra "SUNAT" cuando corresponde. La regla `fx_usd_pen_fallback` (PE) documenta la fuente de respaldo.
+
+## Declaración estatal
+
+`state_return_nonresident` y `state_return_due_date` para MT, CO, UT, CA, ID y VT (`scripts/state-returns.py`, migración `20261030000930`). El checklist muestra el resumen bilingüe de cada estado con su fuente, y la tarjeta de fechas límite muestra la estatal cuando hay fecha verificada (Utah todavía no la tiene).
+
 ## Calidad
 
 - `npm test`: dominio (overtime diario, FICA, referidos, fechas límite, envíos) y RLS de `feedback` sobre la migración real con PGlite (`supabase/tests`).
@@ -126,7 +137,8 @@ La app sigue gratis. En vez de pagos, la fase 5 agrega Temporada → "Enviar pla
 - Darte de alta como admin con el SQL de arriba (después de entrar una vez con tu correo).
 - SMTP propio (por ejemplo Resend) para que el código de acceso les llegue a otros correos, y luego la plantilla con `{{ .Token }}`.
 - Revisión del Enrolled Agent de `tax_rules` (todas marcadas "pendiente Enrolled Agent").
-- Declaración estatal: solo está la regla de Montana. Faltan los estados de ski (CO, UT, CA, ID, WY, VT, NH…).
+- Declaración estatal: faltan WY y NH (no encontré una página oficial que diga claramente que no cobran impuesto al sueldo) y la fecha límite de Utah.
+- Tipo de cambio: si el BCRP vuelve a responder, se usa solo; si no, queda SUNAT. Revisar si conviene pedir al BCRP acceso para la app.
 - Calcular el doble tiempo de California y el 7.º día (CA, KY).
 - Enviar plata: solo Perú verificado. Faltan otros países y confirmar en la SBS el registro de Rextie.
 - Google OAuth (necesita client ID y secret).
