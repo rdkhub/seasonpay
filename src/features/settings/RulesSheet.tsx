@@ -5,8 +5,10 @@ import { formatDateISO } from '@/shared/lib/format';
 import { Badge, Sheet, TaxDisclaimer } from '@/shared/ui';
 
 /** Muestra cada regla con su fuente oficial y fecha de verificación (requisito del proyecto). */
-export function RulesSheet({ open, onClose, rules }: { open: boolean; onClose: () => void; rules: TaxRuleRow[] }) {
+export function RulesSheet({ open, onClose, rules: all, state }: { open: boolean; onClose: () => void; rules: TaxRuleRow[]; state?: string | null }) {
   const { t, i18n } = useTranslation();
+  // De las reglas por estado (overtime de 51 jurisdicciones) solo se muestra la del estado del usuario.
+  const rules = all.filter((r) => r.key !== 'overtime_state' || r.jurisdiction === state);
   return (
     <Sheet open={open} onClose={onClose} title={t('settings.sourcesTitle')} description={t('settings.sourcesBody')}>
       <div className="flex flex-col gap-3 pb-2">
@@ -55,6 +57,10 @@ function summarize(r: TaxRuleRow, t: (k: string, o?: Record<string, unknown>) =>
   const v = r.value as Record<string, unknown>;
   if (typeof v.threshold_hours === 'number' && typeof v.multiplier === 'number') return `${v.threshold_hours} h · ${v.multiplier}x`;
   if (typeof v.flsa_section === 'string') return `FLSA ${v.flsa_section}`;
+  if (r.key === 'overtime_state') {
+    if (v.no_state_law || v.excludes_flsa_covered || v.no_state_overtime) return t('stateOt.sumFederalOnly');
+    return [v.daily_hours ? `${v.daily_hours} h/${t('employer.dayShort')}` : null, v.weekly_hours ? `${v.weekly_hours} h/${t('stateOt.weekShort')}` : null].filter(Boolean).join(' · ');
+  }
   if (typeof v.calendar_years_limit === 'number') return `${t('rules.sumYears', { n: v.calendar_years_limit })} · ${String(v.edition ?? '')}`;
   if (typeof v.max_prior_years === 'number') return `${t('rules.sumPrior', { n: v.max_prior_years, w: v.preceding_years_window })} · ${String(v.edition ?? '')}`;
   if (Array.isArray(v.visa_classes)) return `${(v.visa_classes as string[]).join(', ')} · ${String(v.edition ?? '')}`;

@@ -11,6 +11,7 @@ const emp = (payFrequency: EmployerRow['payFrequency']): EmployerRow => ({
   overtimeEnabled: true,
   overtimeThresholdHours: 40,
   overtimeMultiplier: 1.5,
+  overtimeDailyHours: null,
   overtimeRuleKey: null,
   archived: false,
   createdAt: 0,

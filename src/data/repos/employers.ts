@@ -11,6 +11,7 @@ export interface EmployerDraft {
   overtimeEnabled?: boolean;
   overtimeThresholdHours?: number;
   overtimeMultiplier?: number;
+  overtimeDailyHours?: number | null;
 }
 
 export async function listEmployers(opts: { includeArchived?: boolean } = {}): Promise<EmployerRow[]> {
@@ -33,6 +34,7 @@ export async function createEmployer(draft: EmployerDraft, state: string | null)
       overtimeEnabled: draft.overtimeEnabled ?? ot.enabled,
       overtimeThresholdHours: draft.overtimeThresholdHours ?? ot.thresholdHours,
       overtimeMultiplier: draft.overtimeMultiplier ?? ot.multiplier,
+      overtimeDailyHours: draft.overtimeDailyHours !== undefined ? draft.overtimeDailyHours : ot.dailyHours,
       overtimeRuleKey: ot.ruleKey,
       archived: false,
       createdAt: now,

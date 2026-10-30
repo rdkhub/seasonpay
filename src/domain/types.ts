@@ -25,6 +25,11 @@ export interface OvertimePolicy {
   enabled: boolean;
   weeklyThresholdHours: number;
   multiplier: number;
+  /**
+   * Overtime diario (Alaska, California, Colorado…): horas en un día por encima de este
+   * umbral también son overtime. null = el estado no tiene overtime diario.
+   */
+  dailyThresholdHours?: number | null;
 }
 
 export interface EmployerPayConfig {

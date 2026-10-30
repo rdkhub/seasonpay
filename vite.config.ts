@@ -64,7 +64,7 @@ export default defineConfig({
   ],
   test: {
     environment: 'node',
-    include: ['src/**/*.test.ts', 'api/**/*.test.js'],
+    include: ['src/**/*.test.ts', 'api/**/*.test.js', 'supabase/**/*.test.ts'],
     env: { TZ: 'America/Denver' },
   },
 });

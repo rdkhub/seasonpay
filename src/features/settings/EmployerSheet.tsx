@@ -10,6 +10,7 @@ import { tap } from '@/shared/lib/haptics';
 import { stateName } from '@/shared/lib/usStates';
 import { Button, Sheet, useToast } from '@/shared/ui';
 import { EmployerFields } from './EmployerFields';
+import { StateOvertimeCard } from './StateOvertimeCard';
 import { employerToForm, emptyEmployerForm, validateEmployerForm, type EmployerFormErrors } from './employerForm';
 
 interface EmployerSheetProps {
@@ -76,6 +77,7 @@ export function EmployerSheet({ open, onClose, employer }: EmployerSheetProps) {
       }
     >
       <EmployerFields value={value} onChange={setValue} errors={errors} />
+      <StateOvertimeCard className="mt-5" rules={rules ?? []} state={profile?.workState ?? null} />
 
       {notice && value.overtimeEnabled && (
         <div className="mt-5 rounded-2xl bg-warn/10 p-4">

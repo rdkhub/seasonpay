@@ -235,6 +235,1102 @@
       "source_url": "https://revenue.mt.gov/taxes/individual-income-tax",
       "verified_at": "2026-10-17",
       "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "AK",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": 8,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": true,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": [
+          "ak_small_employers"
+        ]
+      },
+      "source_url": "https://labor.alaska.gov/lss/forms/Summary_of_Alaska_Wage_and_Hour_Act__Rev_01-25.pdf",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "AL",
+      "year": 2026,
+      "value": {
+        "weekly_hours": null,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": true,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "AR",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "AZ",
+      "year": 2026,
+      "value": {
+        "weekly_hours": null,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": true,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "CA",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": 8,
+        "daily_double_time_hours": 12,
+        "seventh_day": true,
+        "daily_applies_to_all": true,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": [
+          "ca_double_time",
+          "ca_seventh_day"
+        ]
+      },
+      "source_url": "https://www.dir.ca.gov/dlse/faq_overtime.htm",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "CO",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": 12,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": true,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": [
+          "co_12_consecutive"
+        ]
+      },
+      "source_url": "https://cdle.colorado.gov/sites/cdle/files/INFO%20%231%20COMPS%20Order%20%2339%20(2024)%2012.8.23%20%5Baccessible%5D.pdf",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "CT",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "DC",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "DE",
+      "year": 2026,
+      "value": {
+        "weekly_hours": null,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": true,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "FL",
+      "year": 2026,
+      "value": {
+        "weekly_hours": null,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": true,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "GA",
+      "year": 2026,
+      "value": {
+        "weekly_hours": null,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": true,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "HI",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "IA",
+      "year": 2026,
+      "value": {
+        "weekly_hours": null,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": true,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "ID",
+      "year": 2026,
+      "value": {
+        "weekly_hours": null,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": true,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "IL",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "IN",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "KS",
+      "year": 2026,
+      "value": {
+        "weekly_hours": null,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": true,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "KY",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": true,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": [
+          "ky_seventh_day"
+        ]
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "LA",
+      "year": 2026,
+      "value": {
+        "weekly_hours": null,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": true,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "MA",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "MD",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "ME",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "MI",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "MN",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 48,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "MO",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": 52,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": [
+          "seasonal_recreation_weekly"
+        ]
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "MS",
+      "year": 2026,
+      "value": {
+        "weekly_hours": null,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": true,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "MT",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": [
+          "mt_student_48"
+        ]
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "NC",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": 45,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": [
+          "seasonal_recreation_weekly"
+        ]
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "ND",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "NE",
+      "year": 2026,
+      "value": {
+        "weekly_hours": null,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": true,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "NH",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "NJ",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "NM",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "NV",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": 8,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": [
+          "nv_wage_condition"
+        ]
+      },
+      "source_url": "https://www.leg.state.nv.us/nrs/nrs-608.html",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "NY",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": [
+          "ny_live_in_44"
+        ]
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "OH",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "OK",
+      "year": 2026,
+      "value": {
+        "weekly_hours": null,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": true,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "OR",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": [
+          "or_industries_10"
+        ]
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "PA",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "RI",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": [
+          "ri_sunday_holiday"
+        ]
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "SC",
+      "year": 2026,
+      "value": {
+        "weekly_hours": null,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": true,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "SD",
+      "year": 2026,
+      "value": {
+        "weekly_hours": null,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": true,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "TN",
+      "year": 2026,
+      "value": {
+        "weekly_hours": null,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": true,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "TX",
+      "year": 2026,
+      "value": {
+        "weekly_hours": null,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": true,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "UT",
+      "year": 2026,
+      "value": {
+        "weekly_hours": null,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": true,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "VA",
+      "year": 2026,
+      "value": {
+        "weekly_hours": null,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": true,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "VT",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "WA",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": [
+          "wa_comp_time"
+        ]
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "WI",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "WV",
+      "year": 2026,
+      "value": {
+        "weekly_hours": 40,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": false,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
+    },
+    {
+      "key": "overtime_state",
+      "jurisdiction": "WY",
+      "year": 2026,
+      "value": {
+        "weekly_hours": null,
+        "daily_hours": null,
+        "daily_double_time_hours": null,
+        "seventh_day": false,
+        "daily_applies_to_all": false,
+        "seasonal_recreation_weekly_hours": null,
+        "no_state_law": false,
+        "excludes_flsa_covered": false,
+        "no_state_overtime": true,
+        "multiplier": 1.5,
+        "notes": []
+      },
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "pendiente Enrolled Agent"
     }
   ]
 }

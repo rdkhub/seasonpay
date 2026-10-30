@@ -12,13 +12,15 @@ export interface EmployerFormValue {
   overtimeEnabled: boolean;
   threshold: string;
   multiplier: string;
+  /** Overtime diario en horas; vacío = sin overtime diario */
+  daily: string;
 }
 
-export type EmployerFormErrors = Partial<Record<'name' | 'rate' | 'threshold' | 'multiplier', string>>;
+export type EmployerFormErrors = Partial<Record<'name' | 'rate' | 'threshold' | 'multiplier' | 'daily', string>>;
 
 export const PAY_FREQUENCIES: PayFrequency[] = ['weekly', 'biweekly', 'semimonthly', 'monthly'];
 
-export function emptyEmployerForm(ot?: { enabled: boolean; thresholdHours: number; multiplier: number }): EmployerFormValue {
+export function emptyEmployerForm(ot?: { enabled: boolean; thresholdHours: number; multiplier: number; dailyHours?: number | null }): EmployerFormValue {
   return {
     name: '',
     rate: '',
@@ -27,6 +29,7 @@ export function emptyEmployerForm(ot?: { enabled: boolean; thresholdHours: numbe
     overtimeEnabled: ot?.enabled ?? false,
     threshold: ot ? String(ot.thresholdHours) : '',
     multiplier: ot ? String(ot.multiplier) : '',
+    daily: ot?.dailyHours ? String(ot.dailyHours) : '',
   };
 }
 
@@ -39,6 +42,7 @@ export function employerToForm(e: EmployerRow): EmployerFormValue {
     overtimeEnabled: e.overtimeEnabled,
     threshold: String(e.overtimeThresholdHours),
     multiplier: String(e.overtimeMultiplier),
+    daily: e.overtimeDailyHours ? String(e.overtimeDailyHours) : '',
   };
 }
 
@@ -51,7 +55,11 @@ export function validateEmployerForm(v: EmployerFormValue, withOvertime: boolean
 
   let threshold: number | undefined;
   let multiplier: number | undefined;
+  let daily: number | null | undefined;
   if (withOvertime && v.overtimeEnabled) {
+    const d = v.daily.trim().replace(',', '.');
+    daily = d === '' ? null : Number(d);
+    if (daily !== null && (!Number.isFinite(daily) || daily <= 0 || daily > 24)) errors.daily = 'shiftForm.errors.times';
     threshold = Number(v.threshold.replace(',', '.'));
     multiplier = Number(v.multiplier.replace(',', '.'));
     if (!Number.isFinite(threshold) || threshold <= 0 || threshold > 168) errors.threshold = 'shiftForm.errors.times';
@@ -68,7 +76,7 @@ export function validateEmployerForm(v: EmployerFormValue, withOvertime: boolean
         ? {
             workweekStartDay: v.workweekStartDay,
             overtimeEnabled: v.overtimeEnabled,
-            ...(v.overtimeEnabled ? { overtimeThresholdHours: threshold, overtimeMultiplier: multiplier } : {}),
+            ...(v.overtimeEnabled ? { overtimeThresholdHours: threshold, overtimeMultiplier: multiplier, overtimeDailyHours: daily } : {}),
           }
         : {}),
     },

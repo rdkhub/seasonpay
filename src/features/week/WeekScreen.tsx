@@ -12,6 +12,8 @@ import { useNow } from '@/shared/lib/useNow';
 import { Badge, Button, Card, EmptyState, ListGroup, ListRow, MoneyDisplay, PressableCard, SectionTitle, Stat } from '@/shared/ui';
 import { OfflinePill } from '@/shared/ui/OfflinePill';
 import { useWeekSummary } from './useWeekSummary';
+import { useProfile, useRules } from '@/data/hooks';
+import { StateOvertimeCard } from '@/features/settings/StateOvertimeCard';
 
 export function WeekScreen() {
   const { t, i18n } = useTranslation();
@@ -20,6 +22,8 @@ export function WeekScreen() {
   const [anchor, setAnchor] = useState(() => Date.now());
   const week = useWeekSummary(anchor, now);
   const { summary: s, range } = week;
+  const profile = useProfile();
+  const rules = useRules();
 
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<ShiftRow | null>(null);
@@ -181,6 +185,7 @@ export function WeekScreen() {
           </Link>
         </span>
       </p>
+      <StateOvertimeCard className="mt-4" rules={rules ?? []} state={profile?.workState ?? null} />
 
       {/* Navegación entre semanas, al alcance del pulgar */}
       <div className="pointer-events-none fixed inset-x-0 bottom-[calc(88px+env(safe-area-inset-bottom))] z-30 flex justify-center px-4">

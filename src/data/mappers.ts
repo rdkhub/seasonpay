@@ -24,6 +24,7 @@ export function toEmployerConfig(e: EmployerRow): EmployerPayConfig {
       enabled: e.overtimeEnabled,
       weeklyThresholdHours: e.overtimeThresholdHours,
       multiplier: e.overtimeMultiplier,
+      dailyThresholdHours: e.overtimeDailyHours ?? null,
     },
   };
 }

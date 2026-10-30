@@ -45,6 +45,8 @@ export interface EmployerRow {
   overtimeEnabled: boolean;
   overtimeThresholdHours: number;
   overtimeMultiplier: number;
+  /** Overtime diario del estado (ej. 8 en California). null = sin overtime diario. */
+  overtimeDailyHours: number | null;
   /** Clave de tax_rules de la que salieron los valores de overtime */
   overtimeRuleKey: string | null;
   archived: boolean;
@@ -271,6 +273,17 @@ export class SeasonPayDB extends Dexie {
             r.countries ??= ['PE'];
             r.referralEnabled ??= false;
             r.notes ??= null;
+          });
+      });
+    // v6: overtime diario por estado.
+    this.version(6)
+      .stores({})
+      .upgrade(async (tx) => {
+        await tx
+          .table('employers')
+          .toCollection()
+          .modify((e: Partial<EmployerRow>) => {
+            e.overtimeDailyHours ??= null;
           });
       });
   }

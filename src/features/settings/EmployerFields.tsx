@@ -70,7 +70,9 @@ export function EmployerFields({ value, onChange, errors = {}, compact }: Employ
               label={t('employer.overtime')}
               description={
                 value.overtimeEnabled
-                  ? t('employer.overtimeOn', { hours: value.threshold || '—', mult: value.multiplier || '—' })
+                  ? value.daily
+                    ? t('employer.overtimeOnDaily', { hours: value.threshold || '—', daily: value.daily, mult: value.multiplier || '—' })
+                    : t('employer.overtimeOn', { hours: value.threshold || '—', mult: value.multiplier || '—' })
                   : t('employer.overtimeOff')
               }
             />
@@ -93,6 +95,18 @@ export function EmployerFields({ value, onChange, errors = {}, compact }: Employ
                 value={value.multiplier}
                 onChange={(e) => set('multiplier', e.target.value)}
                 error={errors.multiplier ? ' ' : undefined}
+                numeric
+              />
+              <Input
+                className="col-span-2"
+                label={t('employer.daily')}
+                hint={t('employer.dailyHint')}
+                inputMode="decimal"
+                suffix={t('employer.dailySuffix')}
+                placeholder="—"
+                value={value.daily}
+                onChange={(e) => set('daily', e.target.value)}
+                error={errors.daily ? t(errors.daily) : undefined}
                 numeric
               />
             </div>

@@ -65,6 +65,30 @@ export interface OvertimeDefaults {
   thresholdHours: number;
   multiplier: number;
   ruleKey: string | null;
+  /** Overtime diario del estado, solo si aplica a todos (sin condiciones de salario). */
+  dailyHours: number | null;
+}
+
+/** Resumen del overtime de un estado (regla overtime_state, fuente: DOL y ley estatal). */
+export interface StateOvertime {
+  no_state_law?: boolean;
+  excludes_flsa_covered?: boolean;
+  no_state_overtime?: boolean;
+  multiplier?: number;
+  weekly_hours?: number | null;
+  daily_hours?: number | null;
+  daily_double_time_hours?: number | null;
+  seventh_day?: boolean;
+  daily_applies_to_all?: boolean;
+  seasonal_recreation_weekly_hours?: number | null;
+  notes?: string[];
+}
+
+export async function stateOvertime(state: string | null): Promise<{ rule: TaxRuleRow; value: StateOvertime } | null> {
+  if (!state) return null;
+  const rows = await db.taxRules.where('[key+jurisdiction]').equals(['overtime_state', state]).toArray();
+  const rule = rows.sort((a, b) => b.year - a.year)[0];
+  return rule ? { rule, value: rule.value as StateOvertime } : null;
 }
 
 /** Valores iniciales de overtime para un empleador nuevo, sacados de tax_rules. */
@@ -73,7 +97,9 @@ export async function overtimeDefaults(state: string | null): Promise<OvertimeDe
   const v = rule?.value as { threshold_hours?: number; multiplier?: number } | undefined;
   if (!rule || typeof v?.threshold_hours !== 'number' || typeof v?.multiplier !== 'number') {
     // Sin regla cargada: el overtime queda apagado en vez de inventar valores.
-    return { enabled: false, thresholdHours: 0, multiplier: 1, ruleKey: null };
+    return { enabled: false, thresholdHours: 0, multiplier: 1, ruleKey: null, dailyHours: null };
   }
-  return { enabled: true, thresholdHours: v.threshold_hours, multiplier: v.multiplier, ruleKey: rule.id };
+  const st = await stateOvertime(state);
+  const daily = st?.value.daily_applies_to_all && typeof st.value.daily_hours === 'number' ? st.value.daily_hours : null;
+  return { enabled: true, thresholdHours: v.threshold_hours, multiplier: v.multiplier, ruleKey: rule.id, dailyHours: daily };
 }

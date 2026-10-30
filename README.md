@@ -90,6 +90,48 @@ La app sigue gratis. En vez de pagos, la fase 5 agrega Temporada → "Enviar pla
 - **Links de referido:** columna `referral_url` (vacía por ahora). Si se llena, la tarjeta muestra "Link de referido", el link lleva `rel="sponsored"` y aparece el aviso de que eso no cambia el orden. Para ponerlo: `update public.remit_providers set referral_url = 'https://…' where id = 'wise';` desde el SQL Editor.
 - **Agregar o actualizar un proveedor:** verificar en su web oficial, editar la fila (con `verified_at` del día) y el JSON local con los mismos datos.
 
+## Pre-temporada (piloto 18-dic-2026 a 30-mar-2027)
+
+- **Modo piloto:** "Beta gratuita" y versión en Ajustes. No hay cobros.
+- **Instalación:** guía paso a paso (iPhone desde Safari, con la nota de iOS 16.4+ para notificaciones; botón en Android). Tarjeta en Hoy que no aparece si la app ya está instalada.
+- **Feedback:** botón en Hoy y en Ajustes. Estrellas, "qué falló", "qué te gustaría" y captura opcional de la pantalla de la app (html-to-image; nunca de la galería, para no recibir boletas reales con SSN). Se adjuntan versión, sistema y pantalla. Sin señal queda en cola (`db.pending`).
+- **Consentimiento:** casilla obligatoria en la bienvenida y al crear cuenta. Si cambia `app_config.privacy_policy_version`, la app pide aceptar de nuevo.
+- **Política de privacidad:** `/privacidad` (`/privacy`), pública y bilingüe.
+- **Exportar y borrar:** Ajustes → Exportar mis datos (JSON). "Borrar mi cuenta" borra local, la cuenta (Edge Function `delete-account`) y, por `install_id`, el feedback, encuestas, métricas y notificaciones de ese celular (`delete_install_data`).
+- **Avisos de impuestos:** `TaxDisclaimer` en Boletas, FICA, Fuentes y Temporada. Cada regla muestra fuente y fecha.
+- **Fechas límite y recordatorios:** el 1040-NR y la declaración estatal se calculan con `tax_rules` (`form_1040nr_due_date`, `state_return_due_date`), por cada año tributario con turnos. Web Push: la Edge Function `send-reminders` corre todos los días a las 16:00 UTC (pg_cron) y avisa 30, 7 y 1 día antes. Las llaves VAPID las crea la función y la privada vive en Vault.
+- **Encuesta de fin de temporada:** tabla `survey_responses`.
+- **Enviar plata:** país de destino, consejos, remesadoras y casas de cambio (Perú), interruptor `app_config.referrals_enabled` (apagado) y `referral_enabled` por proveedor. Tabla `provider_rates` lista para tasas en vivo (vacía).
+- **Métricas sin datos personales:** tabla `events` con un `install_id` aleatorio, sin correo ni montos. Se puede apagar en Ajustes. Vistas: `metrics_registered`, `metrics_retention`, `metrics_payment_errors`, `metrics_feature_usage`, `metrics_weekly_active`.
+- **Admin:** `/admin` (Ajustes → Administración). Solo lo ve quien está en `public.admins`:
+  ```sql
+  insert into public.admins (user_id) select id from auth.users where email = 'TU_CORREO';
+  ```
+- **WhatsApp de testers:** `update public.app_config set value = '"https://chat.whatsapp.com/..."' where key = 'whatsapp_group_url';`
+
+## Overtime por estado
+
+- Regla `overtime_state` para los 50 estados y DC (`scripts/state-overtime.py`, migración `20261030000900`). Fuente: DOL "State Minimum Wage Laws", sección Premium Pay (actualizada 1-jul-2026). Overtime diario confirmado en la fuente estatal: Alaska, California, Colorado y Nevada.
+- Overtime diario automático en AK (8 h), CA (8 h) y CO (12 h). Nevada (8 h) depende del salario, así que no se aplica solo. Las horas extra diarias no cuentan para las 40 semanales.
+- La app muestra la tarjeta "Overtime en tu estado" en Semana y en el empleador, con fuente y fecha. La regla federal (40 h) se mantiene como base.
+- No se calcula todavía: el doble tiempo de California (más de 12 h y 7.º día), el 7.º día de Kentucky ni las 12 horas seguidas de Colorado. La app lo avisa.
+
+## Calidad
+
+- `npm test`: dominio (overtime diario, FICA, referidos, fechas límite, envíos) y RLS de `feedback` sobre la migración real con PGlite (`supabase/tests`).
+- Lighthouse 12 (móvil, 30-oct-2026) en `/hola` y `/privacidad`: rendimiento 90, accesibilidad 100, buenas prácticas 96, SEO 100. Lighthouse 12 ya no tiene la categoría PWA; la instalación se revisó a mano (manifest con íconos 192/512 y maskable, service worker con caché offline y push).
+
+## Pendientes
+
+- Darte de alta como admin con el SQL de arriba (después de entrar una vez con tu correo).
+- SMTP propio (por ejemplo Resend) para que el código de acceso les llegue a otros correos, y luego la plantilla con `{{ .Token }}`.
+- Revisión del Enrolled Agent de `tax_rules` (todas marcadas "pendiente Enrolled Agent").
+- Declaración estatal: solo está la regla de Montana. Faltan los estados de ski (CO, UT, CA, ID, WY, VT, NH…).
+- Calcular el doble tiempo de California y el 7.º día (CA, KY).
+- Enviar plata: solo Perú verificado. Faltan otros países y confirmar en la SBS el registro de Rextie.
+- Google OAuth (necesita client ID y secret).
+- Fase de pagos (pase de temporada): después del piloto, con Lemon Squeezy o Polar.
+
 ## Reglas oficiales (tax_rules)
 
 Cada regla tiene `key`, `value` (jsonb), `year`, `jurisdiction` (`federal` o código de estado), `source_url`, `verified_at` y `reviewed_by`.

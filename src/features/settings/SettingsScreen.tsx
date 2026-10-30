@@ -140,7 +140,7 @@ export function SettingsScreen() {
               key={e.id}
               icon={<Briefcase />}
               title={e.name}
-              subtitle={`${t(`payFrequency.${e.payFrequency}`)}${e.overtimeEnabled ? ` · OT ${e.overtimeThresholdHours} h · ${e.overtimeMultiplier}x` : ''}`}
+              subtitle={`${t(`payFrequency.${e.payFrequency}`)}${e.overtimeEnabled ? ` · OT ${e.overtimeDailyHours ? `${e.overtimeDailyHours} h/${t('employer.dayShort')} · ` : ''}${e.overtimeThresholdHours} h · ${e.overtimeMultiplier}x` : ''}`}
               trailing={
                 e.archived ? (
                   <Badge>{t('employer.archived')}</Badge>
@@ -229,7 +229,7 @@ export function SettingsScreen() {
 
       <EmployerSheet open={employerSheet.open} employer={employerSheet.employer} onClose={() => setEmployerSheet((s) => ({ ...s, open: false }))} />
       <ProfileSheet open={profileOpen} onClose={() => setProfileOpen(false)} profile={profile ?? null} />
-      <RulesSheet open={rulesOpen} onClose={() => setRulesOpen(false)} rules={rules ?? []} />
+      <RulesSheet open={rulesOpen} onClose={() => setRulesOpen(false)} rules={rules ?? []} state={profile?.workState ?? null} />
       <InstallSheet open={installOpen} onClose={() => setInstallOpen(false)} />
 
       <Sheet
