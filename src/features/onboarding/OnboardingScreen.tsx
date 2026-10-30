@@ -15,6 +15,9 @@ import { LogoMark } from '@/shared/ui/Logo';
 import { StateSelect, VisaFields } from './ProfileFields';
 import { AuthSheet } from '@/features/account/AuthSheet';
 import { authAvailable } from '@/data/sync/auth';
+import { getConfig } from '@/data/repos/config';
+import { track } from '@/data/telemetry';
+import { ConsentCheckbox } from '@/features/privacy/ConsentSheet';
 
 const TOTAL = 3;
 
@@ -30,6 +33,8 @@ export function OnboardingScreen() {
   const [errors, setErrors] = useState<EmployerFormErrors & { state?: string }>({});
   const [saving, setSaving] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
+  const [consent, setConsent] = useState(false);
+  const [consentError, setConsentError] = useState(false);
 
   const chooseLang = (l: 'es' | 'en') => {
     setLang(l);
@@ -42,8 +47,11 @@ export function OnboardingScreen() {
     const { errors: e, draft } = validateEmployerForm(employer, false);
     const all = { ...e, ...(workState ? {} : { state: 'onboarding.statePlaceholder' }) };
     setErrors(all);
-    if (!draft || !workState) {
+    setConsentError(!consent);
+    if (!draft || !workState || !consent) {
       tap('warning');
+      // Si lo único que falta es la casilla, la llevamos a la vista (queda debajo de los campos).
+      if (draft && workState) document.getElementById('consent-box')?.scrollIntoView({ behavior: 'smooth', block: 'end' });
       return;
     }
     setSaving(true);
@@ -51,7 +59,10 @@ export function OnboardingScreen() {
       // Si el usuario eligió el mismo idioma del celular, lo guardamos como "del celular".
       const pref: LanguagePref = lang === deviceLanguage() ? 'system' : lang;
       await createEmployer(draft, workState);
-      await saveProfile({ language: pref, visaType, arrivalYear, workState, onboardedAt: Date.now() });
+      const { privacyPolicyVersion } = await getConfig();
+      const now = Date.now();
+      await saveProfile({ language: pref, visaType, arrivalYear, workState, onboardedAt: now, consentAt: now, consentVersion: privacyPolicyVersion });
+      await track('signup', { visa: visaType ?? 'none', state: workState });
       tap('success');
       navigate('/', { replace: true });
     } finally {
@@ -113,6 +124,9 @@ export function OnboardingScreen() {
             <div className="flex flex-col gap-5">
               <StateSelect value={workState} onChange={setWorkState} error={errors.state ? t(errors.state) : undefined} />
               <EmployerFields value={employer} onChange={setEmployer} errors={errors} compact />
+              <div id="consent-box" className="scroll-mb-40">
+                <ConsentCheckbox checked={consent} onChange={(v) => (setConsent(v), setConsentError(false))} error={consentError} />
+              </div>
             </div>
           </>
         )}

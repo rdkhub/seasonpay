@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FileSpreadsheet, FileText } from 'lucide-react';
 import { deliverFiles } from '@/shared/lib/download';
+import { track } from '@/data/telemetry';
 import { tap } from '@/shared/lib/haptics';
 import { Button, SegmentedControl, Sheet, useToast } from '@/shared/ui';
 import { buildCsvFiles, buildPdf, gatherExport, type ExportRange } from './export/buildExport';
@@ -25,6 +26,7 @@ export function ExportSheet({ open, onClose }: { open: boolean; onClose: () => v
       if (res !== 'cancelled') {
         tap('success');
         toast(t('export.done'));
+        void track('export_made', { kind });
       }
     } finally {
       setBusy(null);

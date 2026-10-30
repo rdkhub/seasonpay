@@ -1,65 +1,248 @@
 {
-  "_comment": "Copia local de remit_providers (migración 0700). Solo datos que aparecen en la página oficial de cada proveedor. Sin comisiones ni tipos de cambio: cambian a diario y el usuario los ve en la calculadora del proveedor. referral_url queda en null hasta que haya un link de referido; cuando exista, la app lo marca como tal.",
+  "_comment": "Copia local de remit_providers (migraciones 0700 y 0800). Solo datos de la página oficial de cada proveedor. Sin comisiones ni tipos de cambio. type: remittance (envía de EE. UU.) o exchange (casa de cambio en el país). referral_url y referral_enabled quedan apagados; además existe el interruptor global referrals_enabled en app_config.",
   "providers": [
     {
       "id": "moneygram",
       "name": "MoneyGram",
       "url": "https://www.moneygram.com/us/en/corridor/peru",
-      "methods": ["bank", "cash", "wallet"],
-      "receive_currencies": ["PEN", "USD"],
-      "wallets": ["Yape", "Plin"],
+      "methods": [
+        "bank",
+        "cash",
+        "wallet"
+      ],
+      "receive_currencies": [
+        "PEN",
+        "USD"
+      ],
+      "wallets": [
+        "Yape",
+        "Plin"
+      ],
       "referral_url": null,
-      "source_urls": ["https://www.moneygram.com/r/pe/en", "https://developer.moneygram.com/moneygram-developer/docs/direct-send-options-for-pe"],
+      "source_urls": [
+        "https://www.moneygram.com/r/pe/en",
+        "https://developer.moneygram.com/moneygram-developer/docs/direct-send-options-for-pe"
+      ],
       "verified_at": "2026-10-17",
-      "active": true
+      "active": true,
+      "type": "remittance",
+      "countries": [
+        "PE"
+      ],
+      "referral_enabled": false,
+      "notes": null
     },
     {
       "id": "remitly",
       "name": "Remitly",
       "url": "https://www.remitly.com/us/en/money-transfer/send-money-to-peru",
-      "methods": ["bank", "cash", "wallet"],
-      "receive_currencies": ["PEN", "USD"],
+      "methods": [
+        "bank",
+        "cash",
+        "wallet"
+      ],
+      "receive_currencies": [
+        "PEN",
+        "USD"
+      ],
       "wallets": [],
       "referral_url": null,
-      "source_urls": ["https://www.remitly.com/us/en/money-transfer/send-money-to-peru", "https://www.remitly.com/us/en/peru/pricing"],
+      "source_urls": [
+        "https://www.remitly.com/us/en/money-transfer/send-money-to-peru",
+        "https://www.remitly.com/us/en/peru/pricing"
+      ],
       "verified_at": "2026-10-17",
-      "active": true
+      "active": true,
+      "type": "remittance",
+      "countries": [
+        "PE"
+      ],
+      "referral_enabled": false,
+      "notes": null
     },
     {
       "id": "western_union",
       "name": "Western Union",
       "url": "https://www.westernunion.com/us/en/send-money-to-peru.html",
-      "methods": ["bank", "cash", "wallet"],
-      "receive_currencies": ["PEN", "USD"],
-      "wallets": ["Yape"],
+      "methods": [
+        "bank",
+        "cash",
+        "wallet"
+      ],
+      "receive_currencies": [
+        "PEN",
+        "USD"
+      ],
+      "wallets": [
+        "Yape"
+      ],
       "referral_url": null,
-      "source_urls": ["https://www.westernunion.com/us/en/send-money-to-peru.html"],
+      "source_urls": [
+        "https://www.westernunion.com/us/en/send-money-to-peru.html"
+      ],
       "verified_at": "2026-10-17",
-      "active": true
+      "active": true,
+      "type": "remittance",
+      "countries": [
+        "PE"
+      ],
+      "referral_enabled": false,
+      "notes": null
     },
     {
       "id": "wise",
       "name": "Wise",
       "url": "https://wise.com/us/send-money/send-money-to-peru",
-      "methods": ["bank"],
-      "receive_currencies": ["PEN"],
+      "methods": [
+        "bank"
+      ],
+      "receive_currencies": [
+        "PEN"
+      ],
       "wallets": [],
       "referral_url": null,
-      "source_urls": ["https://wise.com/us/send-money/send-money-to-peru"],
+      "source_urls": [
+        "https://wise.com/us/send-money/send-money-to-peru"
+      ],
       "verified_at": "2026-10-17",
-      "active": true
+      "active": true,
+      "type": "remittance",
+      "countries": [
+        "PE"
+      ],
+      "referral_enabled": false,
+      "notes": null
     },
     {
       "id": "xoom",
       "name": "Xoom",
       "url": "https://www.xoom.com/peru",
-      "methods": ["bank", "cash", "wallet"],
-      "receive_currencies": ["PEN", "USD"],
-      "wallets": ["Yape"],
+      "methods": [
+        "bank",
+        "cash",
+        "wallet"
+      ],
+      "receive_currencies": [
+        "PEN",
+        "USD"
+      ],
+      "wallets": [
+        "Yape"
+      ],
       "referral_url": null,
-      "source_urls": ["https://www.xoom.com/peru"],
+      "source_urls": [
+        "https://www.xoom.com/peru"
+      ],
       "verified_at": "2026-10-17",
-      "active": true
+      "active": true,
+      "type": "remittance",
+      "countries": [
+        "PE"
+      ],
+      "referral_enabled": false,
+      "notes": null
+    },
+    {
+      "id": "worldremit",
+      "name": "WorldRemit",
+      "url": "https://www.worldremit.com/en-us/peru",
+      "type": "remittance",
+      "countries": [
+        "PE"
+      ],
+      "methods": [
+        "bank",
+        "cash",
+        "wallet"
+      ],
+      "receive_currencies": [
+        "PEN",
+        "USD"
+      ],
+      "wallets": [],
+      "referral_url": null,
+      "referral_enabled": false,
+      "source_urls": [
+        "https://www.worldremit.com/en-us/peru"
+      ],
+      "verified_at": "2026-10-17",
+      "active": true,
+      "notes": null
+    },
+    {
+      "id": "kambista",
+      "name": "Kambista",
+      "url": "https://kambista.com",
+      "type": "exchange",
+      "countries": [
+        "PE"
+      ],
+      "methods": [
+        "bank"
+      ],
+      "receive_currencies": [
+        "PEN",
+        "USD"
+      ],
+      "wallets": [],
+      "referral_url": null,
+      "referral_enabled": false,
+      "source_urls": [
+        "https://kambista.com"
+      ],
+      "verified_at": "2026-10-17",
+      "active": true,
+      "notes": "Casa de cambio online. Su web indica registro SBS-UIF 00335-2017."
+    },
+    {
+      "id": "rextie",
+      "name": "Rextie",
+      "url": "https://www.rextie.com",
+      "type": "exchange",
+      "countries": [
+        "PE"
+      ],
+      "methods": [
+        "bank"
+      ],
+      "receive_currencies": [
+        "PEN",
+        "USD"
+      ],
+      "wallets": [],
+      "referral_url": null,
+      "referral_enabled": false,
+      "source_urls": [
+        "https://www.rextie.com"
+      ],
+      "verified_at": "2026-10-17",
+      "active": true,
+      "notes": "Casa de cambio online. Su web no muestra el registro SBS en la portada (pendiente de verificar en la SBS)."
+    },
+    {
+      "id": "tkambio",
+      "name": "TKambio",
+      "url": "https://tkambio.com",
+      "type": "exchange",
+      "countries": [
+        "PE"
+      ],
+      "methods": [
+        "bank"
+      ],
+      "receive_currencies": [
+        "PEN",
+        "USD"
+      ],
+      "wallets": [],
+      "referral_url": null,
+      "referral_enabled": false,
+      "source_urls": [
+        "https://tkambio.com"
+      ],
+      "verified_at": "2026-10-17",
+      "active": true,
+      "notes": "Casa de cambio online. Su web indica inscripción en la SBS (Res. N° 03054-2017)."
     }
   ]
 }

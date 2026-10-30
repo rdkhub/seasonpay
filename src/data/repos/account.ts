@@ -2,6 +2,9 @@ import { db } from '../db';
 import { ensureProvidersSeeded } from './remit';
 import { ensureRulesSeeded } from './rules';
 import { signOutAndDeleteRemote } from '../sync/syncEngine';
+import { getInstallId, resetInstallIdCache } from '../install';
+import { getSupabase } from '../sync/supabaseClient';
+import { disableReminders } from '../push';
 
 /**
  * Borra todos los datos del usuario en este celular.
@@ -9,8 +12,15 @@ import { signOutAndDeleteRemote } from '../sync/syncEngine';
  * Las reglas oficiales (tax_rules) no son datos personales: se vuelven a cargar.
  */
 export async function deleteAllMyData(): Promise<void> {
+  // Feedback, encuesta, métricas y notificaciones de este celular (van por install_id, sin cuenta).
+  await disableReminders().catch(() => undefined);
+  const sb = await getSupabase();
+  if (sb && (typeof navigator === 'undefined' || navigator.onLine)) {
+    const { error } = await sb.rpc('delete_install_data', { p_install: await getInstallId() });
+    if (error) console.warn('[delete] install data', error);
+  }
   await signOutAndDeleteRemote();
-  await db.transaction('rw', [db.profile, db.employers, db.shifts, db.paystubs, db.savings, db.remitQuotes, db.remitProviders, db.outbox, db.meta, db.taxRules], async () => {
+  await db.transaction('rw', [db.profile, db.employers, db.shifts, db.paystubs, db.savings, db.remitQuotes, db.remitProviders, db.events, db.pending, db.outbox, db.meta, db.taxRules], async () => {
     await Promise.all([
       db.profile.clear(),
       db.employers.clear(),
@@ -19,6 +29,8 @@ export async function deleteAllMyData(): Promise<void> {
       db.savings.clear(),
       db.remitQuotes.clear(),
       db.remitProviders.clear(),
+      db.events.clear(),
+      db.pending.clear(),
       db.outbox.clear(),
       db.meta.clear(),
       db.taxRules.clear(),
@@ -29,6 +41,7 @@ export async function deleteAllMyData(): Promise<void> {
   } catch {
     /* almacenamiento bloqueado: no hay nada que limpiar */
   }
+  resetInstallIdCache();
   await ensureRulesSeeded();
   await ensureProvidersSeeded();
 }

@@ -1,14 +1,15 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AlertTriangle, ChevronRight, Plus, Receipt, ShieldAlert, ShieldCheck, ShieldQuestion } from 'lucide-react';
-import { addDays, comparePaystub, periodRange, type PaystubComparison } from '@/domain';
+import { addDays, comparePaystub, ficaAlertForPaystub, periodRange, type PaystubComparison } from '@/domain';
 import type { PaystubRow } from '@/data/db';
 import { useAllShiftsBetween, useEmployers, usePaystubs, useProfile, useRules } from '@/data/hooks';
 import { toEmployerConfig, toShiftInput } from '@/data/mappers';
 import { cn } from '@/shared/lib/cn';
 import { formatDateISO, formatMoney } from '@/shared/lib/format';
 import { useNow } from '@/shared/lib/useNow';
-import { Badge, Button, Card, EmptyState, MoneyDisplay, PressableCard, SectionTitle } from '@/shared/ui';
+import { Badge, Button, Card, EmptyState, MoneyDisplay, PressableCard, SectionTitle, TaxDisclaimer } from '@/shared/ui';
+import { track } from '@/data/telemetry';
 import { OfflinePill } from '@/shared/ui/OfflinePill';
 import { FicaSheet } from './FicaSheet';
 import { PaystubDetailSheet } from './PaystubDetailSheet';
@@ -66,12 +67,16 @@ export function PaystubsScreen() {
 
   const FicaIcon = fica.status === 'possibly_exempt' ? (fica.withheldCents > 0 ? ShieldAlert : ShieldCheck) : fica.status === 'unknown' ? ShieldQuestion : ShieldCheck;
   const ficaAlert = fica.showRefundFlow;
+  useEffect(() => {
+    if (ficaAlert) void track('fica_alert_shown');
+  }, [ficaAlert]);
 
   return (
     <div className="pb-24">
       <header className="mb-4 px-1 pt-2">
         <h1 className="text-[28px] font-semibold tracking-[-0.025em] text-ink">{t('paystubs.title')}</h1>
       </header>
+      <TaxDisclaimer className="mb-4" />
 
       <OfflinePill />
 
@@ -119,14 +124,23 @@ export function PaystubsScreen() {
             const noShifts = c?.flags.includes('no_shifts');
             const review = c && c.flags.length > 0 && !noShifts;
             return (
-              <PressableCard key={p.id} onClick={() => setDetail(p)} className="flex items-center gap-3">
+              <PressableCard
+                key={p.id}
+                onClick={() => {
+                  setDetail(p);
+                  // Métricas: boleta revisada y, si la comparación encontró diferencias, discrepancia.
+                  void track('paystub_reviewed');
+                  if ((c?.flags.length ?? 0) > 0) void track('discrepancy_detected', { flags: c!.flags.length });
+                }}
+                className="flex items-center gap-3"
+              >
                 <div className="min-w-0 flex-1">
                   <div className="tnum text-[15px] font-semibold text-ink">
                     {formatDateISO(p.periodStart, lang)} – {formatDateISO(p.periodEnd, lang)}
                   </div>
                   <div className="mt-0.5 flex items-center gap-2 truncate text-[13px] text-ink-3">
                     {employers?.find((e) => e.id === p.employerId)?.name}
-                    {p.socialSecurityCents + p.medicareCents > 0 && fica.status === 'possibly_exempt' && <AlertTriangle className="h-3.5 w-3.5 text-warn" aria-label="FICA" />}
+                    {ficaAlertForPaystub(fica, p) && <AlertTriangle className="h-3.5 w-3.5 text-warn" aria-label="FICA" />}
                   </div>
                 </div>
                 <div className="shrink-0 text-right">

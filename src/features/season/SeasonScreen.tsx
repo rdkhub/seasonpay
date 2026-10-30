@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { ArrowDownLeft, ArrowUpRight, Check, ChevronRight, Download, ExternalLink, PiggyBank, Send, Target } from 'lucide-react';
+import { ArrowDownLeft, ArrowUpRight, Check, ChevronRight, ClipboardList, Download, ExternalLink, PiggyBank, Send, Target } from 'lucide-react';
 import { summarizeSavings, toPenCents } from '@/domain';
 import type { SavingsKind, SavingsRow } from '@/data/db';
 import { fillPendingRates } from '@/data/fx';
@@ -12,11 +12,14 @@ import { formatDateISO, formatMoney, formatPen } from '@/shared/lib/format';
 import { centsToInput, parseMoneyInput } from '@/shared/lib/money';
 import { tap } from '@/shared/lib/haptics';
 import { useOnline } from '@/shared/lib/useOnline';
-import { Badge, Button, Card, EmptyState, Input, ListGroup, MoneyDisplay, PressableCard, SectionTitle, Sheet, useToast } from '@/shared/ui';
+import { Badge, Button, Card, EmptyState, Input, ListGroup, MoneyDisplay, PressableCard, SectionTitle, Sheet, TaxDisclaimer, useToast } from '@/shared/ui';
 import { OfflinePill } from '@/shared/ui/OfflinePill';
 import { CHECKLIST } from './checklist';
 import { ExportSheet } from './ExportSheet';
 import { SavingsSheet } from './SavingsSheet';
+import { DeadlinesCard } from './DeadlinesCard';
+import { SurveySheet } from './SurveySheet';
+import { useMetaValue } from '@/data/hooks';
 
 export function SeasonScreen() {
   const { t, i18n } = useTranslation();
@@ -39,6 +42,8 @@ export function SeasonScreen() {
   const [goalOpen, setGoalOpen] = useState(false);
   const [goal, setGoal] = useState('');
   const [exportOpen, setExportOpen] = useState(false);
+  const [surveyOpen, setSurveyOpen] = useState(false);
+  const surveyDone = useMetaValue<number>('surveyDone');
 
   const done = new Set(profile?.checklistDone ?? []);
   const toggle = (id: string) => {
@@ -49,7 +54,12 @@ export function SeasonScreen() {
     void saveProfile({ checklistDone: [...next] });
   };
 
-  const ruleOf = (key?: string) => (key ? rules?.find((r) => r.key === key) : undefined);
+  const ruleOf = (key?: string, stateRule?: boolean) =>
+    key
+      ? (rules ?? [])
+          .filter((r) => r.key === key && (!stateRule || r.jurisdiction === profile?.workState))
+          .sort((a, b) => b.year - a.year)[0]
+      : undefined;
   const addr8843 = (ruleOf('form_8843_filing')?.value as { without_return_mail_to?: string } | undefined)?.without_return_mail_to ?? '—';
 
   const saveGoal = async () => {
@@ -143,13 +153,18 @@ export function SeasonScreen() {
         <ChevronRight className="h-5 w-5 text-ink-3" />
       </PressableCard>
 
+      <SectionTitle>{t('deadlines.section')}</SectionTitle>
+      <DeadlinesCard rules={rules ?? []} workState={profile?.workState ?? null} />
+      <TaxDisclaimer className="mt-3" />
+
       <SectionTitle action={<span className="tnum text-[13px] font-medium text-ink-3">{t('season.checklistProgress', { done: CHECKLIST.filter((c) => done.has(c.id)).length, total: CHECKLIST.length })}</span>}>
         {t('season.checklist')}
       </SectionTitle>
       <ListGroup>
         {CHECKLIST.map((item) => {
           const isDone = done.has(item.id);
-          const rule = ruleOf(item.ruleKey);
+          const rule = ruleOf(item.ruleKey, item.stateRule);
+          const bodyKey = item.stateRule && !rule ? `checklist.${item.id}.bodyNoRule` : `checklist.${item.id}.body`;
           return (
             <div key={item.id} className="flex gap-3.5 px-4 py-3.5">
               <button
@@ -167,7 +182,7 @@ export function SeasonScreen() {
               </button>
               <div className="min-w-0 flex-1">
                 <p className={cn('text-[15px] font-semibold', isDone ? 'text-ink-3 line-through' : 'text-ink')}>{t(`checklist.${item.id}.title`)}</p>
-                <p className="mt-0.5 text-[13px] leading-snug text-ink-2">{t(`checklist.${item.id}.body`, { address: addr8843 })}</p>
+                <p className="mt-0.5 text-[13px] leading-snug text-ink-2">{t(bodyKey, { address: addr8843, state: profile?.workState ?? '' })}</p>
                 <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1">
                   {item.to && (
                     <button
@@ -203,6 +218,18 @@ export function SeasonScreen() {
         <ChevronRight className="h-5 w-5 text-ink-3" />
       </PressableCard>
 
+      <SectionTitle>{t('survey.section')}</SectionTitle>
+      <PressableCard onClick={() => setSurveyOpen(true)} className="flex items-center gap-3.5">
+        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-accent-soft text-accent">
+          <ClipboardList className="h-5 w-5" />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-[15px] font-semibold text-ink">{surveyDone ? t('survey.doneTitle') : t('survey.cardTitle')}</span>
+          <span className="mt-0.5 block text-[13px] leading-snug text-ink-2">{surveyDone ? t('survey.doneBody') : t('survey.cardBody')}</span>
+        </span>
+        <ChevronRight className="h-5 w-5 text-ink-3" />
+      </PressableCard>
+
       {/* Acciones principales, abajo */}
       <div className="pointer-events-none fixed inset-x-0 bottom-[calc(88px+env(safe-area-inset-bottom))] z-30 flex justify-center px-4">
         <div className="pointer-events-auto grid w-full max-w-lg grid-cols-2 gap-2.5">
@@ -217,6 +244,7 @@ export function SeasonScreen() {
 
       <SavingsSheet open={sheet.open} entry={sheet.entry} defaultKind={sheet.kind} onClose={() => setSheet((s) => ({ ...s, open: false }))} />
       <ExportSheet open={exportOpen} onClose={() => setExportOpen(false)} />
+      <SurveySheet open={surveyOpen} onClose={() => setSurveyOpen(false)} />
       <Sheet
         open={goalOpen}
         onClose={() => setGoalOpen(false)}

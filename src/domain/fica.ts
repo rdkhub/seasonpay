@@ -69,3 +69,11 @@ export function assessFica({ visaType, priorYearsInStatus, rules, withheldCents 
   const exempt = priorYearsInStatus < rules.teacherTraineePriorYearsLimit;
   return { ...base, status: exempt ? 'possibly_exempt' : 'may_be_resident', showRefundFlow: exempt && withheldCents > 0 };
 }
+
+/**
+ * Alerta en una boleta: el usuario J-1 podría estar exento (no residente según Pub 519)
+ * y la boleta muestra descuento de Social Security o Medicare.
+ */
+export function ficaAlertForPaystub(a: Pick<FicaAssessment, 'status'>, p: { socialSecurityCents: number; medicareCents: number }): boolean {
+  return a.status === 'possibly_exempt' && p.socialSecurityCents + p.medicareCents > 0;
+}

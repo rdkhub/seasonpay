@@ -4,6 +4,7 @@ import { getSyncSnapshot, onSyncChange } from './sync/syncEngine';
 import { db } from './db';
 import { listEmployers } from './repos/employers';
 import { listPaystubs } from './repos/paystubs';
+import { DEFAULT_CONFIG, parseConfig } from './repos/config';
 import { listProviders, listQuotes } from './repos/remit';
 import { listRules } from './repos/rules';
 import { listSavings } from './repos/savings';
@@ -58,6 +59,19 @@ export function useRemitProviders() {
 
 export function useRemitQuotes() {
   return useLiveQuery(() => listQuotes(), []);
+}
+
+/** Interruptores públicos (app_config). Mientras carga, los valores por defecto. */
+export function useAppConfig() {
+  return useLiveQuery(async () => parseConfig(await db.appConfig.toArray()), []) ?? DEFAULT_CONFIG;
+}
+
+export function usePendingSubmissions() {
+  return useLiveQuery(() => db.pending.count(), []);
+}
+
+export function useMetaValue<T>(key: string) {
+  return useLiveQuery(async () => (await db.meta.get(key))?.value as T | undefined, [key]);
 }
 
 /** Estado de la sincronización (sincronizando, al día, sin conexión…). */

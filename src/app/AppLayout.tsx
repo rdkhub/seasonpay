@@ -1,4 +1,6 @@
 import { Outlet } from 'react-router-dom';
+import { FeedbackSheet } from '@/features/feedback/FeedbackSheet';
+import { ConsentGate } from '@/features/privacy/ConsentSheet';
 import { BottomNav } from './BottomNav';
 
 export function AppLayout() {
@@ -8,6 +10,8 @@ export function AppLayout() {
         <Outlet />
       </main>
       <BottomNav />
+      <FeedbackSheet />
+      <ConsentGate />
     </>
   );
 }

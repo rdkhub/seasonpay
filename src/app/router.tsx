@@ -3,6 +3,8 @@ import { LandingScreen } from '@/features/landing/LandingScreen';
 import { OnboardingScreen } from '@/features/onboarding/OnboardingScreen';
 import { PaystubsScreen } from '@/features/paystubs/PaystubsScreen';
 import { RemitScreen } from '@/features/remit/RemitScreen';
+import { PrivacyScreen } from '@/features/privacy/PrivacyScreen';
+import { AdminScreen } from '@/features/admin/AdminScreen';
 import { SeasonScreen } from '@/features/season/SeasonScreen';
 import { SettingsScreen } from '@/features/settings/SettingsScreen';
 import { TodayScreen } from '@/features/shifts/TodayScreen';
@@ -16,6 +18,8 @@ export const router = createBrowserRouter([
     children: [
       { path: '/hola', element: <LandingScreen /> },
       { path: '/welcome', element: <OnboardingScreen /> },
+      { path: '/privacidad', element: <PrivacyScreen /> },
+      { path: '/privacy', element: <PrivacyScreen /> },
       {
         element: <AppLayout />,
         children: [
@@ -25,6 +29,7 @@ export const router = createBrowserRouter([
           { path: 'season', element: <SeasonScreen /> },
           { path: 'season/send', element: <RemitScreen /> },
           { path: 'settings', element: <SettingsScreen /> },
+          { path: 'admin', element: <AdminScreen /> },
         ],
       },
       { path: '*', element: <Navigate to="/" replace /> },

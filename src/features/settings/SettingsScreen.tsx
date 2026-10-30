@@ -1,14 +1,23 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { BookOpenCheck, Briefcase, Lock, Plus, Share2, Trash2, UserRound } from 'lucide-react';
+import { BarChart3, BookOpenCheck, Briefcase, FileJson, Lock, MessageCircle, MessageSquareHeart, Plus, ScrollText, Share2, ShieldCheck, Smartphone, Trash2, UserRound } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import type { EmployerRow, LanguagePref } from '@/data/db';
-import { useEmployers, useProfile, useRules } from '@/data/hooks';
+import { useAppConfig, useEmployers, useProfile, useRules } from '@/data/hooks';
+import { buildMyDataExport, myDataFile } from '@/data/exportAll';
+import { useAuth } from '@/data/sync/auth';
+import { checkIsAdmin } from '@/features/admin/adminApi';
+import { openFeedback } from '@/features/feedback/feedbackStore';
+import { InstallSheet } from '@/features/install/InstallSheet';
+import { installCase } from '@/features/install/installGuide';
+import { deliverFiles } from '@/shared/lib/download';
+import { track } from '@/data/telemetry';
 import { deleteAllMyData } from '@/data/repos/account';
 import { saveProfile } from '@/data/repos/profile';
 import { formatMoney } from '@/shared/lib/format';
 import { tap } from '@/shared/lib/haptics';
 import { stateName } from '@/shared/lib/usStates';
-import { Badge, Button, Card, EmptyState, ListGroup, ListRow, SectionTitle, SegmentedControl, Sheet, useToast } from '@/shared/ui';
+import { Badge, Button, Card, EmptyState, ListGroup, ListRow, SectionTitle, SegmentedControl, Sheet, Toggle, useToast } from '@/shared/ui';
 import { AccountSection } from '@/features/account/AccountSection';
 import { EmployerSheet } from './EmployerSheet';
 import { ProfileSheet } from './ProfileSheet';
@@ -20,6 +29,31 @@ export function SettingsScreen() {
   const profile = useProfile();
   const employers = useEmployers(true);
   const rules = useRules();
+  const config = useAppConfig();
+  const navigate = useNavigate();
+  const { session } = useAuth();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [installOpen, setInstallOpen] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const installed = installCase() === 'installed';
+
+  useEffect(() => {
+    if (session) void checkIsAdmin().then(setIsAdmin);
+    else setIsAdmin(false);
+  }, [session]);
+
+  const exportJson = async () => {
+    setExporting(true);
+    try {
+      const r = await deliverFiles([myDataFile(await buildMyDataExport())]);
+      if (r !== 'cancelled') {
+        toast(t('export.done'));
+        void track('export_made', { kind: 'json' });
+      }
+    } finally {
+      setExporting(false);
+    }
+  };
 
   const [employerSheet, setEmployerSheet] = useState<{ open: boolean; employer: EmployerRow | null }>({ open: false, employer: null });
   const [profileOpen, setProfileOpen] = useState(false);
@@ -45,8 +79,9 @@ export function SettingsScreen() {
 
   return (
     <div>
-      <header className="mb-5 px-1 pt-2">
+      <header className="mb-5 flex items-center justify-between gap-3 px-1 pt-2">
         <h1 className="text-[28px] font-semibold tracking-[-0.025em] text-ink">{t('settings.title')}</h1>
+        <Badge tone="accent">{t('pilot.beta')}</Badge>
       </header>
 
       <SectionTitle>{t('settings.language')}</SectionTitle>
@@ -127,8 +162,11 @@ export function SettingsScreen() {
         <ListRow icon={<BookOpenCheck />} title={t('settings.sources')} subtitle={t('settings.sourcesSub')} onClick={() => setRulesOpen(true)} />
       </ListGroup>
 
-      <SectionTitle>{t('settings.shareSection')}</SectionTitle>
+      <SectionTitle>{t('pilot.section')}</SectionTitle>
       <ListGroup>
+        <ListRow icon={<MessageSquareHeart />} title={t('feedback.title')} subtitle={t('feedback.rowSub')} onClick={() => void openFeedback()} />
+        {config.whatsappGroupUrl && <ListRow icon={<MessageCircle />} title={t('feedback.whatsapp')} subtitle={t('feedback.whatsappSub')} href={config.whatsappGroupUrl} />}
+        {!installed && <ListRow icon={<Smartphone />} title={t('install.title')} subtitle={t('install.rowSub')} onClick={() => setInstallOpen(true)} />}
         <ListRow
           icon={<Share2 />}
           title={t('settings.share')}
@@ -156,17 +194,43 @@ export function SettingsScreen() {
         </span>
         <p className="text-[14px] leading-snug text-ink-2">{t('settings.privacyBody')}</p>
       </Card>
+      <div className="mt-3">
+        <ListGroup>
+          <ListRow icon={<ScrollText />} title={t('privacyPolicy.title')} onClick={() => navigate('/privacidad')} />
+          <ListRow icon={<FileJson />} title={t('settings.exportMine')} subtitle={exporting ? t('export.making') : t('settings.exportMineSub')} onClick={() => void exportJson()} />
+        </ListGroup>
+      </div>
+      <Card className="mt-3">
+        <Toggle
+          checked={!(profile?.analyticsOptOut ?? false)}
+          onChange={(on) => void saveProfile({ analyticsOptOut: !on })}
+          label={t('settings.metrics')}
+          description={t('settings.metricsSub')}
+        />
+      </Card>
 
       <SectionTitle>{t('settings.danger')}</SectionTitle>
       <ListGroup>
         <ListRow icon={<Trash2 />} tone="danger" title={t('settings.deleteAll')} subtitle={t('settings.deleteAllSub')} onClick={() => setDeleteOpen(true)} />
       </ListGroup>
 
-      <p className="mt-8 text-center text-[12px] text-ink-3">SeasonPay · {t('settings.version', { v: __APP_VERSION__ })}</p>
+      {isAdmin && (
+        <>
+          <SectionTitle>{t('admin.title')}</SectionTitle>
+          <ListGroup>
+            <ListRow icon={<BarChart3 />} title={t('admin.open')} subtitle={t('admin.openSub')} onClick={() => navigate('/admin')} />
+          </ListGroup>
+        </>
+      )}
+
+      <p className="mt-8 flex items-center justify-center gap-1.5 text-center text-[12px] text-ink-3">
+        <ShieldCheck className="h-3.5 w-3.5" /> SeasonPay · {t('pilot.beta')} · {t('settings.version', { v: __APP_VERSION__ })}
+      </p>
 
       <EmployerSheet open={employerSheet.open} employer={employerSheet.employer} onClose={() => setEmployerSheet((s) => ({ ...s, open: false }))} />
       <ProfileSheet open={profileOpen} onClose={() => setProfileOpen(false)} profile={profile ?? null} />
       <RulesSheet open={rulesOpen} onClose={() => setRulesOpen(false)} rules={rules ?? []} />
+      <InstallSheet open={installOpen} onClose={() => setInstallOpen(false)} />
 
       <Sheet
         open={deleteOpen}

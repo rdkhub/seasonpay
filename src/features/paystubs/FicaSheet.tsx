@@ -5,7 +5,7 @@ import type { FicaAssessment } from '@/domain';
 import type { TaxRuleRow } from '@/data/db';
 import { saveProfile } from '@/data/repos/profile';
 import { formatDateISO, formatMoney } from '@/shared/lib/format';
-import { Button, Sheet, Stepper, useToast } from '@/shared/ui';
+import { Button, Sheet, Stepper, useToast, TaxDisclaimer } from '@/shared/ui';
 
 interface Props {
   open: boolean;
@@ -37,6 +37,7 @@ export function FicaSheet({ open, onClose, assessment: a, rules }: Props) {
   return (
     <Sheet open={open} onClose={onClose} title={t('fica.sheetTitle')} description={t(`fica.${a.status}`)}>
       <div className="flex flex-col gap-6 pb-2">
+        <TaxDisclaimer />
         <p className="text-[15px] leading-relaxed text-ink-2">{t(`fica.${a.status}Body`, { year: a.yearInStatus ?? '—' })}</p>
 
         <div className="flex flex-col gap-3">

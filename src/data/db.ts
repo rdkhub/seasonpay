@@ -25,6 +25,11 @@ export interface ProfileRow {
   savingsGoalCents: number | null;
   /** Ids de los pasos del checklist de fin de temporada que ya hizo */
   checklistDone: string[];
+  /** Cuándo aceptó la política de privacidad y qué versión */
+  consentAt: number | null;
+  consentVersion: string | null;
+  /** true = no enviar métricas anónimas */
+  analyticsOptOut: boolean;
   onboardedAt: number | null;
   createdAt: number;
   updatedAt: number;
@@ -122,9 +127,16 @@ export interface TaxRuleRow {
 
 export type RemitMethod = 'bank' | 'cash' | 'wallet';
 
+export type RemitProviderType = 'remittance' | 'exchange';
+
 export interface RemitProviderRow {
   id: string;
   name: string;
+  type: RemitProviderType;
+  /** Países de destino verificados (ISO alfa-2) */
+  countries: string[];
+  referralEnabled: boolean;
+  notes: string | null;
   url: string;
   methods: RemitMethod[];
   receiveCurrencies: ('PEN' | 'USD')[];
@@ -143,6 +155,43 @@ export interface RemitQuoteRow {
   totalPaidCents: number;
   receivedCents: number;
   receiveCurrency: 'PEN' | 'USD';
+  createdAt: number;
+}
+
+/** Interruptores públicos (tabla app_config de Supabase) */
+export interface AppConfigRow {
+  key: string;
+  value: unknown;
+}
+
+export type EventName =
+  | 'signup'
+  | 'account_created'
+  | 'app_open'
+  | 'shift_logged'
+  | 'paystub_reviewed'
+  | 'discrepancy_detected'
+  | 'fica_alert_shown'
+  | 'feedback_sent'
+  | 'survey_sent'
+  | 'export_made'
+  | 'remit_quote_added'
+  | 'install_completed'
+  | 'push_enabled';
+
+/** Evento de métricas en cola (sin datos personales) */
+export interface EventRow {
+  seq?: number;
+  name: EventName;
+  props: Record<string, string | number | boolean>;
+  clientAt: number;
+}
+
+/** Envíos a Supabase que esperan señal: feedback y encuesta */
+export interface PendingSubmissionRow {
+  id: string;
+  kind: 'feedback' | 'survey';
+  payload: Record<string, unknown>;
   createdAt: number;
 }
 
@@ -169,6 +218,9 @@ export class SeasonPayDB extends Dexie {
   taxRules!: EntityTable<TaxRuleRow, 'id'>;
   remitProviders!: EntityTable<RemitProviderRow, 'id'>;
   remitQuotes!: EntityTable<RemitQuoteRow, 'id'>;
+  appConfig!: EntityTable<AppConfigRow, 'key'>;
+  events!: EntityTable<EventRow, 'seq'>;
+  pending!: EntityTable<PendingSubmissionRow, 'id'>;
   outbox!: EntityTable<OutboxRow, 'seq'>;
   meta!: EntityTable<MetaRow, 'key'>;
 
@@ -195,6 +247,32 @@ export class SeasonPayDB extends Dexie {
       remitProviders: 'id',
       remitQuotes: 'id, createdAt',
     });
+    // v5 (pre-temporada): configuración pública, cola de métricas y envíos pendientes.
+    this.version(5)
+      .stores({
+        appConfig: 'key',
+        events: '++seq, clientAt',
+        pending: 'id, kind, createdAt',
+      })
+      .upgrade(async (tx) => {
+        await tx
+          .table('profile')
+          .toCollection()
+          .modify((p: Partial<ProfileRow>) => {
+            p.consentAt ??= null;
+            p.consentVersion ??= null;
+            p.analyticsOptOut ??= false;
+          });
+        await tx
+          .table('remitProviders')
+          .toCollection()
+          .modify((r: Partial<RemitProviderRow>) => {
+            r.type ??= 'remittance';
+            r.countries ??= ['PE'];
+            r.referralEnabled ??= false;
+            r.notes ??= null;
+          });
+      });
   }
 }
 

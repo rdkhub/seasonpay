@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { ExternalLink, ShieldCheck } from 'lucide-react';
 import type { TaxRuleRow } from '@/data/db';
 import { formatDateISO } from '@/shared/lib/format';
-import { Badge, Sheet } from '@/shared/ui';
+import { Badge, Sheet, TaxDisclaimer } from '@/shared/ui';
 
 /** Muestra cada regla con su fuente oficial y fecha de verificación (requisito del proyecto). */
 export function RulesSheet({ open, onClose, rules }: { open: boolean; onClose: () => void; rules: TaxRuleRow[] }) {
@@ -10,6 +10,7 @@ export function RulesSheet({ open, onClose, rules }: { open: boolean; onClose: (
   return (
     <Sheet open={open} onClose={onClose} title={t('settings.sourcesTitle')} description={t('settings.sourcesBody')}>
       <div className="flex flex-col gap-3 pb-2">
+        <TaxDisclaimer />
         {rules.map((r) => {
           const host = safeHost(r.sourceUrl);
           const summary = summarize(r, t);

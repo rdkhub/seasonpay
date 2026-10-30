@@ -17,7 +17,7 @@ export function RootGate() {
   }
   const onboarded = !!profile?.onboardedAt;
   // La página pública (/hola) se puede abrir siempre; el resto depende del onboarding.
-  if (pathname === '/hola') return <Outlet />;
+  if (pathname === '/hola' || pathname === '/privacidad' || pathname === '/privacy') return <Outlet />;
   if (!onboarded && pathname !== '/welcome') return <Navigate to={shouldShowLanding() ? '/hola' : '/welcome'} replace />;
   if (onboarded && pathname === '/welcome') return <Navigate to="/" replace />;
   return <Outlet />;

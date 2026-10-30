@@ -1,6 +1,8 @@
 export { Button } from './Button';
 export { Card, PressableCard, SectionTitle } from './Card';
-export { Input, Select, FieldShell } from './Input';
+export { Input, Select, FieldShell, TextArea } from './Input';
+export { Checkbox } from './Checkbox';
+export { TaxDisclaimer } from './TaxDisclaimer';
 export { MoneyDisplay } from './MoneyDisplay';
 export { Sheet } from './Sheet';
 export { Toggle } from './Toggle';

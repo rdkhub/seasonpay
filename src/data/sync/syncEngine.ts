@@ -14,6 +14,8 @@ import {
 } from './mapping';
 import { getSupabase, hasSupabaseConfig, SYNC_ENABLED } from './supabaseClient';
 import { providerFromRemote } from '../repos/remit';
+import { flushPending } from '../repos/submissions';
+import { flushTelemetry } from '../telemetry';
 
 /**
  * Motor de sincronización offline-first.
@@ -178,6 +180,17 @@ async function pullProviders(): Promise<void> {
   });
 }
 
+async function pullConfig(): Promise<void> {
+  const sb = (await getSupabase())!;
+  const { data, error } = await sb.from('app_config').select('key, value');
+  if (error) throw error;
+  if (!data) return;
+  await db.transaction('rw', db.appConfig, async () => {
+    await db.appConfig.clear();
+    await db.appConfig.bulkPut(data.map((r) => ({ key: r.key as string, value: r.value })));
+  });
+}
+
 let running: Promise<void> | null = null;
 let again = false;
 
@@ -193,6 +206,10 @@ export async function syncNow(): Promise<void> {
       setStatus('syncing');
       await pullRules().catch((e) => console.warn('[sync] rules', e));
       await pullProviders().catch((e) => console.warn('[sync] providers', e));
+      await pullConfig().catch((e) => console.warn('[sync] config', e));
+      // Métricas, feedback y encuesta no necesitan sesión.
+      await flushTelemetry();
+      await flushPending().catch((e) => console.warn('[sync] pending', e));
       const userId = await currentUserId();
       if (!userId) return setStatus('signed_out');
       await push(userId);
@@ -234,18 +251,21 @@ export function startAutoSync(intervalMs = 60_000): () => void {
   // Cada cambio local entra a la cola: sincronizamos poco después.
   const onQueued = () => requestSync();
   db.outbox.hook('creating', onQueued);
+  db.pending.hook('creating', onQueued);
   kick();
   return () => {
     window.removeEventListener('online', kick);
     document.removeEventListener('visibilitychange', onVisible);
     window.clearInterval(timer);
     db.outbox.hook('creating').unsubscribe(onQueued);
+    db.pending.hook('creating').unsubscribe(onQueued);
   };
 }
 
 /** Borra los datos personales de este celular (las reglas oficiales se quedan). */
 export async function clearLocalPersonalData(): Promise<void> {
   await db.transaction('rw', [db.profile, db.employers, db.shifts, db.paystubs, db.savings, db.remitQuotes, db.outbox, db.meta], async () => {
+    // La cola de métricas y feedback no se borra al cerrar sesión: no tiene datos de la cuenta.
     await Promise.all([db.profile.clear(), db.employers.clear(), db.shifts.clear(), db.paystubs.clear(), db.savings.clear(), db.remitQuotes.clear(), db.outbox.clear()]);
     // Cursores de datos personales; los de datos públicos (reglas, proveedores) se conservan.
     const keys = (await db.meta.toArray()).map((m) => m.key).filter((k) => k.startsWith('pull:') && k !== 'pull:tax_rules' && k !== 'pull:remit_providers');

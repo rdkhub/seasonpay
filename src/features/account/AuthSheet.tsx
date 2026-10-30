@@ -5,6 +5,8 @@ import { googleAuthEnabled, sendEmailCode, signInWithGoogle, verifyEmailCode, ty
 import { syncNow } from '@/data/sync/syncEngine';
 import { tap } from '@/shared/lib/haptics';
 import { Button, Input, Sheet, useToast } from '@/shared/ui';
+import { useProfile } from '@/data/hooks';
+import { ConsentCheckbox } from '@/features/privacy/ConsentSheet';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const RESEND_SECONDS = 60;
@@ -26,12 +28,19 @@ export function AuthSheet({ open, onClose, onSignedIn }: Props) {
   const [error, setError] = useState<AuthError | 'email' | null>(null);
   const [busy, setBusy] = useState(false);
   const [wait, setWait] = useState(0);
+  const profile = useProfile();
+  // Crear cuenta exige aceptar la política. Si ya la aceptó en la bienvenida, no se repite.
+  const needsConsent = !profile?.consentAt;
+  const [consent, setConsent] = useState(false);
+  const [consentError, setConsentError] = useState(false);
 
   useEffect(() => {
     if (open) {
       setStep('email');
       setCode('');
       setError(null);
+      setConsent(false);
+      setConsentError(false);
     }
   }, [open]);
 
@@ -46,6 +55,10 @@ export function AuthSheet({ open, onClose, onSignedIn }: Props) {
     if (!EMAIL_RE.test(e)) {
       tap('warning');
       return setError('email');
+    }
+    if (needsConsent && !consent) {
+      tap('warning');
+      return setConsentError(true);
     }
     setBusy(true);
     setError(null);
@@ -124,6 +137,7 @@ export function AuthSheet({ open, onClose, onSignedIn }: Props) {
               onKeyDown={(e) => e.key === 'Enter' && void send()}
               autoFocus
             />
+            {needsConsent && <ConsentCheckbox checked={consent} onChange={(v) => (setConsent(v), setConsentError(false))} error={consentError} />}
             {googleAuthEnabled() && (
               <>
                 <div className="flex items-center gap-3 text-[13px] text-ink-3">
@@ -131,7 +145,18 @@ export function AuthSheet({ open, onClose, onSignedIn }: Props) {
                   {t('account.or')}
                   <span className="h-px flex-1 bg-line" />
                 </div>
-                <Button variant="secondary" size="lg" block onClick={() => void signInWithGoogle()}>
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  block
+                  onClick={() => {
+                    if (needsConsent && !consent) {
+                      tap('warning');
+                      return setConsentError(true);
+                    }
+                    void signInWithGoogle();
+                  }}
+                >
                   {t('account.google')}
                 </Button>
               </>

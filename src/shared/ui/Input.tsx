@@ -1,4 +1,4 @@
-import { forwardRef, useId, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes } from 'react';
+import { forwardRef, useId, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes, type TextareaHTMLAttributes } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { cn } from '@/shared/lib/cn';
 
@@ -97,6 +97,32 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
         </select>
         <ChevronDown aria-hidden className="pointer-events-none absolute right-4 h-5 w-5 text-ink-3" />
       </div>
+    </FieldShell>
+  );
+});
+
+export interface TextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+  label?: ReactNode;
+  hint?: ReactNode;
+  error?: ReactNode;
+}
+
+export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function TextArea({ label, hint, error, className, id, rows = 3, ...rest }, ref) {
+  const auto = useId();
+  const areaId = id ?? auto;
+  return (
+    <FieldShell label={label} hint={hint} error={error} htmlFor={areaId} className={className}>
+      <textarea
+        ref={ref}
+        id={areaId}
+        rows={rows}
+        aria-invalid={!!error || undefined}
+        className={cn(
+          'w-full resize-none rounded-2xl bg-surface-2 px-4 py-3.5 text-[17px] leading-snug text-ink outline-none ring-1 transition-shadow duration-150 placeholder:text-ink-3',
+          error ? 'ring-danger' : 'ring-transparent focus:ring-2 focus:ring-accent',
+        )}
+        {...rest}
+      />
     </FieldShell>
   );
 });

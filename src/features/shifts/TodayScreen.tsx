@@ -1,6 +1,9 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { HandCoins, Play, Plus, Square, Sun } from 'lucide-react';
+import { HandCoins, MessageSquareHeart, Play, Plus, Smartphone, Square, Sun, X } from 'lucide-react';
+import { openFeedback } from '@/features/feedback/feedbackStore';
+import { InstallSheet } from '@/features/install/InstallSheet';
+import { dismissInstallOffer, shouldOfferInstall } from '@/features/install/installGuide';
 import { startOfDay, addDays } from '@/domain';
 import { db, type ShiftRow } from '@/data/db';
 import { useActiveShift } from '@/data/hooks';
@@ -29,6 +32,8 @@ export function TodayScreen() {
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<ShiftRow | null>(null);
   const [finishing, setFinishing] = useState<ShiftRow | null>(null);
+  const [offerInstall, setOfferInstall] = useState(() => shouldOfferInstall());
+  const [installOpen, setInstallOpen] = useState(false);
 
   const activeEmployers = week.employers.filter((e) => !e.archived);
   const dayFrom = startOfDay(now);
@@ -77,9 +82,40 @@ export function TodayScreen() {
           <p className="text-[13px] font-semibold uppercase tracking-[0.06em] text-ink-3">{t('common.today')}</p>
           <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-ink">{formatLongDate(now, lang)}</h1>
         </div>
+        <button
+          type="button"
+          data-no-capture
+          aria-label={t('feedback.title')}
+          onClick={() => void openFeedback()}
+          className="-mr-1 grid h-11 w-11 place-items-center rounded-full bg-surface text-accent shadow-card ring-1 ring-line/70 active:scale-95"
+        >
+          <MessageSquareHeart className="h-5 w-5" />
+        </button>
       </header>
 
       <OfflinePill />
+
+      {offerInstall && (
+        <div data-no-capture className="mb-3 flex items-center gap-3 rounded-2xl bg-accent-soft px-4 py-3">
+          <Smartphone className="h-5 w-5 shrink-0 text-accent" />
+          <button type="button" onClick={() => setInstallOpen(true)} className="min-w-0 flex-1 text-left">
+            <span className="block text-[14px] font-semibold text-ink">{t('install.cardTitle')}</span>
+            <span className="block text-[13px] leading-snug text-ink-2">{t('install.cardBody')}</span>
+          </button>
+          <button
+            type="button"
+            aria-label={t('common.close')}
+            onClick={() => {
+              dismissInstallOffer();
+              setOfferInstall(false);
+            }}
+            className="-mr-2 grid h-11 w-11 shrink-0 place-items-center rounded-full text-ink-3"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
+      <InstallSheet open={installOpen} onClose={() => setInstallOpen(false)} />
 
       {/* Dato principal: lo ganado en la semana */}
       <Card tone="hero" className="animate-rise-in p-6">

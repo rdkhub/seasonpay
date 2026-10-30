@@ -8,6 +8,8 @@ export interface ChecklistItem {
   to?: '/paystubs' | 'export' | 'savings';
   /** Clave de tax_rules cuya fuente se muestra */
   ruleKey?: string;
+  /** La regla es del estado donde trabaja (jurisdicción = workState) */
+  stateRule?: boolean;
 }
 
 export const CHECKLIST: ChecklistItem[] = [
@@ -16,6 +18,7 @@ export const CHECKLIST: ChecklistItem[] = [
   { id: 'fica_check', to: '/paystubs', ruleKey: 'fica_refund_procedure' },
   { id: 'form_8843', ruleKey: 'form_8843_filing' },
   { id: 'form_1040nr', ruleKey: 'form_1040nr_purpose' },
+  { id: 'state_return', ruleKey: 'state_return_nonresident', stateRule: true },
   { id: 'documents' },
   { id: 'bank' },
   { id: 'savings', to: 'savings' },

@@ -1,6 +1,7 @@
 import { newId } from '@/shared/lib/id';
 import { db, type ShiftRow } from '../db';
 import { enqueue } from '../outbox';
+import { track } from '../telemetry';
 
 const DAY = 86_400_000;
 
@@ -29,6 +30,12 @@ export async function activeShift(now = Date.now()): Promise<ShiftRow | undefine
 }
 
 export async function createShift(draft: ShiftDraft): Promise<ShiftRow> {
+  const row = await insertShift(draft);
+  if (row.endedAt !== null) void track('shift_logged', { mode: 'manual' });
+  return row;
+}
+
+async function insertShift(draft: ShiftDraft): Promise<ShiftRow> {
   return db.transaction('rw', db.shifts, db.outbox, async () => {
     const now = Date.now();
     const row: ShiftRow = {
@@ -71,6 +78,7 @@ export async function stopShift(id: string, at = Date.now()): Promise<void> {
   if (!current) return;
   // Si se detiene en el mismo minuto, dejamos al menos 1 minuto para que el turno sea válido.
   await updateShift(id, { endedAt: Math.max(at, current.startedAt + 60_000) });
+  void track('shift_logged', { mode: 'timer' });
 }
 
 /** Borrado lógico (lápida) para que el borrado también se sincronice. */

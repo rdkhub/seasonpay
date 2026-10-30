@@ -1,23 +1,33 @@
 import { db, type RemitProviderRow, type RemitQuoteRow } from '../db';
 import seed from '../seed/remitProviders.json';
+import { sortProvidersNeutral } from '@/domain/referrals';
+import { track } from '../telemetry';
 
 interface SeedProvider {
   id: string;
   name: string;
   url: string;
+  type?: RemitProviderRow['type'];
+  countries?: string[];
+  referral_enabled?: boolean;
+  notes?: string | null;
   methods: RemitProviderRow['methods'];
   receive_currencies: RemitProviderRow['receiveCurrencies'];
   wallets: string[];
   referral_url: string | null;
   source_urls: string[];
   verified_at: string;
-  active: boolean;
+  active?: boolean;
 }
 
 export const providerFromRemote = (r: SeedProvider): RemitProviderRow => ({
   id: r.id,
   name: r.name,
   url: r.url,
+  type: r.type === 'exchange' ? 'exchange' : 'remittance',
+  countries: r.countries && r.countries.length > 0 ? r.countries : ['PE'],
+  referralEnabled: r.referral_enabled === true,
+  notes: r.notes ?? null,
   methods: r.methods,
   receiveCurrencies: r.receive_currencies,
   wallets: r.wallets ?? [],
@@ -42,7 +52,7 @@ export async function ensureProvidersSeeded(): Promise<void> {
 /** Orden alfabético: neutral, no depende de quién tenga link de referido. */
 export async function listProviders(): Promise<RemitProviderRow[]> {
   const rows = await db.remitProviders.toArray();
-  return rows.filter((p) => p.active).sort((a, b) => a.name.localeCompare(b.name));
+  return sortProvidersNeutral(rows.filter((p) => p.active));
 }
 
 export async function listQuotes(): Promise<RemitQuoteRow[]> {
@@ -51,6 +61,7 @@ export async function listQuotes(): Promise<RemitQuoteRow[]> {
 
 export async function addQuote(q: Omit<RemitQuoteRow, 'id' | 'createdAt'>): Promise<void> {
   await db.remitQuotes.add({ ...q, id: crypto.randomUUID(), createdAt: Date.now() });
+  await track('remit_quote_added', { provider: q.providerId, currency: q.receiveCurrency });
 }
 
 export async function deleteQuote(id: string): Promise<void> {
