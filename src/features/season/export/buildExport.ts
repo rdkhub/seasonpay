@@ -7,7 +7,7 @@ import { listPaystubs } from '@/data/repos/paystubs';
 import { listRules } from '@/data/repos/rules';
 import { listSavings } from '@/data/repos/savings';
 import { ficaRulesFrom, priorYearsOf } from '@/features/paystubs/useFica';
-import { formatDateISO, formatHours, formatMoney, formatPen } from '@/shared/lib/format';
+import { formatDateISO, formatHours, formatLocal, formatMoney } from '@/shared/lib/format';
 import { centsToDecimal, minutesToHours, toCsv } from './csv';
 
 export type ExportRange = 'all' | 'thisYear';
@@ -57,7 +57,7 @@ export async function gatherExport(range: ExportRange, now = Date.now()) {
     withheldCents: stubTotals.ss + stubTotals.medicare,
   });
 
-  const savingsSummary = summarizeSavings(savings, profile?.savingsGoalCents ?? null);
+  const savingsSummary = summarizeSavings(savings, profile?.savingsGoalCents ?? null, profile?.homeCurrency ?? 'PEN');
   const employerName = new Map(employers.map((e) => [e.id, e.name]));
   return { shifts, paystubs, savings, employers, employerName, work, stubTotals, fica, savingsSummary, rules, from, to, now };
 }
@@ -107,11 +107,12 @@ export function buildCsvFiles(d: ExportData): File[] {
     ]),
   );
   const savingsCsv = toCsv(
-    ['fecha', 'tipo', 'usd', 'tipo_cambio', 'fecha_tipo_cambio', 'fuente_tipo_cambio', 'soles', 'nota'],
+    ['fecha', 'tipo', 'usd', 'moneda_local', 'tipo_cambio', 'fecha_tipo_cambio', 'fuente_tipo_cambio', 'monto_local', 'nota'],
     d.savings.map((s) => [
       s.date,
       s.kind === 'save' ? 'ahorro' : 'retiro',
       centsToDecimal(s.amountCents),
+      s.fxCurrency ?? 'PEN',
       s.fxRate,
       s.fxDate,
       s.fxSource,
@@ -231,7 +232,8 @@ export async function buildPdf(d: ExportData, t: TFunction, lang: string): Promi
 
   section(t('export.secSavings'));
   row(t('export.saved'), m(d.savingsSummary.balanceCents));
-  row(t('export.savedPen'), formatPen(d.savingsSummary.balancePenCents, lang));
+  if (d.savingsSummary.currency !== 'USD')
+    row(t('export.savedPen', { name: t(`money.name.${d.savingsSummary.currency}`) }), formatLocal(d.savingsSummary.balanceLocalCents, d.savingsSummary.currency, lang));
 
   section(t('export.secSources'));
   const used = d.rules.filter((r) => ['overtime_weekly', 'fica_exemption_nonresident_fjmq', 'fica_refund_procedure', 'form_8843_filing', 'fx_usd_pen_series'].includes(r.key));

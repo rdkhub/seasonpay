@@ -21,6 +21,7 @@ export async function saveProfile(patch: Partial<Omit<ProfileRow, 'id' | 'create
       consentAt: null,
       consentVersion: null,
       analyticsOptOut: false,
+      homeCurrency: 'PEN',
       onboardedAt: null,
       createdAt: current?.createdAt ?? now,
       ...current,

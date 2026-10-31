@@ -1,14 +1,34 @@
 import { useTranslation } from 'react-i18next';
 import { ExternalLink, ShieldCheck } from 'lucide-react';
 import type { TaxRuleRow } from '@/data/db';
+import { CURRENCY_COUNTRY, type HomeCurrency } from '@/domain/currency';
 import { formatDateISO } from '@/shared/lib/format';
 import { Badge, Sheet, TaxDisclaimer } from '@/shared/ui';
 
 /** Muestra cada regla con su fuente oficial y fecha de verificación (requisito del proyecto). */
-export function RulesSheet({ open, onClose, rules: all, state }: { open: boolean; onClose: () => void; rules: TaxRuleRow[]; state?: string | null }) {
+const STATE_KEYS = new Set(['overtime_state', 'state_return_nonresident', 'state_return_due_date']);
+
+export function RulesSheet({
+  open,
+  onClose,
+  rules: all,
+  state,
+  currency = 'PEN',
+}: {
+  open: boolean;
+  onClose: () => void;
+  rules: TaxRuleRow[];
+  state?: string | null;
+  currency?: HomeCurrency;
+}) {
   const { t, i18n } = useTranslation();
-  // De las reglas por estado (overtime de 51 jurisdicciones) solo se muestra la del estado del usuario.
-  const rules = all.filter((r) => r.key !== 'overtime_state' || r.jurisdiction === state);
+  // Reglas por estado: solo las del estado del usuario. Tipo de cambio: solo el de su moneda.
+  const rules = all.filter((r) => {
+    if (STATE_KEYS.has(r.key)) return r.jurisdiction === state;
+    if (r.key === 'fx_usd_local') return r.jurisdiction === CURRENCY_COUNTRY[currency];
+    if (r.key.startsWith('fx_usd_pen')) return currency === 'PEN';
+    return true;
+  });
   return (
     <Sheet open={open} onClose={onClose} title={t('settings.sourcesTitle')} description={t('settings.sourcesBody')}>
       <div className="flex flex-col gap-3 pb-2">

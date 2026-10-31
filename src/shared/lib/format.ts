@@ -1,3 +1,4 @@
+import { CURRENCY_DECIMALS, CURRENCY_SYMBOL, type HomeCurrency } from '@/domain/currency';
 /** Formatos de dinero, horas y fechas según el idioma activo. */
 
 const localeFor = (lang: string) => (lang.startsWith('en') ? 'en-US' : 'es-US');
@@ -117,4 +118,24 @@ export function formatPen(cents: number, lang: string): string {
   }
   const sign = cents < 0 ? '−' : '';
   return `${sign}S/ ${f.format(Math.abs(cents) / 100)}`;
+}
+
+const localCache = new Map<string, Intl.NumberFormat>();
+/** Centavos de la moneda local → "R$ 1.234,56", "COP $ 3.166.910", "S/ 3,438.00". */
+export function formatLocal(cents: number, currency: HomeCurrency, lang: string): string {
+  const dec = CURRENCY_DECIMALS[currency];
+  const key = `${lang}:${dec}`;
+  let f = localCache.get(key);
+  if (!f) {
+    f = new Intl.NumberFormat(localeFor(lang), { minimumFractionDigits: dec, maximumFractionDigits: dec });
+    localCache.set(key, f);
+  }
+  const sign = cents < 0 ? '−' : '';
+  return `${sign}${CURRENCY_SYMBOL[currency]} ${f.format(Math.abs(cents) / 100)}`;
+}
+
+/** Tipo de cambio con los decimales que publica cada fuente (3 para soles, 4 para reales, 2 para el resto). */
+export function formatRate(rate: number, currency: HomeCurrency, lang: string): string {
+  const dec = currency === 'PEN' ? 3 : currency === 'BRL' ? 4 : 2;
+  return new Intl.NumberFormat(localeFor(lang), { minimumFractionDigits: dec, maximumFractionDigits: dec }).format(rate);
 }

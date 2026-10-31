@@ -1,3 +1,4 @@
+import type { HomeCurrency } from '@/domain/currency';
 import Dexie, { type EntityTable } from 'dexie';
 
 /**
@@ -30,6 +31,8 @@ export interface ProfileRow {
   consentVersion: string | null;
   /** true = no enviar métricas anónimas */
   analyticsOptOut: boolean;
+  /** Moneda del país a donde va el ahorro (PEN por defecto) */
+  homeCurrency: HomeCurrency;
   onboardedAt: number | null;
   createdAt: number;
   updatedAt: number;
@@ -97,6 +100,9 @@ export interface PaystubRow {
 
 export type SavingsKind = 'save' | 'withdraw';
 
+/** Origen del tipo de cambio: BCRP/SUNAT (Perú), BCRA (Argentina), PTAX del Banco Central do Brasil, TRM (Colombia) o escrito a mano. */
+export type FxSource = 'bcrp' | 'sunat' | 'bcra' | 'ptax' | 'trm' | 'manual';
+
 export interface SavingsRow {
   id: string;
   kind: SavingsKind;
@@ -104,11 +110,13 @@ export interface SavingsRow {
   date: string;
   /** Dólares, en centavos */
   amountCents: number;
-  /** Soles por dólar usado en este movimiento (venta: BCRP interbancario o, de respaldo, SUNAT) */
+  /** Moneda local por dólar usado en este movimiento (fuente oficial de ese país, o escrito a mano) */
   fxRate: number | null;
+  /** Moneda del tipo de cambio (los movimientos anteriores a nov-2026 son PEN) */
+  fxCurrency: HomeCurrency;
   /** Fecha del tipo de cambio (yyyy-mm-dd): puede ser el día hábil anterior */
   fxDate: string | null;
-  fxSource: 'bcrp' | 'sunat' | 'manual' | null;
+  fxSource: FxSource | null;
   note: string;
   createdAt: number;
   updatedAt: number;
@@ -296,6 +304,23 @@ export class SeasonPayDB extends Dexie {
           .toCollection()
           .modify((e: Partial<EmployerRow>) => {
             e.overtimeDailyHours ??= null;
+          });
+      });
+    // v8: ahorro en la moneda de cada país.
+    this.version(8)
+      .stores({})
+      .upgrade(async (tx) => {
+        await tx
+          .table('savings')
+          .toCollection()
+          .modify((s: Partial<SavingsRow>) => {
+            s.fxCurrency ??= 'PEN';
+          });
+        await tx
+          .table('profile')
+          .toCollection()
+          .modify((p: Partial<ProfileRow>) => {
+            p.homeCurrency ??= 'PEN';
           });
       });
     // v7: corredores por país en los proveedores.

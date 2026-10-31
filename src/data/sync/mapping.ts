@@ -1,3 +1,4 @@
+import { isHomeCurrency } from '@/domain/currency';
 import type { EmployerRow, PaystubRow, ProfileRow, SavingsRow, ShiftRow, SyncTable } from '../db';
 
 /**
@@ -24,6 +25,7 @@ export function profileToRemote(p: ProfileRow, userId: string): Remote {
     consent_at: iso(p.consentAt),
     consent_version: p.consentVersion,
     analytics_opt_out: p.analyticsOptOut,
+    home_currency: p.homeCurrency,
     onboarded_at: iso(p.onboardedAt),
     created_at: iso(p.createdAt),
     updated_at: iso(p.updatedAt),
@@ -43,6 +45,7 @@ export function profileFromRemote(r: Remote): ProfileRow {
     consentAt: ms(r.consent_at as string | null),
     consentVersion: (r.consent_version as string | null) ?? null,
     analyticsOptOut: (r.analytics_opt_out as boolean | null) ?? false,
+    homeCurrency: isHomeCurrency(r.home_currency) ? r.home_currency : 'PEN',
     onboardedAt: ms(r.onboarded_at as string | null),
     createdAt: ms(r.created_at as string) ?? Date.now(),
     updatedAt: ms(r.updated_at as string) ?? 0,
@@ -180,6 +183,7 @@ export function savingsToRemote(s: SavingsRow, userId: string): Remote {
     fx_rate: s.fxRate,
     fx_date: s.fxDate,
     fx_source: s.fxSource,
+    fx_currency: s.fxCurrency,
     note: s.note,
     created_at: iso(s.createdAt),
     updated_at: iso(s.updatedAt),
@@ -196,6 +200,7 @@ export function savingsFromRemote(r: Remote): SavingsRow {
     fxRate: r.fx_rate === null || r.fx_rate === undefined ? null : Number(r.fx_rate),
     fxDate: (r.fx_date as string | null) ?? null,
     fxSource: (r.fx_source as SavingsRow['fxSource']) ?? null,
+    fxCurrency: isHomeCurrency(r.fx_currency) ? r.fx_currency : 'PEN',
     note: (r.note as string) ?? '',
     createdAt: ms(r.created_at as string) ?? Date.now(),
     updatedAt: ms(r.updated_at as string) ?? 0,

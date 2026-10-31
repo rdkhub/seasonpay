@@ -1,4 +1,5 @@
-import { db, type SavingsRow } from './db';
+import { CURRENCY_COUNTRY, type HomeCurrency } from '@/domain/currency';
+import { db, type FxSource, type SavingsRow } from './db';
 import { getRule } from './repos/rules';
 import { updateSavings } from './repos/savings';
 import { getSupabase } from './sync/supabaseClient';
@@ -10,7 +11,7 @@ import { getSupabase } from './sync/supabaseClient';
  * La serie del BCRP sale de tax_rules (fx_usd_pen_series). Cada respuesta se guarda en meta.
  */
 
-export type FxProvider = 'bcrp' | 'sunat';
+export type FxProvider = Exclude<FxSource, 'manual'>;
 
 export interface FxQuote {
   date: string;
@@ -75,12 +76,58 @@ export async function fetchFx(date: string): Promise<FxQuote | null> {
   }
 }
 
-/** Completa el tipo de cambio de los movimientos que se guardaron sin señal. */
+/**
+ * Cómo se obtiene el tipo de cambio de cada país, según tax_rules (fx_usd_local).
+ * mode "api": lo trae /api/fx-local; "manual": el usuario lo copia de la web oficial; "none": Ecuador (dólar).
+ */
+export interface LocalFxRule {
+  currency: HomeCurrency;
+  mode: 'api' | 'manual' | 'none';
+  provider?: FxProvider;
+  label?: { es: string; en: string };
+  pageUrl?: string;
+  sourceUrl: string;
+  verifiedAt: string;
+}
+
+export async function localFxRule(currency: HomeCurrency): Promise<LocalFxRule | null> {
+  if (currency === 'PEN') return null;
+  const rule = await getRule('fx_usd_local', { state: CURRENCY_COUNTRY[currency] });
+  if (!rule || rule.jurisdiction !== CURRENCY_COUNTRY[currency]) return null;
+  const v = rule.value as { currency?: string; mode?: string; provider?: string; label?: { es: string; en: string }; page_url?: string };
+  if (v.currency !== currency) return null;
+  const mode = v.mode === 'api' || v.mode === 'none' ? v.mode : 'manual';
+  return { currency, mode, provider: v.provider as FxProvider | undefined, label: v.label, pageUrl: v.page_url, sourceUrl: rule.sourceUrl, verifiedAt: rule.verifiedAt };
+}
+
+/** Tipo de cambio oficial USD → moneda del país para una fecha. PEN usa fetchFx; el resto, /api/fx-local. */
+export async function fetchLocalFx(date: string, currency: HomeCurrency): Promise<FxQuote | null> {
+  if (currency === 'PEN') return fetchFx(date);
+  if (currency === 'USD') return null;
+  const cacheKey = `fx:${currency}:${date}`;
+  const cached = (await db.meta.get(cacheKey))?.value as FxQuote | undefined;
+  if (cached) return cached;
+  const rule = await localFxRule(currency);
+  if (rule?.mode !== 'api' || (typeof navigator !== 'undefined' && !navigator.onLine)) return null;
+  try {
+    const r = await fetch(`/api/fx-local?cur=${currency}&date=${encodeURIComponent(date)}`).catch(() => null);
+    if (!r?.ok) return null;
+    const body = (await r.json()) as Partial<FxQuote>;
+    if (!(typeof body.value === 'number' && body.value > 0 && typeof body.date === 'string' && body.provider)) return null;
+    const q: FxQuote = { date: body.date, value: Math.round(body.value * 10000) / 10000, series: body.series ?? '', source: body.source ?? '', provider: body.provider };
+    await db.meta.put({ key: cacheKey, value: q });
+    return q;
+  } catch {
+    return null;
+  }
+}
+
+/** Completa el tipo de cambio de los movimientos que se guardaron sin señal (cada uno en su moneda). */
 export async function fillPendingRates(rows: SavingsRow[]): Promise<number> {
   let filled = 0;
   for (const row of rows) {
-    if (row.fxRate !== null) continue;
-    const q = await fetchFx(row.date);
+    if (row.fxRate !== null || row.fxCurrency === 'USD') continue;
+    const q = await fetchLocalFx(row.date, row.fxCurrency ?? 'PEN');
     if (!q) continue;
     await updateSavings(row.id, { fxRate: q.value, fxDate: q.date, fxSource: q.provider });
     filled += 1;

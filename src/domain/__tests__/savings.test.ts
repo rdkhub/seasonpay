@@ -15,7 +15,7 @@ describe('summarizeSavings', () => {
       { kind: 'save', amountCents: 50000, fxRate: 3.4 },
     ]);
     expect(s.balanceCents).toBe(100000);
-    expect(s.balancePenCents).toBe(175000 + 170000);
+    expect(s.balanceLocalCents).toBe(175000 + 170000);
   });
 
   it('resta los retiros', () => {
@@ -25,7 +25,7 @@ describe('summarizeSavings', () => {
     ]);
     expect(s.balanceCents).toBe(60000);
     expect(s.withdrawnCents).toBe(20000);
-    expect(s.balancePenCents).toBe(276000 - 68800);
+    expect(s.balanceLocalCents).toBe(276000 - 68800);
   });
 
   it('cuenta los movimientos sin tipo de cambio', () => {
@@ -34,12 +34,51 @@ describe('summarizeSavings', () => {
       { kind: 'save', amountCents: 10000, fxRate: 3.4 },
     ]);
     expect(s.pendingRateCount).toBe(1);
-    expect(s.balancePenCents).toBe(34000);
+    expect(s.balanceLocalCents).toBe(34000);
   });
 
   it('calcula el progreso hacia la meta (máximo 100%)', () => {
     expect(summarizeSavings([{ kind: 'save', amountCents: 25000, fxRate: 3.4 }], 100000).goalProgress).toBe(0.25);
     expect(summarizeSavings([{ kind: 'save', amountCents: 250000, fxRate: 3.4 }], 100000).goalProgress).toBe(1);
     expect(summarizeSavings([], null).goalProgress).toBeNull();
+  });
+});
+
+describe('ahorro en otras monedas', () => {
+  it('solo suma al total local los movimientos de esa moneda', () => {
+    const s = summarizeSavings(
+      [
+        { kind: 'save', amountCents: 10000, fxRate: 1534, fxCurrency: 'ARS' },
+        { kind: 'save', amountCents: 10000, fxRate: 3.4, fxCurrency: 'PEN' },
+        { kind: 'save', amountCents: 10000, fxRate: null, fxCurrency: 'ARS' },
+      ],
+      null,
+      'ARS',
+    );
+    expect(s.balanceLocalCents).toBe(15340000);
+    expect(s.otherCurrencyCount).toBe(1);
+    expect(s.pendingRateCount).toBe(1);
+  });
+
+  it('los movimientos antiguos sin moneda cuentan como soles', () => {
+    const s = summarizeSavings([{ kind: 'save', amountCents: 10000, fxRate: 3.4 }], null, 'PEN');
+    expect(s.balanceLocalCents).toBe(34000);
+    expect(s.otherCurrencyCount).toBe(0);
+  });
+
+  it('en dólares (Ecuador) no hay conversión', () => {
+    const s = summarizeSavings([{ kind: 'save', amountCents: 10000, fxRate: null }], null, 'USD');
+    expect(s.balanceLocalCents).toBe(10000);
+    expect(s.pendingRateCount).toBe(0);
+  });
+});
+
+describe('manualRateOk', () => {
+  it('rechaza valores fuera de rango (errores de tipeo)', async () => {
+    const { manualRateOk } = await import('../currency');
+    expect(manualRateOk('CLP', 993.22)).toBe(true);
+    expect(manualRateOk('CLP', 99.3)).toBe(false);
+    expect(manualRateOk('BOB', 12.09)).toBe(true);
+    expect(manualRateOk('PEN', 34.5)).toBe(false);
   });
 });

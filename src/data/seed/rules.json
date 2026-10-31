@@ -1640,6 +1640,115 @@
       "verified_at": "2026-10-30",
       "reviewed_by": "pendiente Enrolled Agent",
       "notes": "Utah State Tax Commission, General Instructions (When to File and Pay)."
+    },
+    {
+      "key": "fx_usd_local",
+      "jurisdiction": "AR",
+      "year": 2026,
+      "value": {
+        "currency": "ARS",
+        "mode": "api",
+        "provider": "bcra",
+        "label": {
+          "es": "BCRA",
+          "en": "BCRA"
+        },
+        "api": "https://api.bcra.gob.ar/estadisticascambiarias/v1.0/Cotizaciones/USD?fechadesde={from}&fechahasta={to}",
+        "field": "results[].detalle[codigoMoneda=USD].tipoCotizacion"
+      },
+      "source_url": "https://api.bcra.gob.ar/estadisticascambiarias/v1.0/Cotizaciones/USD",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "no aplica (tipo de cambio)",
+      "notes": "Banco Central de la República Argentina. Valor del 30-oct-2026: 1534."
+    },
+    {
+      "key": "fx_usd_local",
+      "jurisdiction": "BR",
+      "year": 2026,
+      "value": {
+        "currency": "BRL",
+        "mode": "api",
+        "provider": "ptax",
+        "label": {
+          "es": "Banco Central do Brasil (PTAX)",
+          "en": "Banco Central do Brasil (PTAX)"
+        },
+        "api": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarPeriodo",
+        "field": "value[].cotacaoVenda"
+      },
+      "source_url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "no aplica (tipo de cambio)",
+      "notes": "Cotação PTAX de venda. Valor del 29-oct-2026: 5,3744."
+    },
+    {
+      "key": "fx_usd_local",
+      "jurisdiction": "CO",
+      "year": 2026,
+      "value": {
+        "currency": "COP",
+        "mode": "api",
+        "provider": "trm",
+        "label": {
+          "es": "TRM (Superfinanciera)",
+          "en": "TRM (Financial Superintendence)"
+        },
+        "api": "https://www.datos.gov.co/resource/32sa-8pi3.json",
+        "field": "valor (vigenciadesde..vigenciahasta)"
+      },
+      "source_url": "https://www.datos.gov.co/resource/32sa-8pi3.json",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "no aplica (tipo de cambio)",
+      "notes": "Tasa Representativa del Mercado certificada por la Superintendencia Financiera de Colombia. Valor del 30-oct-2026: 3166,91."
+    },
+    {
+      "key": "fx_usd_local",
+      "jurisdiction": "CL",
+      "year": 2026,
+      "value": {
+        "currency": "CLP",
+        "mode": "manual",
+        "label": {
+          "es": "el Banco Central de Chile (dólar observado)",
+          "en": "the Central Bank of Chile (dólar observado)"
+        },
+        "page_url": "https://www.bcentral.cl"
+      },
+      "source_url": "https://www.bcentral.cl",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "no aplica (tipo de cambio)",
+      "notes": "Su API exige registro con usuario y clave; la app pide copiar el dólar observado de la portada. Valor visto el 30-oct-2026: 993,22."
+    },
+    {
+      "key": "fx_usd_local",
+      "jurisdiction": "BO",
+      "year": 2026,
+      "value": {
+        "currency": "BOB",
+        "mode": "manual",
+        "label": {
+          "es": "el Banco Central de Bolivia (tipo de cambio oficial)",
+          "en": "the Central Bank of Bolivia (official rate)"
+        },
+        "page_url": "https://www.bcb.gob.bo"
+      },
+      "source_url": "https://www.bcb.gob.bo",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "no aplica (tipo de cambio)",
+      "notes": "Sin API. Tipo de cambio oficial vigente al 31-oct-2026: 12,09 Bs por dólar."
+    },
+    {
+      "key": "fx_usd_local",
+      "jurisdiction": "EC",
+      "year": 2026,
+      "value": {
+        "currency": "USD",
+        "mode": "none"
+      },
+      "source_url": "https://www.bce.fin.ec",
+      "verified_at": "2026-10-30",
+      "reviewed_by": "no aplica (tipo de cambio)",
+      "notes": "Ecuador usa el dólar estadounidense: no hay conversión."
     }
   ]
 }

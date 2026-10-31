@@ -232,7 +232,7 @@ export function SettingsScreen() {
 
       <EmployerSheet open={employerSheet.open} employer={employerSheet.employer} onClose={() => setEmployerSheet((s) => ({ ...s, open: false }))} />
       <ProfileSheet open={profileOpen} onClose={() => setProfileOpen(false)} profile={profile ?? null} />
-      <RulesSheet open={rulesOpen} onClose={() => setRulesOpen(false)} rules={rules ?? []} state={profile?.workState ?? null} />
+      <RulesSheet open={rulesOpen} onClose={() => setRulesOpen(false)} rules={rules ?? []} state={profile?.workState ?? null} currency={profile?.homeCurrency ?? 'PEN'} />
       <InstallSheet open={installOpen} onClose={() => setInstallOpen(false)} />
       <FaqSheet open={faqOpen} onClose={() => setFaqOpen(false)} />
 
