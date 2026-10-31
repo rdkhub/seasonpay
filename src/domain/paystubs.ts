@@ -82,8 +82,9 @@ export function comparePaystub(
   const t = summary.byEmployer[0];
 
   const expectedRegularMinutes = t?.regularMinutes ?? 0;
-  const expectedOvertimeMinutes = t?.overtimeMinutes ?? 0;
-  const expectedWagesCents = (t?.basePayCents ?? 0) + (t?.overtimePayCents ?? 0);
+  // En la boleta las horas extra pueden venir juntas (overtime + doble tiempo): se comparan sumadas.
+  const expectedOvertimeMinutes = (t?.overtimeMinutes ?? 0) + (t?.doubleTimeMinutes ?? 0);
+  const expectedWagesCents = (t?.basePayCents ?? 0) + (t?.overtimePayCents ?? 0) + (t?.doubleTimePayCents ?? 0);
   const expectedCardTipsCents = t?.cardTipsCents ?? 0;
   const stubWagesCents = stub.grossCents - stub.tipsCents;
 

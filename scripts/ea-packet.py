@@ -131,7 +131,7 @@ Please tick <b>OK</b> or <b>Needs change</b> and write notes. If you approve a r
 <ul>
 <li>Federal rules use Publication 519 (2025) and the 2025 forms, the latest published as of {TODAY}. They will be re-verified when the 2026 editions are released.</li>
 <li>Deadlines: if a date falls on a weekend, the app shows the original date, flags it and explains the next-business-day rule (Pub. 519). It does not compute legal holidays (e.g., DC Emancipation Day).</li>
-<li>Overtime: the app applies weekly overtime and daily overtime in AK, CA and CO. It does not compute CA double time, CA/KY seventh-day rules or CO 12 consecutive hours; it shows a notice instead.</li>
+<li>Overtime: the app applies weekly overtime, daily overtime in AK, CA and CO, CA double time (over 12 h/day and over 8 h on the 7th consecutive day), and the CA and KY seventh-day rules (KY only when the week exceeds 40 h, per KRS 337.050). Each shift counts on the day it starts, so a long overnight shift covers CO's 12 consecutive hours; two back-to-back shifts logged on different days are not merged. NV daily overtime depends on wage and is set by the user.</li>
 <li>FICA: exemption logic covers nonresident F/J/M/Q under Pub. 519. It does not handle the student FICA exception under IRC 3121(b)(10).</li>
 <li>Alaska: no explicit official page found stating there is no individual income tax; no state rule is shown for AK.</li>
 </ul></div>

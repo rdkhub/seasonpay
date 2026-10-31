@@ -65,6 +65,10 @@ for s in WEEKLY_40:
 
 rules['MN'] = base(weekly_hours=48)
 rules['KY']['seventh_day'] = True
+# KRS 337.050: 1.5x por las horas del 7.º día si se trabajaron los 7 días de la semana laboral;
+# no aplica si el empleado no trabaja más de 40 h en la semana. Verificado 2026-10-31.
+rules['KY']['seventh_day_rule'] = 'ky'
+rules['KY']['seventh_day_min_weekly_hours'] = 40
 rules['KY']['notes'] = ['ky_seventh_day']
 rules['MO']['seasonal_recreation_weekly_hours'] = 52
 rules['MO']['notes'] = ['seasonal_recreation_weekly']
@@ -79,6 +83,9 @@ rules['MT']['notes'] = ['mt_student_48']
 rules['AK'] = base(weekly_hours=40, daily_hours=8, daily_applies_to_all=True, notes=['ak_small_employers'])
 rules['CA'] = base(weekly_hours=40, daily_hours=8, daily_double_time_hours=12, seventh_day=True, daily_applies_to_all=True,
                    notes=['ca_double_time', 'ca_seventh_day'])
+# DLSE (Labor Code 510): doble (2x) después de 12 h en el día y después de 8 h el 7.º día seguido.
+rules['CA']['double_time_multiplier'] = 2
+rules['CA']['seventh_day_rule'] = 'ca'
 rules['CO'] = base(weekly_hours=40, daily_hours=12, daily_applies_to_all=True, notes=['co_12_consecutive'])
 rules['NV'] = base(weekly_hours=40, daily_hours=8, daily_applies_to_all=False, notes=['nv_wage_condition'])
 

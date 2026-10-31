@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import { addDays, startOfDay, summarizePeriod, weekRange, type PeriodSummary } from '@/domain';
 import type { EmployerRow, ShiftRow } from '@/data/db';
-import { useEmployers, useShiftsInRange } from '@/data/hooks';
-import { toEmployerConfig, toShiftInput } from '@/data/mappers';
+import { useEmployers, useProfile, useRules, useShiftsInRange } from '@/data/hooks';
+import { statePremium, toEmployerConfig, toShiftInput, type StatePremium } from '@/data/mappers';
 
 export interface WeekData {
   loading: boolean;
@@ -15,6 +15,8 @@ export interface WeekData {
   contextShifts: ShiftRow[];
   employers: EmployerRow[];
   employerById: Map<string, EmployerRow>;
+  /** Doble tiempo / 7.º día del estado del usuario (California, Kentucky) */
+  premium: StatePremium | null;
 }
 
 /**
@@ -29,13 +31,16 @@ export function useWeekSummary(anchor: number, now: number): WeekData {
   const ctxFrom = addDays(range.from, -7);
   const ctxTo = addDays(range.to, 7);
   const contextShifts = useShiftsInRange(ctxFrom, ctxTo);
+  const profile = useProfile();
+  const rules = useRules();
+  const premium = useMemo(() => statePremium(rules, profile?.workState), [rules, profile?.workState]);
 
   return useMemo(() => {
     const employers = allEmployers ?? [];
     const ctx = contextShifts ?? [];
     const summary = summarizePeriod({
       shifts: ctx.map(toShiftInput),
-      employers: employers.map(toEmployerConfig),
+      employers: employers.map((e) => toEmployerConfig(e, premium)),
       range,
       now,
     });
@@ -48,8 +53,9 @@ export function useWeekSummary(anchor: number, now: number): WeekData {
       contextShifts: ctx,
       employers,
       employerById: new Map(employers.map((e) => [e.id, e])),
+      premium,
     };
-  }, [allEmployers, contextShifts, range, now, weekStartDay]);
+  }, [allEmployers, contextShifts, range, now, weekStartDay, premium]);
 }
 
 /** Resumen de un día usando el mismo contexto (el overtime ya viene repartido bien). */
@@ -57,7 +63,7 @@ export function summarizeDay(data: WeekData, day: number, now: number): PeriodSu
   const from = startOfDay(day);
   return summarizePeriod({
     shifts: data.contextShifts.map(toShiftInput),
-    employers: data.employers.map(toEmployerConfig),
+    employers: data.employers.map((e) => toEmployerConfig(e, data.premium)),
     range: { from, to: addDays(from, 1) },
     now,
   });

@@ -43,7 +43,7 @@ export function TodayScreen() {
   if (active && !todayShifts.some((s) => s.id === active.id)) todayShifts.push(active);
 
   const activeBreakdown = active ? week.summary.byShift.get(active.id) : undefined;
-  const activePay = activeBreakdown ? activeBreakdown.basePayCents + activeBreakdown.overtimePayCents : 0;
+  const activePay = activeBreakdown ? activeBreakdown.basePayCents + activeBreakdown.overtimePayCents + activeBreakdown.doubleTimePayCents : 0;
   const activeEmployer = active ? week.employerById.get(active.employerId) : undefined;
 
   const begin = async (employerId: string) => {
@@ -126,8 +126,8 @@ export function TodayScreen() {
         <MoneyDisplay cents={s.grossCents} size="display" className="mt-3 block text-white" />
         <div className="mt-4 flex flex-wrap gap-2 text-[13px] font-medium">
           <span className="rounded-full bg-white/10 px-3 py-1.5 text-white/90">{t('today.weekMeta', { hours: formatHours(s.workedMinutes) })}</span>
-          {s.overtimeMinutes > 0 && (
-            <span className="rounded-full bg-white/20 px-3 py-1.5 text-white">{t('today.overtimeChip', { hours: formatHours(s.overtimeMinutes) })}</span>
+          {s.overtimeMinutes + s.doubleTimeMinutes > 0 && (
+            <span className="rounded-full bg-white/20 px-3 py-1.5 text-white">{t('today.overtimeChip', { hours: formatHours(s.overtimeMinutes + s.doubleTimeMinutes) })}</span>
           )}
           {s.tipsCents > 0 && (
             <span className="rounded-full bg-white/10 px-3 py-1.5 text-white/90">{t('today.tipsChip', { amount: formatMoney(s.tipsCents, lang, { noCents: true }) })}</span>

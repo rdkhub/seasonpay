@@ -135,15 +135,24 @@ La app sigue gratis. En vez de pagos, la fase 5 agrega Temporada → "Enviar pla
 
 ## Pendientes
 
-- Darte de alta como admin con el SQL de arriba (después de entrar una vez con tu correo).
-- SMTP propio (por ejemplo Resend) para que el código de acceso les llegue a otros correos, y luego la plantilla con `{{ .Token }}`.
-- Revisión del Enrolled Agent de `tax_rules` (todas marcadas "pendiente Enrolled Agent").
-- Declaración estatal: faltan WY y NH (no encontré una página oficial que diga claramente que no cobran impuesto al sueldo) y la fecha límite de Utah.
-- Tipo de cambio: si el BCRP vuelve a responder, se usa solo; si no, queda SUNAT. Revisar si conviene pedir al BCRP acceso para la app.
-- Calcular el doble tiempo de California y el 7.º día (CA, KY).
-- Enviar plata: Perú completo (comparador y casas de cambio). Argentina, Bolivia, Brasil, Chile, Colombia y Ecuador con los corredores confirmados (`remit_providers.corridors`, `scripts/remit-corridors.py`). Wise, Xoom y WorldRemit ya cubren los seis países (Wise no ofrece pesos argentinos; está en lista de espera). Rextie: registro SBS confirmado en sus Términos y Condiciones (Res. SBS N° 684-2017). Falta MoneyGram fuera de Perú y la moneda de llegada de Xoom y WorldRemit en AR, BO, BR, CL, EC.
-- Google OAuth (necesita client ID y secret).
-- Fase de pagos (pase de temporada): después del piloto, con Lemon Squeezy o Polar.
+Lo que solo puede hacer Rodrigo:
+- Crear su usuario en la app y pasar el nombre para hacerlo admin (`insert into public.admins …` con el id del usuario `<nombre>@users.seasonpay.vercel.app`).
+- Pruebas en celular: `docs/pruebas-celular.md`.
+- Mandar `docs/review/seasonpay-ea-review.pdf` al Enrolled Agent y cargar sus correcciones.
+- Grupo de WhatsApp (opcional): `update public.app_config set value = '"https://chat.whatsapp.com/…"' where key = 'whatsapp_group_url';`
+
+Por verificar o mejorar:
+- Federal: cuando el IRS publique la Publication 519 y los formularios del año tributario 2026 (suele ser a inicios de 2027), revisar y cargar las reglas con year = 2026.
+- Alaska: no hay una página oficial que diga explícitamente que no cobra impuesto a los sueldos; por eso no hay regla estatal para AK.
+- Chile y Bolivia: el tipo de cambio se escribe a mano (sus bancos centrales no tienen API pública sin registro). Chile tiene API con registro gratis en si3.bcentral.cl; si Rodrigo se registra, se puede automatizar.
+- Enviar plata: falta MoneyGram fuera de Perú y la moneda de llegada de Xoom y WorldRemit en AR, BO, BR, CL, EC.
+- `pg_net` está en el esquema public (aviso menor del revisor de Supabase); moverlo pide confirmar en el panel porque borra y recrea la extensión.
+- Overtime: dos turnos pegados registrados en días distintos no se juntan para las 12 horas seguidas de Colorado.
+
+Para el lanzamiento (después del piloto):
+- Dominio propio + Resend (SMTP) para volver a ofrecer login por correo (`VITE_EMAIL_AUTH=true`).
+- Google OAuth (`VITE_GOOGLE_AUTH=true`, necesita client ID y secret).
+- Pagos (pase de temporada) con Lemon Squeezy o Polar.
 
 ## Reglas oficiales (tax_rules)
 

@@ -175,6 +175,7 @@ const es = {
     },
   },
   week: {
+    doubleTimeShort: '{{hours}} al doble',
     title: 'Semana',
     gross: 'Pago bruto estimado',
     thisWeek: 'Esta semana',
@@ -840,11 +841,11 @@ const es = {
     weekShort: 'sem',
     notes: {
       ak_small_employers: 'No aplica a empleadores con 3 trabajadores o menos.',
-      ca_double_time: 'Después de {{dt}} h en un día se paga doble (2x). SeasonPay todavía no calcula el doble; revisa tu boleta si haces jornadas largas.',
-      ca_seventh_day: 'El 7.º día seguido de trabajo en la semana: las primeras 8 h a 1.5x y lo que pase de 8 h al doble. SeasonPay todavía no lo calcula.',
-      co_12_consecutive: 'También es overtime lo que pase de 12 horas seguidas aunque cruce la medianoche, y se usa la regla que te pague más.',
+      ca_double_time: 'Después de {{dt}} h en un día se paga doble (2x). SeasonPay ya lo incluye en tu estimado.',
+      ca_seventh_day: 'El 7.º día seguido de trabajo en la semana: las primeras 8 h a 1.5x y lo que pase de 8 h al doble. SeasonPay ya lo incluye en tu estimado.',
+      co_12_consecutive: 'También es overtime lo que pase de 12 horas seguidas aunque cruce la medianoche, y se usa la regla que te pague más. SeasonPay cuenta cada turno en el día en que empieza, así que un turno largo nocturno también se cubre; si registras dos turnos pegados en días distintos, revisa tu boleta.',
       nv_wage_condition: 'El overtime después de 8 h al día solo aplica si ganas menos de 1.5 veces el salario mínimo de Nevada. Si ganas más, solo cuenta el de 40 h por semana.',
-      ky_seventh_day: 'Kentucky también tiene una regla de overtime por el 7.º día de trabajo en la semana.',
+      ky_seventh_day: 'Si trabajas los 7 días de la semana laboral y pasas de 40 h, las horas del 7.º día se pagan a 1.5x (KRS 337.050). SeasonPay ya lo incluye en tu estimado.',
       seasonal_recreation_weekly: 'En negocios recreativos de temporada, la ley estatal pide overtime después de {{seasonal}} h por semana.',
       ny_live_in_44: 'Quien vive en la casa donde trabaja (residential/live-in) recibe overtime después de 44 h por semana.',
       or_industries_10: 'En ciertas fábricas, enlatadoras y empacadoras también hay overtime después de 10 h al día.',

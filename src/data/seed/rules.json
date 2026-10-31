@@ -346,10 +346,12 @@
         "notes": [
           "ca_double_time",
           "ca_seventh_day"
-        ]
+        ],
+        "double_time_multiplier": 2,
+        "seventh_day_rule": "ca"
       },
       "source_url": "https://www.dir.ca.gov/dlse/faq_overtime.htm",
-      "verified_at": "2026-10-30",
+      "verified_at": "2026-10-31",
       "reviewed_by": "pendiente Enrolled Agent"
     },
     {
@@ -623,11 +625,14 @@
         "multiplier": 1.5,
         "notes": [
           "ky_seventh_day"
-        ]
+        ],
+        "seventh_day_rule": "ky",
+        "seventh_day_min_weekly_hours": 40
       },
       "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
-      "verified_at": "2026-10-30",
-      "reviewed_by": "pendiente Enrolled Agent"
+      "verified_at": "2026-10-31",
+      "reviewed_by": "pendiente Enrolled Agent",
+      "notes": "; 7.º día según KRS 337.050 (no aplica si no se trabajan más de 40 h en la semana)"
     },
     {
       "key": "overtime_state",

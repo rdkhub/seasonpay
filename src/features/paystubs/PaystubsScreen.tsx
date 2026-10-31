@@ -4,7 +4,7 @@ import { AlertTriangle, ChevronRight, Plus, Receipt, ShieldAlert, ShieldCheck, S
 import { addDays, comparePaystub, ficaAlertForPaystub, periodRange, type PaystubComparison } from '@/domain';
 import type { PaystubRow } from '@/data/db';
 import { useAllShiftsBetween, useEmployers, usePaystubs, useProfile, useRules } from '@/data/hooks';
-import { toEmployerConfig, toShiftInput } from '@/data/mappers';
+import { statePremium, toEmployerConfig, toShiftInput } from '@/data/mappers';
 import { cn } from '@/shared/lib/cn';
 import { formatDateISO, formatMoney } from '@/shared/lib/format';
 import { useNow } from '@/shared/lib/useNow';
@@ -36,12 +36,13 @@ export function PaystubsScreen() {
   const comparisons = useMemo(() => {
     const map = new Map<string, PaystubComparison | null>();
     const inputs = (shifts ?? []).map(toShiftInput);
+    const premium = statePremium(rules, profile?.workState);
     for (const p of paystubs ?? []) {
       const emp = employers?.find((e) => e.id === p.employerId);
-      map.set(p.id, emp ? comparePaystub(p, inputs, toEmployerConfig(emp), now) : null);
+      map.set(p.id, emp ? comparePaystub(p, inputs, toEmployerConfig(emp, premium), now) : null);
     }
     return map;
-  }, [paystubs, shifts, employers, now]);
+  }, [paystubs, shifts, employers, now, rules, profile?.workState]);
 
   const fica = useFica(profile, rules, paystubs, now);
   const year = new Date(now).getFullYear();

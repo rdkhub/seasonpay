@@ -30,6 +30,16 @@ export interface OvertimePolicy {
    * umbral también son overtime. null = el estado no tiene overtime diario.
    */
   dailyThresholdHours?: number | null;
+  /** Doble tiempo diario (California): horas por encima de este umbral en un día se pagan a doubleTimeMultiplier. */
+  dailyDoubleTimeHours?: number | null;
+  doubleTimeMultiplier?: number | null;
+  /**
+   * Séptimo día de trabajo seguido en la semana laboral:
+   * - 'ca' (California): las primeras 8 h del 7.º día son overtime y lo que pasa de 8 h es doble tiempo.
+   * - 'ky' (Kentucky): las horas del 7.º día son overtime si en la semana se trabajó más de seventhDayMinWeeklyHours.
+   */
+  seventhDay?: 'ca' | 'ky' | null;
+  seventhDayMinWeeklyHours?: number | null;
 }
 
 export interface EmployerPayConfig {
@@ -46,8 +56,11 @@ export interface ShiftBreakdown {
   workedMinutes: number;
   regularMinutes: number;
   overtimeMinutes: number;
+  /** Minutos a doble tiempo (solo California) */
+  doubleTimeMinutes: number;
   basePayCents: Cents;
   overtimePayCents: Cents;
+  doubleTimePayCents: Cents;
   tipsCents: Cents;
   isActive: boolean;
 }
@@ -56,8 +69,10 @@ export interface EmployerTotals {
   employerId: string;
   regularMinutes: number;
   overtimeMinutes: number;
+  doubleTimeMinutes: number;
   basePayCents: Cents;
   overtimePayCents: Cents;
+  doubleTimePayCents: Cents;
   cashTipsCents: Cents;
   cardTipsCents: Cents;
   grossCents: Cents;
@@ -68,12 +83,14 @@ export interface PeriodSummary {
   workedMinutes: number;
   regularMinutes: number;
   overtimeMinutes: number;
+  doubleTimeMinutes: number;
   basePayCents: Cents;
   overtimePayCents: Cents;
+  doubleTimePayCents: Cents;
   cashTipsCents: Cents;
   cardTipsCents: Cents;
   tipsCents: Cents;
-  /** Sueldo (base + overtime) + propinas. Antes de impuestos y deducciones. */
+  /** Sueldo (base + overtime + doble tiempo) + propinas. Antes de impuestos y deducciones. */
   grossCents: Cents;
   byEmployer: EmployerTotals[];
   byShift: Map<string, ShiftBreakdown>;

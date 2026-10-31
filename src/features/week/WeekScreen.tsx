@@ -53,7 +53,7 @@ export function WeekScreen() {
     setFormOpen(true);
   };
 
-  const employersWithShifts = s.byEmployer.filter((e) => e.regularMinutes + e.overtimeMinutes > 0 || e.grossCents > 0);
+  const employersWithShifts = s.byEmployer.filter((e) => e.regularMinutes + e.overtimeMinutes + e.doubleTimeMinutes > 0 || e.grossCents > 0);
 
   return (
     <div className="pb-20">
@@ -73,14 +73,14 @@ export function WeekScreen() {
         <MoneyDisplay cents={s.grossCents} size="display" className="mt-3 block animate-fade-in text-white" />
         <div className="mt-5 grid grid-cols-3 gap-3 border-t border-white/15 pt-4">
           <HeroCell label={t('week.base')} cents={s.basePayCents} />
-          <HeroCell label={t('week.overtimePay')} cents={s.overtimePayCents} />
+          <HeroCell label={t('week.overtimePay')} cents={s.overtimePayCents + s.doubleTimePayCents} />
           <HeroCell label={t('week.tips')} cents={s.tipsCents} />
         </div>
       </Card>
 
       <div className="mt-3 grid grid-cols-2 gap-2.5">
         <Stat label={t('week.regular')} value={formatHours(s.regularMinutes)} />
-        <Stat label={t('week.overtime')} value={formatHours(s.overtimeMinutes)} accent={s.overtimeMinutes > 0} />
+        <Stat label={t('week.overtime')} value={formatHours(s.overtimeMinutes + s.doubleTimeMinutes)} accent={s.overtimeMinutes + s.doubleTimeMinutes > 0} />
         <Stat
           label={t('week.tips')}
           value={<MoneyDisplay cents={s.tipsCents} size="md" />}
@@ -97,7 +97,7 @@ export function WeekScreen() {
               <ListRow
                 key={e.employerId}
                 title={week.employerById.get(e.employerId)?.name ?? '—'}
-                subtitle={`${formatHours(e.regularMinutes + e.overtimeMinutes)}${e.overtimeMinutes ? ` · ${formatHours(e.overtimeMinutes)} extra` : ''}`}
+                subtitle={`${formatHours(e.regularMinutes + e.overtimeMinutes + e.doubleTimeMinutes)}${e.overtimeMinutes ? ` · ${formatHours(e.overtimeMinutes)} extra` : ''}${e.doubleTimeMinutes ? ` · ${t('week.doubleTimeShort', { hours: formatHours(e.doubleTimeMinutes) })}` : ''}`}
                 trailing={<MoneyDisplay cents={e.grossCents} size="sm" className="text-ink" />}
               />
             ))}
@@ -138,7 +138,7 @@ export function WeekScreen() {
               <div className="flex flex-col gap-2">
                 {g.shifts.map((sh) => {
                   const b = s.byShift.get(sh.id);
-                  const pay = b ? b.basePayCents + b.overtimePayCents : 0;
+                  const pay = b ? b.basePayCents + b.overtimePayCents + b.doubleTimePayCents : 0;
                   const crosses = sh.endedAt !== null && dayKey(sh.endedAt) !== dayKey(sh.startedAt);
                   return (
                     <PressableCard
@@ -163,7 +163,7 @@ export function WeekScreen() {
                       <div className="shrink-0 text-right">
                         <MoneyDisplay cents={pay} size="sm" className="text-ink" />
                         <div className="tnum mt-1 flex items-center justify-end gap-1.5 text-[13px] text-ink-3">
-                          {b && b.overtimeMinutes > 0 && <Badge tone="accent">+{formatHours(b.overtimeMinutes)}</Badge>}
+                          {b && b.overtimeMinutes + b.doubleTimeMinutes > 0 && <Badge tone="accent">+{formatHours(b.overtimeMinutes + b.doubleTimeMinutes)}</Badge>}
                           {b ? formatHours(b.workedMinutes) : ''}
                         </div>
                       </div>

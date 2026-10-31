@@ -174,6 +174,7 @@
    }
   },
   "week": {
+   "doubleTimeShort": "{{hours}} al doble",
    "title": "Semana",
    "gross": "Pago bruto estimado",
    "thisWeek": "Esta semana",
@@ -317,6 +318,12 @@
    "title": "Temporada",
    "saved": "Ahorrado",
    "inPen": "≈ {{amount}} con el tipo de cambio de cada día",
+   "otherCurrency_one": "{{count}} movimiento en otra moneda (no entra en este total)",
+   "otherCurrency_other": "{{count}} movimientos en otra moneda (no entran en este total)",
+   "currency": "Moneda de tu país",
+   "currencyTitle": "¿A qué moneda pasas tu ahorro?",
+   "currencyBody": "Cada movimiento guarda el tipo de cambio oficial de ese día en esa moneda. Si la cambias, los movimientos anteriores se quedan en la moneda en que se guardaron.",
+   "currencySaved": "Moneda actualizada",
    "pendingRates_one": "{{count}} movimiento sin tipo de cambio todavía",
    "pendingRates_other": "{{count}} movimientos sin tipo de cambio todavía",
    "goal": "Meta: {{amount}}",
@@ -330,11 +337,48 @@
    "addWithdraw": "Retiré",
    "movements": "Movimientos",
    "emptyTitle": "Todavía no registras ahorro",
-   "emptyBody": "Anota cada vez que guardas o mandas plata. Guardamos el tipo de cambio oficial de ese día (BCRP o, si no responde, SUNAT).",
+   "emptyBody": "Anota cada vez que guardas o mandas plata. Guardamos el tipo de cambio oficial de ese día en la moneda de tu país.",
    "checklist": "Fin de temporada",
    "checklistProgress": "{{done}} de {{total}} listos",
    "export": "Exportar resumen",
    "exportBody": "Un PDF con tu temporada y archivos CSV con tus turnos, boletas y ahorro."
+  },
+  "money": {
+   "name": {
+    "PEN": "soles",
+    "ARS": "pesos argentinos",
+    "BOB": "bolivianos",
+    "BRL": "reales",
+    "CLP": "pesos chilenos",
+    "COP": "pesos colombianos",
+    "USD": "dólares"
+   },
+   "option": {
+    "PEN": "Soles (Perú)",
+    "ARS": "Pesos argentinos",
+    "BOB": "Bolivianos (Bolivia)",
+    "BRL": "Reales (Brasil)",
+    "CLP": "Pesos chilenos",
+    "COP": "Pesos colombianos",
+    "USD": "Dólares (Ecuador)"
+   },
+   "country": {
+    "PE": "Perú",
+    "AR": "Argentina",
+    "BO": "Bolivia",
+    "BR": "Brasil",
+    "CL": "Chile",
+    "CO": "Colombia",
+    "EC": "Ecuador"
+   },
+   "source": {
+    "bcrp": "BCRP, interbancario venta",
+    "sunat": "SUNAT, venta",
+    "bcra": "BCRA",
+    "ptax": "PTAX (Banco Central do Brasil), venta",
+    "trm": "TRM (Superfinanciera de Colombia)",
+    "manual": "Escrito a mano"
+   }
   },
   "savings": {
    "newTitle": "Nuevo movimiento",
@@ -350,9 +394,14 @@
    "rateOffline": "Sin señal: lo completamos cuando vuelva el internet.",
    "rateMissing": "No encontramos el tipo de cambio de esa fecha.",
    "rateManual": "Escribirlo a mano",
-   "rateManualLabel": "Soles por dólar",
-   "rateUseBcrp": "Usar el oficial (BCRP o SUNAT)",
-   "inPen": "En soles: {{amount}}",
+   "rateManualLabel": "{{name}} por dólar",
+   "rateUseBcrp": "Usar el oficial",
+   "rateOfficial": "{{source}}, {{date}}: {{symbol}} {{value}} por dólar",
+   "manualOnly": "El tipo de cambio oficial de {{country}} no tiene una consulta automática. Cópialo de la web oficial y escríbelo aquí.",
+   "manualOnlyLink": "Ver en {{source}}",
+   "usdNote": "En Ecuador se usa el dólar, así que no hay tipo de cambio.",
+   "otherCurrencyNote": "Este movimiento se guardó en {{name}}. Para cambiarlo a tu moneda actual, bórralo y vuelve a agregarlo.",
+   "inPen": "En {{name}}: {{amount}}",
    "note": "Nota",
    "notePlaceholder": "Ej. Envío a mi familia",
    "saved": "Movimiento guardado",
@@ -363,7 +412,7 @@
    "manualBadge": "Manual",
    "errors": {
     "amount": "Escribe un monto mayor a 0",
-    "rate": "Escribe un tipo de cambio válido, ej. 3.432"
+    "rate": "Ese tipo de cambio no parece correcto. Revísalo en la web oficial."
    }
   },
   "checklist": {
@@ -402,7 +451,7 @@
    },
    "savings": {
     "title": "Anota tu ahorro final",
-    "body": "Registra lo que llevas para ver el total en dólares y soles."
+    "body": "Registra lo que llevas para ver el total en dólares y en la moneda de tu país."
    },
    "export": {
     "title": "Exporta tu resumen",
@@ -443,7 +492,7 @@
    "medicare": "Medicare",
    "net": "Neto",
    "saved": "Ahorrado (USD)",
-   "savedPen": "Ahorrado (soles, al tipo de cambio de cada día)",
+   "savedPen": "Ahorrado ({{name}}, al tipo de cambio de cada día)",
    "disclaimer": "SeasonPay informa, no asesora. Los montos de trabajo son estimados a partir de tus registros. Confirma tu caso con tu empleador, tu sponsor o un profesional."
   },
   "account": {
@@ -539,8 +588,8 @@
    "f2Body": "Compara cada boleta con tus turnos y te avisamos si falta overtime o propinas.",
    "f3Title": "Social Security y Medicare",
    "f3Body": "Si eres J-1 no residente, te decimos si podrías estar exento y cómo pedir el reembolso, con la fuente oficial del IRS.",
-   "f4Title": "Ahorro en dólares y soles",
-   "f4Body": "Cada movimiento guarda el tipo de cambio oficial de ese día (BCRP o SUNAT). Al final, exporta tu resumen en PDF o CSV.",
+   "f4Title": "Ahorro en dólares y en tu moneda",
+   "f4Body": "Cada movimiento guarda el tipo de cambio oficial de ese día en la moneda de tu país (soles, pesos, reales o bolivianos). Al final, exporta tu resumen en PDF o CSV.",
    "f5Title": "Overtime y fechas de tu estado",
    "f5Body": "Reglas de overtime de los 50 estados y DC según el Departamento de Trabajo, y las fechas límite de tus declaraciones con recordatorio.",
    "f6Title": "Enviar plata a casa",
@@ -617,6 +666,60 @@
    "receiveIn": "Llega en",
    "receivedLabel": "Le llega a la otra persona",
    "required": "Pon el monto"
+  },
+  "faq": {
+   "title": "Preguntas frecuentes",
+   "rowSub": "Gratis, privacidad, estados, cuenta",
+   "items": {
+    "free": {
+     "q": "¿Es gratis?",
+     "a": "Sí. Es gratis durante el piloto de la temporada 2026-27, sin pagos dentro de la app ni publicidad. Más adelante podría tener una versión de pago; si eso pasa, lo avisaremos antes en la app."
+    },
+    "account": {
+     "q": "¿Tengo que crear una cuenta?",
+     "a": "No. La app funciona completa sin cuenta y todo se guarda en tu celular.\nLa cuenta es opcional y sirve como respaldo, por si cambias o pierdes el celular. Solo pide un usuario y una contraseña: sin correo ni teléfono."
+    },
+    "data": {
+     "q": "¿Qué datos guardan?",
+     "a": "En tu celular: tu perfil (visa, año de llegada, estado), empleadores, turnos, propinas, montos de boletas, ahorro y cotizaciones de envío.\nSi creas cuenta, una copia de eso queda en nuestra base de datos para respaldarlo. Nunca pedimos SSN, ITIN, pasaporte ni datos bancarios. El detalle está en la política de privacidad."
+    },
+    "password": {
+     "q": "¿Qué pasa si olvido mi contraseña?",
+     "a": "Como no te pedimos correo, no podemos recuperarla. Tus datos siguen en tu celular, así que puedes seguir usando la app sin cuenta. Guarda la contraseña en un lugar seguro, o en el gestor de contraseñas de tu celular."
+    },
+    "states": {
+     "q": "¿Sirve para mi estado?",
+     "a": "Sí, para cualquier estado. El overtime usa las reglas de los 50 estados y DC según el Departamento de Trabajo.\nPara la declaración estatal tenemos la regla de Montana, Colorado, Utah, California, Idaho y Vermont, y de los estados que no cobran impuesto a los sueldos (Florida, New Hampshire, Nevada, South Dakota, Tennessee, Texas, Washington y Wyoming). En los demás te decimos dónde revisarlo."
+    },
+    "countries": {
+     "q": "¿Sirve si no soy de Perú?",
+     "a": "Sí. Turnos, propinas, overtime, boletas e impuestos sirven para cualquier país.\nEn \"Enviar plata a casa\" hay proveedores para Perú, Argentina, Bolivia, Brasil, Chile, Colombia y Ecuador, y el ahorro se puede ver en la moneda de cualquiera de esos países, con el tipo de cambio oficial de su banco central."
+    },
+    "offline": {
+     "q": "¿Funciona sin internet?",
+     "a": "Sí. Puedes registrar turnos, propinas y boletas sin señal. Lo que necesita internet (tipo de cambio del día, respaldo y comentarios) se actualiza cuando vuelve la señal."
+    },
+    "taxes": {
+     "q": "¿Me dice cuánto impuesto tengo que pagar?",
+     "a": "No. SeasonPay no calcula impuestos ni prepara declaraciones. Te informa qué formularios y fechas podrían aplicarte según el IRS y tu estado, y te avisa si en tus boletas aparece Social Security o Medicare que quizá no te correspondía. Para tu caso, confírmalo con tu empleador, tu sponsor o un profesional."
+    },
+    "sources": {
+     "q": "¿De dónde sale la información?",
+     "a": "Solo de fuentes oficiales: IRS, Departamento de Trabajo, los departamentos de impuestos de cada estado y, para el tipo de cambio, el banco central de cada país (en Perú, el BCRP o SUNAT; en Colombia, la TRM). Cada regla tiene su link y la fecha en que la verificamos (Ajustes → Reglas y fuentes oficiales)."
+    },
+    "install": {
+     "q": "¿Cómo la instalo?",
+     "a": "No pasa por ninguna tienda. En iPhone, ábrela en Safari, toca Compartir y luego \"Agregar a inicio\". En Android, ábrela en Chrome, toca ⋮ y luego \"Instalar app\"."
+    },
+    "delete": {
+     "q": "¿Cómo borro mis datos?",
+     "a": "En Ajustes → Borrar mi cuenta y mis datos. Se borra todo de tu celular y, si tienes cuenta, también del servidor. Antes puedes descargar una copia en Ajustes → Exportar mis datos."
+    },
+    "who": {
+     "q": "¿Quién hace SeasonPay?",
+     "a": "Es un proyecto personal, en piloto, de un trabajador de temporada con visa J-1. No es una empresa y no tiene acuerdos con sponsors, empleadores ni proveedores de envíos. Si quieres sugerir algo, usa Ajustes → Enviar comentario."
+    }
+   }
   },
   "pilot": {
    "beta": "Beta gratuita",
@@ -882,11 +985,11 @@
    "weekShort": "sem",
    "notes": {
     "ak_small_employers": "No aplica a empleadores con 3 trabajadores o menos.",
-    "ca_double_time": "Después de {{dt}} h en un día se paga doble (2x). SeasonPay todavía no calcula el doble; revisa tu boleta si haces jornadas largas.",
-    "ca_seventh_day": "El 7.º día seguido de trabajo en la semana: las primeras 8 h a 1.5x y lo que pase de 8 h al doble. SeasonPay todavía no lo calcula.",
-    "co_12_consecutive": "También es overtime lo que pase de 12 horas seguidas aunque cruce la medianoche, y se usa la regla que te pague más.",
+    "ca_double_time": "Después de {{dt}} h en un día se paga doble (2x). SeasonPay ya lo incluye en tu estimado.",
+    "ca_seventh_day": "El 7.º día seguido de trabajo en la semana: las primeras 8 h a 1.5x y lo que pase de 8 h al doble. SeasonPay ya lo incluye en tu estimado.",
+    "co_12_consecutive": "También es overtime lo que pase de 12 horas seguidas aunque cruce la medianoche, y se usa la regla que te pague más. SeasonPay cuenta cada turno en el día en que empieza, así que un turno largo nocturno también se cubre; si registras dos turnos pegados en días distintos, revisa tu boleta.",
     "nv_wage_condition": "El overtime después de 8 h al día solo aplica si ganas menos de 1.5 veces el salario mínimo de Nevada. Si ganas más, solo cuenta el de 40 h por semana.",
-    "ky_seventh_day": "Kentucky también tiene una regla de overtime por el 7.º día de trabajo en la semana.",
+    "ky_seventh_day": "Si trabajas los 7 días de la semana laboral y pasas de 40 h, las horas del 7.º día se pagan a 1.5x (KRS 337.050). SeasonPay ya lo incluye en tu estimado.",
     "seasonal_recreation_weekly": "En negocios recreativos de temporada, la ley estatal pide overtime después de {{seasonal}} h por semana.",
     "ny_live_in_44": "Quien vive en la casa donde trabaja (residential/live-in) recibe overtime después de 44 h por semana.",
     "or_industries_10": "En ciertas fábricas, enlatadoras y empacadoras también hay overtime después de 10 h al día.",
@@ -947,6 +1050,7 @@
    "sumPrior": "{{n}} de {{w}} años previos",
    "fx_usd_pen_series": "Tipo de cambio USD a PEN (BCRP, interbancario venta)",
    "fx_usd_pen_fallback": "Tipo de cambio de respaldo (SUNAT, venta)",
+   "fx_usd_local": "Tipo de cambio oficial de tu país",
    "form_8843_filing": "Form 8843: quién lo presenta y a dónde se envía",
    "form_1040nr_purpose": "Form 1040-NR: declaración de no residentes",
    "jurisdiction_federal": "Federal"
@@ -1127,6 +1231,7 @@
    }
   },
   "week": {
+   "doubleTimeShort": "{{hours}} double time",
    "title": "Week",
    "gross": "Estimated gross pay",
    "thisWeek": "This week",
@@ -1270,6 +1375,12 @@
    "title": "Season",
    "saved": "Saved",
    "inPen": "≈ {{amount}} at each day’s exchange rate",
+   "otherCurrency_one": "{{count}} entry in another currency (not in this total)",
+   "otherCurrency_other": "{{count}} entries in another currency (not in this total)",
+   "currency": "Your home currency",
+   "currencyTitle": "Which currency do you convert your savings to?",
+   "currencyBody": "Each entry keeps that day’s official exchange rate in that currency. If you change it, earlier entries stay in the currency they were saved in.",
+   "currencySaved": "Currency updated",
    "pendingRates_one": "{{count}} entry still without an exchange rate",
    "pendingRates_other": "{{count}} entries still without an exchange rate",
    "goal": "Goal: {{amount}}",
@@ -1283,11 +1394,48 @@
    "addWithdraw": "Withdrew",
    "movements": "Entries",
    "emptyTitle": "No savings logged yet",
-   "emptyBody": "Log every time you save or send money. We keep the official exchange rate for that day (BCRP or, if it doesn’t respond, SUNAT).",
+   "emptyBody": "Log every time you save or send money. We keep that day’s official exchange rate in your home currency.",
    "checklist": "End of season",
    "checklistProgress": "{{done}} of {{total}} done",
    "export": "Export summary",
    "exportBody": "A PDF of your season and CSV files with your shifts, paystubs and savings."
+  },
+  "money": {
+   "name": {
+    "PEN": "soles",
+    "ARS": "Argentine pesos",
+    "BOB": "bolivianos",
+    "BRL": "reais",
+    "CLP": "Chilean pesos",
+    "COP": "Colombian pesos",
+    "USD": "dollars"
+   },
+   "option": {
+    "PEN": "Soles (Peru)",
+    "ARS": "Argentine pesos",
+    "BOB": "Bolivianos (Bolivia)",
+    "BRL": "Reais (Brazil)",
+    "CLP": "Chilean pesos",
+    "COP": "Colombian pesos",
+    "USD": "US dollars (Ecuador)"
+   },
+   "country": {
+    "PE": "Peru",
+    "AR": "Argentina",
+    "BO": "Bolivia",
+    "BR": "Brazil",
+    "CL": "Chile",
+    "CO": "Colombia",
+    "EC": "Ecuador"
+   },
+   "source": {
+    "bcrp": "BCRP, interbank sell",
+    "sunat": "SUNAT, sell",
+    "bcra": "BCRA",
+    "ptax": "PTAX (Banco Central do Brasil), sell",
+    "trm": "TRM (Colombia’s Financial Superintendence)",
+    "manual": "Entered manually"
+   }
   },
   "savings": {
    "newTitle": "New entry",
@@ -1303,9 +1451,14 @@
    "rateOffline": "Offline: we’ll fill it in when you’re back online.",
    "rateMissing": "We couldn’t find the exchange rate for that date.",
    "rateManual": "Enter it manually",
-   "rateManualLabel": "Soles per dollar",
-   "rateUseBcrp": "Use the official rate (BCRP or SUNAT)",
-   "inPen": "In soles: {{amount}}",
+   "rateManualLabel": "{{name}} per dollar",
+   "rateUseBcrp": "Use the official rate",
+   "rateOfficial": "{{source}}, {{date}}: {{symbol}} {{value}} per dollar",
+   "manualOnly": "{{country}}’s official exchange rate has no automatic lookup. Copy it from the official website and enter it here.",
+   "manualOnlyLink": "See it on {{source}}",
+   "usdNote": "Ecuador uses the US dollar, so there’s no exchange rate.",
+   "otherCurrencyNote": "This entry was saved in {{name}}. To switch it to your current currency, delete it and add it again.",
+   "inPen": "In {{name}}: {{amount}}",
    "note": "Note",
    "notePlaceholder": "e.g. Money sent to family",
    "saved": "Entry saved",
@@ -1316,7 +1469,7 @@
    "manualBadge": "Manual",
    "errors": {
     "amount": "Enter an amount above 0",
-    "rate": "Enter a valid exchange rate, e.g. 3.432"
+    "rate": "That exchange rate doesn’t look right. Check it on the official website."
    }
   },
   "checklist": {
@@ -1355,7 +1508,7 @@
    },
    "savings": {
     "title": "Log your final savings",
-    "body": "Record what you have to see the total in dollars and soles."
+    "body": "Record what you have to see the total in dollars and in your home currency."
    },
    "export": {
     "title": "Export your summary",
@@ -1396,7 +1549,7 @@
    "medicare": "Medicare",
    "net": "Net",
    "saved": "Saved (USD)",
-   "savedPen": "Saved (soles, at each day’s rate)",
+   "savedPen": "Saved ({{name}}, at each day’s rate)",
    "disclaimer": "SeasonPay informs, it doesn’t advise. Work amounts are estimates based on your records. Confirm your case with your employer, sponsor or a professional."
   },
   "account": {
@@ -1492,8 +1645,8 @@
    "f2Body": "Compare each paystub with your shifts and we’ll flag missing overtime or tips.",
    "f3Title": "Social Security and Medicare",
    "f3Body": "If you are a nonresident J-1, we tell you whether you may be exempt and how to request a refund, with the official IRS source.",
-   "f4Title": "Savings in dollars and soles",
-   "f4Body": "Each entry keeps the official exchange rate for that day (BCRP or SUNAT). At the end, export your summary as a PDF or CSV.",
+   "f4Title": "Savings in dollars and your currency",
+   "f4Body": "Each entry keeps that day’s official exchange rate in your home currency (soles, pesos, reais or bolivianos). At the end, export your summary as a PDF or CSV.",
    "f5Title": "Your state’s overtime and deadlines",
    "f5Body": "Overtime rules for all 50 states and DC from the Department of Labor, plus your tax filing deadlines with reminders.",
    "f6Title": "Send money home",
@@ -1570,6 +1723,60 @@
    "receiveIn": "Arrives in",
    "receivedLabel": "The other person receives",
    "required": "Enter the amount"
+  },
+  "faq": {
+   "title": "FAQ",
+   "rowSub": "Free, privacy, states, account",
+   "items": {
+    "free": {
+     "q": "Is it free?",
+     "a": "Yes. It’s free during the 2026-27 season pilot, with no in-app payments or ads. A paid version may come later; if that happens, we’ll announce it in the app first."
+    },
+    "account": {
+     "q": "Do I need an account?",
+     "a": "No. The app works fully without an account and everything is saved on your phone.\nAn account is optional and works as a backup in case you change or lose your phone. It only needs a username and password: no email or phone number."
+    },
+    "data": {
+     "q": "What data do you store?",
+     "a": "On your phone: your profile (visa, arrival year, state), employers, shifts, tips, paystub amounts, savings and transfer quotes.\nIf you create an account, a copy is kept in our database as a backup. We never ask for your SSN, ITIN, passport or bank details. Details are in the privacy policy."
+    },
+    "password": {
+     "q": "What if I forget my password?",
+     "a": "Since we don’t ask for your email, we can’t recover it. Your data stays on your phone, so you can keep using the app without an account. Keep your password somewhere safe, or in your phone’s password manager."
+    },
+    "states": {
+     "q": "Does it work for my state?",
+     "a": "Yes, any state. Overtime uses the rules for all 50 states and DC from the Department of Labor.\nFor state returns we have the rules for Montana, Colorado, Utah, California, Idaho and Vermont, plus the states with no tax on wages (Florida, New Hampshire, Nevada, South Dakota, Tennessee, Texas, Washington and Wyoming). For the rest we show you where to check."
+    },
+    "countries": {
+     "q": "Does it work if I’m not from Peru?",
+     "a": "Yes. Shifts, tips, overtime, paystubs and taxes work for any country.\n\"Send money home\" lists providers for Peru, Argentina, Bolivia, Brazil, Chile, Colombia and Ecuador. Savings can be shown in the currency of any of those countries, using its central bank’s official rate."
+    },
+    "offline": {
+     "q": "Does it work offline?",
+     "a": "Yes. You can log shifts, tips and paystubs with no signal. Anything that needs internet (today’s exchange rate, backup and feedback) updates when you’re back online."
+    },
+    "taxes": {
+     "q": "Does it tell me how much tax I owe?",
+     "a": "No. SeasonPay doesn’t calculate taxes or prepare returns. It tells you which forms and deadlines may apply to you according to the IRS and your state, and flags Social Security or Medicare on your paystubs that may not have applied to you. For your case, confirm with your employer, your sponsor or a professional."
+    },
+    "sources": {
+     "q": "Where does the information come from?",
+     "a": "Only official sources: the IRS, the Department of Labor, each state’s tax department and, for the exchange rate, each country’s central bank (in Peru, BCRP or SUNAT; in Colombia, the TRM). Every rule shows its link and the date we verified it (Settings → Rules and official sources)."
+    },
+    "install": {
+     "q": "How do I install it?",
+     "a": "No app store needed. On iPhone, open it in Safari, tap Share and then \"Add to Home Screen\". On Android, open it in Chrome, tap ⋮ and then \"Install app\"."
+    },
+    "delete": {
+     "q": "How do I delete my data?",
+     "a": "Settings → Delete my account and data. It deletes everything from your phone and, if you have an account, from the server too. Before that you can download a copy in Settings → Export my data."
+    },
+    "who": {
+     "q": "Who makes SeasonPay?",
+     "a": "It’s a personal project, in pilot, by a seasonal worker on a J-1 visa. It’s not a company and has no deals with sponsors, employers or money transfer providers. To suggest something, use Settings → Send feedback."
+    }
+   }
   },
   "pilot": {
    "beta": "Free beta",
@@ -1835,11 +2042,11 @@
    "weekShort": "wk",
    "notes": {
     "ak_small_employers": "It doesn’t apply to employers with 3 or fewer employees.",
-    "ca_double_time": "After {{dt}} h in a day, double time (2x) applies. SeasonPay doesn’t calculate double time yet; check your paystub if you work long days.",
-    "ca_seventh_day": "On the 7th consecutive workday of the week: the first 8 h at 1.5x and hours over 8 at double time. SeasonPay doesn’t calculate it yet.",
-    "co_12_consecutive": "Hours past 12 consecutive hours are also overtime even across midnight, and whichever rule pays more is used.",
+    "ca_double_time": "After {{dt}} h in a day, double time (2x) applies. SeasonPay includes it in your estimate.",
+    "ca_seventh_day": "On the 7th consecutive workday of the week: the first 8 h at 1.5x and hours over 8 at double time. SeasonPay includes it in your estimate.",
+    "co_12_consecutive": "Hours past 12 consecutive hours are also overtime even across midnight, and whichever rule pays more is used. SeasonPay counts each shift on the day it starts, so a long overnight shift is covered; if you log two back-to-back shifts on different days, check your paystub.",
     "nv_wage_condition": "Overtime after 8 h a day only applies if you earn less than 1.5 times the Nevada minimum wage. If you earn more, only the 40 h weekly rule counts.",
-    "ky_seventh_day": "Kentucky also has an overtime rule for the 7th workday in a week.",
+    "ky_seventh_day": "If you work all 7 days of the workweek and go over 40 h, hours on the 7th day are paid at 1.5x (KRS 337.050). SeasonPay includes it in your estimate.",
     "seasonal_recreation_weekly": "In seasonal recreation businesses, state law requires overtime after {{seasonal}} h a week.",
     "ny_live_in_44": "Residential (live-in) workers get overtime after 44 h a week.",
     "or_industries_10": "Certain manufacturing, cannery and packing plants also owe overtime after 10 h a day.",
@@ -1900,6 +2107,7 @@
    "sumPrior": "{{n}} of {{w}} prior years",
    "fx_usd_pen_series": "USD to PEN exchange rate (BCRP, interbank sell)",
    "fx_usd_pen_fallback": "Backup exchange rate (SUNAT, sell)",
+   "fx_usd_local": "Your country’s official exchange rate",
    "form_8843_filing": "Form 8843: who files it and where to mail it",
    "form_1040nr_purpose": "Form 1040-NR: nonresident tax return",
    "jurisdiction_federal": "Federal"

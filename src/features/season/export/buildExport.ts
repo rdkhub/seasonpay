@@ -1,7 +1,7 @@
 import type { TFunction } from 'i18next';
 import { addDays, assessFica, dayKey, startOfDay, timeKey, summarizePeriod, summarizeSavings, type FicaStatus } from '@/domain';
 import { db } from '@/data/db';
-import { toEmployerConfig, toShiftInput } from '@/data/mappers';
+import { statePremium, toEmployerConfig, toShiftInput } from '@/data/mappers';
 import { listEmployers } from '@/data/repos/employers';
 import { listPaystubs } from '@/data/repos/paystubs';
 import { listRules } from '@/data/repos/rules';
@@ -33,7 +33,7 @@ export async function gatherExport(range: ExportRange, now = Date.now()) {
   const to = shifts.length ? addDays(startOfDay(shifts[shifts.length - 1]!.startedAt), 1) : now;
   const work = summarizePeriod({
     shifts: allShifts.filter((s) => s.deletedAt === null).map(toShiftInput),
-    employers: employers.map(toEmployerConfig),
+    employers: employers.map((e) => toEmployerConfig(e, statePremium(rules, profile?.workState))),
     range: { from, to },
     now,
   });
@@ -80,7 +80,7 @@ export function buildCsvFiles(d: ExportData): File[] {
         s.breakMinutes,
         minutesToHours(b?.workedMinutes ?? 0),
         minutesToHours(b?.regularMinutes ?? 0),
-        minutesToHours(b?.overtimeMinutes ?? 0),
+        minutesToHours((b?.overtimeMinutes ?? 0) + (b?.doubleTimeMinutes ?? 0)),
         centsToDecimal(s.cashTipsCents),
         centsToDecimal(s.cardTipsCents),
         s.note,
@@ -211,7 +211,7 @@ export async function buildPdf(d: ExportData, t: TFunction, lang: string): Promi
   section(t('export.secWork'));
   row(t('export.shiftsCount'), String(d.work.shiftCount));
   row(t('export.regularHours'), formatHours(d.work.regularMinutes));
-  row(t('export.overtimeHours'), formatHours(d.work.overtimeMinutes));
+  row(t('export.overtimeHours'), formatHours(d.work.overtimeMinutes + d.work.doubleTimeMinutes));
   row(t('export.cashTips'), m(d.work.cashTipsCents));
   row(t('export.cardTips'), m(d.work.cardTipsCents));
   row(t('export.estGross'), m(d.work.grossCents));

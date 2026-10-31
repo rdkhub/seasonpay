@@ -177,6 +177,7 @@ const en: Resources = {
     },
   },
   week: {
+    doubleTimeShort: '{{hours}} double time',
     title: 'Week',
     gross: 'Estimated gross pay',
     thisWeek: 'This week',
@@ -841,11 +842,11 @@ const en: Resources = {
     weekShort: 'wk',
     notes: {
       ak_small_employers: 'It doesn’t apply to employers with 3 or fewer employees.',
-      ca_double_time: 'After {{dt}} h in a day, double time (2x) applies. SeasonPay doesn’t calculate double time yet; check your paystub if you work long days.',
-      ca_seventh_day: 'On the 7th consecutive workday of the week: the first 8 h at 1.5x and hours over 8 at double time. SeasonPay doesn’t calculate it yet.',
-      co_12_consecutive: 'Hours past 12 consecutive hours are also overtime even across midnight, and whichever rule pays more is used.',
+      ca_double_time: 'After {{dt}} h in a day, double time (2x) applies. SeasonPay includes it in your estimate.',
+      ca_seventh_day: 'On the 7th consecutive workday of the week: the first 8 h at 1.5x and hours over 8 at double time. SeasonPay includes it in your estimate.',
+      co_12_consecutive: 'Hours past 12 consecutive hours are also overtime even across midnight, and whichever rule pays more is used. SeasonPay counts each shift on the day it starts, so a long overnight shift is covered; if you log two back-to-back shifts on different days, check your paystub.',
       nv_wage_condition: 'Overtime after 8 h a day only applies if you earn less than 1.5 times the Nevada minimum wage. If you earn more, only the 40 h weekly rule counts.',
-      ky_seventh_day: 'Kentucky also has an overtime rule for the 7th workday in a week.',
+      ky_seventh_day: 'If you work all 7 days of the workweek and go over 40 h, hours on the 7th day are paid at 1.5x (KRS 337.050). SeasonPay includes it in your estimate.',
       seasonal_recreation_weekly: 'In seasonal recreation businesses, state law requires overtime after {{seasonal}} h a week.',
       ny_live_in_44: 'Residential (live-in) workers get overtime after 44 h a week.',
       or_industries_10: 'Certain manufacturing, cannery and packing plants also owe overtime after 10 h a day.',
