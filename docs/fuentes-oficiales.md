@@ -1,7 +1,7 @@
 # SeasonPay: fuentes oficiales y contexto de datos
 
 Documento de contexto del proyecto. Lista las únicas fuentes válidas para cualquier dato tributario, laboral o de tipo de cambio que use la app.
-Última actualización de esta lista: 2026-10-30 (corredores LATAM, Rextie y tipo de cambio SUNAT).
+Última actualización de esta lista: 2026-10-31 (estados sin impuesto a sueldos, Utah, regla de fin de semana, tipo de cambio de 6 países, doble tiempo y 7.º día).
 
 ## Reglas de uso de estas fuentes
 
@@ -53,7 +53,11 @@ Flujo oficial de reembolso a reflejar en la app: primero se pide al empleador; s
 | Declaración de impuestos de no residentes | IRS Form 1040-NR | https://www.irs.gov/forms-pubs/about-form-1040-nr |
 | Fecha límite del 1040-NR (`form_1040nr_due_date`): empleados con sueldo sujeto a retención, el 15 del 4.º mes después del año (15 de abril); el resto, el 15 del 6.º mes (15 de junio). Verificado 2026-10-17 | IRS, Taxation of Nonresident Aliens | https://www.irs.gov/individuals/international-taxpayers/taxation-of-nonresident-aliens |
 
-Una temporada de invierno cruza dos años tributarios (ej. dic-2026 a mar-2027): cada año se declara por separado y la app muestra las dos fechas. La regla de fin de semana o feriado no se verificó; la app pide confirmar la fecha en la fuente.
+Una temporada de invierno cruza dos años tributarios (ej. dic-2026 a mar-2027): cada año se declara por separado y la app muestra las dos fechas.
+
+Regla de fin de semana o feriado (verificada 2026-10-30, Publication 519 (2025), When To File): "If the regular due date for filing falls on a Saturday, Sunday, or legal holiday, the due date is the next day that is not a Saturday, Sunday, or legal holiday." La app marca la fecha que cae fin de semana (ej. 15-abr-2028, sábado) y explica la regla; no calcula feriados como Emancipation Day.
+
+Al 2026-10-30 el IRS sigue con la Publication 519 (2025) y el Form 8843 (2025) como últimas ediciones; la app lo avisa. Revisar cuando salgan las de 2026.
 
 ## 5. Propinas
 
@@ -84,7 +88,16 @@ Cargado el 2026-10-30 (pendiente Enrolled Agent): `overtime_state` para los 50 e
 | Colorado | 40 h/semana, 12 h/día o 12 h seguidas, la que pague más (COMPS Order #39) | CDLE | https://cdle.colorado.gov/sites/cdle/files/INFO%20%231%20COMPS%20Order%20%2339%20(2024)%2012.8.23%20%5Baccessible%5D.pdf |
 | Nevada | 8 h/día solo si gana menos de 1.5 veces el salario mínimo; 40 h/semana (NRS 608.018) | Nevada Legislature | https://www.leg.state.nv.us/nrs/nrs-608.html |
 
-La app aplica el overtime diario automáticamente en AK (8 h), CA (8 h) y CO (12 h). En NV queda manual porque depende del salario. Todavía no calcula el doble tiempo ni el 7.º día de CA, el 7.º día de KY ni las 12 horas seguidas de CO; lo avisa en la tarjeta del estado. La FLSA (40 h) sigue como base para empleadores cubiertos.
+La app aplica el overtime diario automáticamente en AK (8 h), CA (8 h) y CO (12 h). En NV queda manual porque depende del salario. La FLSA (40 h) sigue como base para empleadores cubiertos.
+
+Desde el 2026-10-31 también calcula (pendiente Enrolled Agent):
+
+| Estado | Regla | Fuente | URL |
+| --- | --- | --- | --- |
+| California | Doble (2x) después de 12 h en el día y después de 8 h el 7.º día seguido; las primeras 8 h del 7.º día a 1.5x | DIR / DLSE, Overtime FAQ | https://www.dir.ca.gov/dlse/faq_overtime.htm |
+| Kentucky | 1.5x por las horas del 7.º día si se trabajan los 7 días de la semana laboral; no aplica si en la semana no se pasa de 40 h | KRS 337.050 (texto consultado en la copia de Justia; confirmar en apps.legislature.ky.gov) y tabla del DOL | https://law.justia.com/codes/kentucky/chapter-337/section-337-050 |
+
+Las 12 horas seguidas de Colorado quedan cubiertas por turno (cada turno cuenta en el día en que empieza). Dos turnos pegados registrados en días distintos no se juntan.
 
 ## 7. Impuestos estatales
 
@@ -108,7 +121,22 @@ Cargado en `tax_rules` (verificado 2026-10-17, pendiente Enrolled Agent):
 | `state_return_nonresident` MT: no residentes con ingresos de fuente de Montana y obligación de declarar a nivel federal declaran en Montana; excepción si solo ganaron sueldo por 30 días o menos y trabajaron en más de un estado | Montana DOR, Filing Requirements | https://revenue.mt.gov/taxes/individual-income-tax/filing-requirements |
 | `state_return_due_date` MT: 15 de abril (extensión 15 de octubre) | Montana DOR | https://revenue.mt.gov/taxes/individual-income-tax |
 
-El 2026-10-30 se cargó la declaración estatal de no residentes de CO, UT, CA, ID y VT (migración `20261030000930_state_returns.sql`). Pendiente: Wyoming y New Hampshire (sin impuesto a sueldos, falta confirmarlo en su fuente) y la fecha límite de Utah.
+El 2026-10-30 se cargó la declaración estatal de no residentes de CO, UT, CA, ID y VT (migración `20261030000930_state_returns.sql`) y la fecha límite de Utah (15 de abril; prórroga automática de 6 meses para declarar, no para pagar): https://incometax.utah.gov/general-instructions/
+
+Estados sin impuesto a los sueldos (`state_return_nonresident` con `no_wage_tax`, verificado 2026-10-30):
+
+| Estado | Fuente | URL | Cita |
+| --- | --- | --- | --- |
+| Florida | Florida Department of Revenue | https://floridarevenue.com/faq/Pages/FAQDetails.aspx?FAQID=1466 | "Florida does not impose a personal income tax, so there are no filing requirements." |
+| New Hampshire | NH Department of Revenue Administration | https://www.revenue.nh.gov/taxes-glance/interest-dividends-tax | "does not have an income tax on an individual's reported W-2 wages" (el I&D Tax se derogó desde 2025) |
+| Nevada | Nevada Department of Taxation | https://tax.nv.gov/about-nevada-department-of-taxation/income-tax-in-nevada/ | "Nevada does not have an individual income tax" |
+| South Dakota | SD Department of Revenue | https://dor.sd.gov/individuals/taxes/ | "does not impose a state income tax" |
+| Tennessee | TN Department of Revenue (HIT-3) | https://revenue.support.tn.gov/hc/en-us/articles/360057828631-HIT-3-Hall-Income-Tax-Repealed-Beginning-January-1-2021 | Hall Income Tax derogado desde 2021 |
+| Texas | Texas Economic Development Corporation (socia de la oficina del gobernador) | https://businessintexas.com/why-texas/taxes-incentives/taxes/ | "no corporate or personal income tax" |
+| Washington | WA Department of Revenue | https://dor.wa.gov/taxes-rates/income-tax | "does not currently have an individual income tax" (desde 2028, impuesto solo a ingresos de más de 1 millón) |
+| Wyoming | Wyoming Business Council (revista Why Wyoming, sept. 2025) | https://wyomingbusiness.org/wp-content/uploads/2025/09/25_WhyWyoming_Mag_Digital.pdf | "not subject to state income taxes" |
+
+Alaska queda pendiente: no se encontró una página oficial que lo diga explícitamente.
 
 ## 8. Programa J-1
 
@@ -131,6 +159,17 @@ También sirven las guías de impuestos que publican los sponsors J-1 para sus p
 Desde oct-2026 la API del BCRP responde con una página anti-bot a los pedidos automáticos. La app intenta primero el BCRP; si falla, usa el tipo de cambio de venta de SUNAT, lo guarda dos veces al día en `fx_daily` y lo marca como "SUNAT" en el ahorro. No se intenta saltar el bloqueo del BCRP.
 
 Usar el tipo de cambio interbancario de venta. Guardar el tipo de cambio usado en cada registro de ahorro, no recalcular con el del día.
+
+### Otros países (tax_rules `fx_usd_local`, verificado 2026-10-30)
+
+| País | Fuente | URL | Modo |
+| --- | --- | --- | --- |
+| Argentina | BCRA, API Estadísticas Cambiarias v1.0 | https://api.bcra.gob.ar/estadisticascambiarias/v1.0/Cotizaciones/USD | Automático (`/api/fx-local`) |
+| Brasil | Banco Central do Brasil, PTAX (venda) | https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/ | Automático |
+| Colombia | TRM, Superintendencia Financiera (datos.gov.co) | https://www.datos.gov.co/resource/32sa-8pi3.json | Automático |
+| Chile | Banco Central de Chile, dólar observado | https://www.bcentral.cl | A mano (su API exige registro) |
+| Bolivia | Banco Central de Bolivia, tipo de cambio oficial | https://www.bcb.gob.bo | A mano (sin API). Al 31-oct-2026: 12,09 Bs por dólar |
+| Ecuador | Usa el dólar | https://www.bce.fin.ec | Sin conversión |
 
 ## 10. Proveedores para enviar plata de EE. UU. a casa
 
