@@ -53,7 +53,7 @@ export default defineConfig({
         // Solo precacheamos la fuente latina; las otras escrituras no se usan.
         globIgnores: ['**/inter-{cyrillic,cyrillic-ext,greek,greek-ext,vietnamese}-*.woff2', '**/splash/*.png', '**/og-image.png'],
         navigateFallback: '/index.html',
-        navigateFallbackDenylist: [/^\/api\//],
+        navigateFallbackDenylist: [/^\/api\//, /\.(png|jpg|svg|pdf|json|txt)$/],
         cleanupOutdatedCaches: true,
         // Las versiones nuevas se activan solas (sin quedar "en espera").
         skipWaiting: true,
