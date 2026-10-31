@@ -16,7 +16,7 @@ import { OfflinePill } from '@/shared/ui/OfflinePill';
 import { QuoteSheet } from './QuoteSheet';
 
 /**
- * Enviar plata a Perú: lista neutral de proveedores (orden alfabético, datos de su web oficial)
+ * Enviar plata a casa: lista neutral de proveedores (orden alfabético, datos de su web oficial)
  * y un comparador con las cotizaciones que el usuario copia de cada app.
  * Informa; no recomienda a ningún proveedor.
  */
@@ -80,7 +80,7 @@ export function RemitScreen() {
 
       <OfflinePill />
 
-      <p className="px-1 text-[15px] leading-relaxed text-ink-2">{t('remit.intro')}</p>
+      <p className="px-1 text-[15px] leading-relaxed text-ink-2">{country === 'PE' ? t('remit.intro') : t('remit.introOther')}</p>
 
       <Select className="mt-4" label={t('remit.country')} value={country} onChange={(e) => setCountry(e.target.value)}>
         {(countries.length ? countries : ['PE']).map((c) => (
@@ -237,7 +237,7 @@ export function RemitScreen() {
       </div>
       <div className="grid gap-3">
         {remitters.map((p) => (
-          <ProviderCard key={p.id} p={p} referralsEnabled={config.referralsEnabled} />
+          <ProviderCard key={p.id} p={p} country={country} referralsEnabled={config.referralsEnabled} />
         ))}
       </div>
       {exchanges.length > 0 && (
@@ -246,7 +246,7 @@ export function RemitScreen() {
           <p className="mb-3 px-1 text-[13px] leading-snug text-ink-2">{t('remit.exchangesIntro')}</p>
           <div className="grid gap-3">
             {exchanges.map((p) => (
-              <ProviderCard key={p.id} p={p} referralsEnabled={config.referralsEnabled} />
+              <ProviderCard key={p.id} p={p} country={country} referralsEnabled={config.referralsEnabled} />
             ))}
           </div>
           <p className="mt-3 px-1 text-[12px] leading-snug text-ink-3">{t('remit.sbsTip')}</p>
@@ -259,9 +259,23 @@ export function RemitScreen() {
   );
 }
 
-function ProviderCard({ p, referralsEnabled }: { p: RemitProviderRow; referralsEnabled: boolean }) {
+function ProviderCard({ p: base, country, referralsEnabled }: { p: RemitProviderRow; country: string; referralsEnabled: boolean }) {
   const { t, i18n } = useTranslation();
+  // Fuera de Perú, los datos salen del corredor de ese país (url, métodos, moneda, fuente).
+  const c = country !== 'PE' ? base.corridors[country] : undefined;
+  const p = c
+    ? { ...base, url: c.url, methods: c.methods, receiveCurrencies: c.receiveCurrencies, wallets: c.wallets, sourceUrls: c.sourceUrls, verifiedAt: c.verifiedAt, referralUrl: null }
+    : base;
   const link = pickProviderLink(p, referralsEnabled);
+  const currencyName = (code: string) => {
+    if (code === 'PEN' || code === 'USD') return t(`remit.currency.${code}`);
+    try {
+      const n = new Intl.DisplayNames([i18n.language], { type: 'currency' }).of(code);
+      return n ? `${n} (${code})` : code;
+    } catch {
+      return code;
+    }
+  };
   return (
     <Card className="p-4">
       <div className="flex items-start justify-between gap-3">
@@ -281,11 +295,13 @@ function ProviderCard({ p, referralsEnabled }: { p: RemitProviderRow; referralsE
               </Badge>
             ))}
           </div>
-          <p className="mt-2 text-[14px] text-ink-2">
-            {t('remit.arrivesIn', {
-              list: p.receiveCurrencies.map((c) => t(`remit.currency.${c}`)).join(` ${t('remit.or')} `),
-            })}
-          </p>
+          {p.receiveCurrencies.length > 0 && (
+            <p className="mt-2 text-[14px] text-ink-2">
+              {t('remit.arrivesIn', {
+                list: p.receiveCurrencies.map(currencyName).join(` ${t('remit.or')} `),
+              })}
+            </p>
+          )}
         </>
       ) : (
         <p className="mt-2 text-[14px] text-ink-2">{t('remit.exchangeBody')}</p>

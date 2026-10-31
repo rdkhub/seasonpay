@@ -131,8 +131,20 @@ export type RemitMethod = 'bank' | 'cash' | 'wallet';
 
 export type RemitProviderType = 'remittance' | 'exchange';
 
+/** Datos de un proveedor para un país distinto de Perú (verificados en su web para envíos desde EE. UU.) */
+export interface RemitCorridor {
+  url: string;
+  methods: RemitMethod[];
+  receiveCurrencies: string[];
+  wallets: string[];
+  sourceUrls: string[];
+  verifiedAt: string;
+}
+
 export interface RemitProviderRow {
   id: string;
+  /** Por país (ISO alfa-2). Perú vive en los campos principales. */
+  corridors: Record<string, RemitCorridor>;
   name: string;
   type: RemitProviderType;
   /** Países de destino verificados (ISO alfa-2) */
@@ -284,6 +296,17 @@ export class SeasonPayDB extends Dexie {
           .toCollection()
           .modify((e: Partial<EmployerRow>) => {
             e.overtimeDailyHours ??= null;
+          });
+      });
+    // v7: corredores por país en los proveedores.
+    this.version(7)
+      .stores({})
+      .upgrade(async (tx) => {
+        await tx
+          .table('remitProviders')
+          .toCollection()
+          .modify((r: Partial<RemitProviderRow>) => {
+            r.corridors ??= {};
           });
       });
   }

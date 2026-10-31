@@ -11,6 +11,7 @@ interface SeedProvider {
   countries?: string[];
   referral_enabled?: boolean;
   notes?: string | null;
+  corridors?: Record<string, { url: string; methods: RemitProviderRow['methods']; receive_currencies: string[]; wallets?: string[]; source_urls: string[]; verified_at: string }>;
   methods: RemitProviderRow['methods'];
   receive_currencies: RemitProviderRow['receiveCurrencies'];
   wallets: string[];
@@ -28,6 +29,12 @@ export const providerFromRemote = (r: SeedProvider): RemitProviderRow => ({
   countries: r.countries && r.countries.length > 0 ? r.countries : ['PE'],
   referralEnabled: r.referral_enabled === true,
   notes: r.notes ?? null,
+  corridors: Object.fromEntries(
+    Object.entries(r.corridors ?? {}).map(([k, c]) => [
+      k,
+      { url: c.url, methods: c.methods, receiveCurrencies: c.receive_currencies ?? [], wallets: c.wallets ?? [], sourceUrls: c.source_urls ?? [c.url], verifiedAt: String(c.verified_at) },
+    ]),
+  ),
   methods: r.methods,
   receiveCurrencies: r.receive_currencies,
   wallets: r.wallets ?? [],
