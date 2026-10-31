@@ -140,7 +140,7 @@ La app sigue gratis. En vez de pagos, la fase 5 agrega Temporada → "Enviar pla
 - Declaración estatal: faltan WY y NH (no encontré una página oficial que diga claramente que no cobran impuesto al sueldo) y la fecha límite de Utah.
 - Tipo de cambio: si el BCRP vuelve a responder, se usa solo; si no, queda SUNAT. Revisar si conviene pedir al BCRP acceso para la app.
 - Calcular el doble tiempo de California y el 7.º día (CA, KY).
-- Enviar plata: Perú completo (comparador y casas de cambio). Argentina, Bolivia, Brasil, Chile, Colombia y Ecuador con los corredores confirmados (`remit_providers.corridors`, `scripts/remit-corridors.py`). Falta confirmar Wise y Xoom en más países, MoneyGram fuera de Perú y el registro SBS de Rextie.
+- Enviar plata: Perú completo (comparador y casas de cambio). Argentina, Bolivia, Brasil, Chile, Colombia y Ecuador con los corredores confirmados (`remit_providers.corridors`, `scripts/remit-corridors.py`). Wise, Xoom y WorldRemit ya cubren los seis países (Wise no ofrece pesos argentinos; está en lista de espera). Rextie: registro SBS confirmado en sus Términos y Condiciones (Res. SBS N° 684-2017). Falta MoneyGram fuera de Perú y la moneda de llegada de Xoom y WorldRemit en AR, BO, BR, CL, EC.
 - Google OAuth (necesita client ID y secret).
 - Fase de pagos (pase de temporada): después del piloto, con Lemon Squeezy o Polar.
 

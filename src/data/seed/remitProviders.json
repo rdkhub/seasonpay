@@ -318,7 +318,11 @@
       "active": true,
       "type": "remittance",
       "countries": [
+        "BO",
+        "BR",
         "CL",
+        "CO",
+        "EC",
         "PE"
       ],
       "referral_enabled": false,
@@ -335,6 +339,62 @@
           "wallets": [],
           "source_urls": [
             "https://wise.com/es-us/send-money/send-money-to-chile"
+          ],
+          "verified_at": "2026-10-30"
+        },
+        "BO": {
+          "url": "https://wise.com/us/send-money/send-money-to-bolivia",
+          "methods": [
+            "bank"
+          ],
+          "receive_currencies": [
+            "BOB"
+          ],
+          "wallets": [],
+          "source_urls": [
+            "https://wise.com/us/send-money/send-money-to-bolivia"
+          ],
+          "verified_at": "2026-10-30"
+        },
+        "BR": {
+          "url": "https://wise.com/us/send-money/send-money-to-brazil",
+          "methods": [
+            "bank"
+          ],
+          "receive_currencies": [
+            "BRL"
+          ],
+          "wallets": [],
+          "source_urls": [
+            "https://wise.com/us/send-money/send-money-to-brazil"
+          ],
+          "verified_at": "2026-10-30"
+        },
+        "CO": {
+          "url": "https://wise.com/us/send-money/send-money-to-colombia",
+          "methods": [
+            "bank"
+          ],
+          "receive_currencies": [
+            "COP"
+          ],
+          "wallets": [],
+          "source_urls": [
+            "https://wise.com/us/send-money/send-money-to-colombia"
+          ],
+          "verified_at": "2026-10-30"
+        },
+        "EC": {
+          "url": "https://wise.com/us/send-money/send-money-to-ecuador",
+          "methods": [
+            "bank"
+          ],
+          "receive_currencies": [
+            "USD"
+          ],
+          "wallets": [],
+          "source_urls": [
+            "https://wise.com/us/send-money/send-money-to-ecuador"
           ],
           "verified_at": "2026-10-30"
         }
@@ -364,12 +424,70 @@
       "active": true,
       "type": "remittance",
       "countries": [
+        "AR",
+        "BO",
+        "BR",
+        "CL",
         "CO",
+        "EC",
         "PE"
       ],
       "referral_enabled": false,
       "notes": null,
       "corridors": {
+        "AR": {
+          "url": "https://www.xoom.com/argentina/send-money",
+          "methods": [
+            "bank",
+            "cash"
+          ],
+          "receive_currencies": [],
+          "wallets": [],
+          "source_urls": [
+            "https://www.xoom.com/argentina/send-money"
+          ],
+          "verified_at": "2026-10-30"
+        },
+        "BO": {
+          "url": "https://www.xoom.com/bolivia/send-money",
+          "methods": [
+            "bank",
+            "cash",
+            "wallet"
+          ],
+          "receive_currencies": [],
+          "wallets": [],
+          "source_urls": [
+            "https://www.xoom.com/bolivia/send-money"
+          ],
+          "verified_at": "2026-10-30"
+        },
+        "BR": {
+          "url": "https://www.xoom.com/brazil/send-money",
+          "methods": [
+            "bank",
+            "wallet"
+          ],
+          "receive_currencies": [],
+          "wallets": [],
+          "source_urls": [
+            "https://www.xoom.com/brazil/send-money"
+          ],
+          "verified_at": "2026-10-30"
+        },
+        "CL": {
+          "url": "https://www.xoom.com/chile/send-money",
+          "methods": [
+            "bank",
+            "cash"
+          ],
+          "receive_currencies": [],
+          "wallets": [],
+          "source_urls": [
+            "https://www.xoom.com/chile/send-money"
+          ],
+          "verified_at": "2026-10-30"
+        },
         "CO": {
           "url": "https://xoom.com/colombia",
           "methods": [
@@ -388,6 +506,19 @@
             "https://xoom.com/colombia"
           ],
           "verified_at": "2026-10-30"
+        },
+        "EC": {
+          "url": "https://www.xoom.com/ecuador/send-money",
+          "methods": [
+            "bank",
+            "cash"
+          ],
+          "receive_currencies": [],
+          "wallets": [],
+          "source_urls": [
+            "https://www.xoom.com/ecuador/send-money"
+          ],
+          "verified_at": "2026-10-30"
         }
       }
     },
@@ -397,8 +528,12 @@
       "url": "https://www.worldremit.com/en-us/peru",
       "type": "remittance",
       "countries": [
+        "AR",
         "BO",
+        "BR",
         "CL",
+        "CO",
+        "EC",
         "PE"
       ],
       "methods": [
@@ -451,6 +586,62 @@
             "https://www.worldremit.com/en-us/chile"
           ],
           "verified_at": "2026-10-30"
+        },
+        "AR": {
+          "url": "https://www.worldremit.com/en-us/argentina",
+          "methods": [
+            "bank",
+            "cash",
+            "wallet"
+          ],
+          "receive_currencies": [],
+          "wallets": [],
+          "source_urls": [
+            "https://www.worldremit.com/en-us/argentina"
+          ],
+          "verified_at": "2026-10-30"
+        },
+        "BR": {
+          "url": "https://www.worldremit.com/en-us/brazil",
+          "methods": [
+            "bank",
+            "cash",
+            "wallet"
+          ],
+          "receive_currencies": [],
+          "wallets": [],
+          "source_urls": [
+            "https://www.worldremit.com/en-us/brazil"
+          ],
+          "verified_at": "2026-10-30"
+        },
+        "CO": {
+          "url": "https://www.worldremit.com/en-us/colombia",
+          "methods": [
+            "bank",
+            "cash",
+            "wallet"
+          ],
+          "receive_currencies": [],
+          "wallets": [],
+          "source_urls": [
+            "https://www.worldremit.com/en-us/colombia"
+          ],
+          "verified_at": "2026-10-30"
+        },
+        "EC": {
+          "url": "https://www.worldremit.com/en-us/ecuador",
+          "methods": [
+            "bank",
+            "cash",
+            "wallet"
+          ],
+          "receive_currencies": [],
+          "wallets": [],
+          "source_urls": [
+            "https://www.worldremit.com/en-us/ecuador"
+          ],
+          "verified_at": "2026-10-30"
         }
       }
     },
@@ -499,11 +690,12 @@
       "referral_url": null,
       "referral_enabled": false,
       "source_urls": [
-        "https://www.rextie.com"
+        "https://www.rextie.com",
+        "https://www.rextie.com/terminos-y-condiciones/"
       ],
-      "verified_at": "2026-10-17",
+      "verified_at": "2026-10-30",
       "active": true,
-      "notes": "Casa de cambio online. Su web no muestra el registro SBS en la portada (pendiente de verificar en la SBS).",
+      "notes": "Casa de cambio online. Sus Términos y Condiciones indican registro como casa de cambio digital por Resolución SBS N° 684-2017.",
       "corridors": {}
     },
     {
