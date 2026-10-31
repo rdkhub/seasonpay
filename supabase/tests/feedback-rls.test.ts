@@ -101,3 +101,24 @@ describe('RLS de feedback', () => {
     await expect(as('anon', null, insertSql(null, 9))).rejects.toThrow(/check constraint/);
   });
 });
+
+describe('límite anti-abuso de feedback (20261031001030_rate_limits.sql)', () => {
+  beforeAll(async () => {
+    const rl = readFileSync(fileURLToPath(new URL('../migrations/20261031001030_rate_limits.sql', import.meta.url)), 'utf8');
+    // La función y el trigger de feedback (las otras tablas no existen en esta base de prueba).
+    await db.exec(rl.slice(rl.indexOf('create or replace function'), rl.indexOf('create index')));
+    await db.exec(rl.slice(rl.indexOf('create trigger feedback_rate_limit'), rl.indexOf('create trigger survey_rate_limit')));
+  });
+
+  it('un mismo celular puede mandar hasta 10 por hora; el 11.º se rechaza', async () => {
+    // Ya hay 2 de este install (de las pruebas de arriba)
+    for (let i = 0; i < 8; i++) await as('anon', null, insertSql(null));
+    await expect(as('anon', null, insertSql(null))).rejects.toThrow(/rate_limit/);
+  });
+
+  it('otro celular no se ve afectado', async () => {
+    await expect(
+      as('anon', null, insertSql(null).replace(INSTALL, '22222222-2222-2222-2222-222222222222')),
+    ).resolves.toBeDefined();
+  });
+});
