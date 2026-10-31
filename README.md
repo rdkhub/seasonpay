@@ -72,7 +72,8 @@ Reglas de la arquitectura:
 
 ## Cuenta, sincronización y landing (Fase 4)
 
-- **Login sin contraseña:** el usuario pone su correo y recibe un correo de Supabase. Entra escribiendo el código o tocando el enlace desde el mismo celular. Google es opcional (`VITE_GOOGLE_AUTH=true` cuando el proveedor esté configurado).
+- **Cuenta opcional con usuario y contraseña (sin correo):** la Edge Function `create-user` (desplegada con `--no-verify-jwt`) crea la cuenta ya confirmada con un correo interno `<usuario>@users.seasonpay.vercel.app`, que nunca recibe nada. Después la app entra con `signInWithPassword`. Límite de 5 cuentas por IP por hora (`signup_attempts`, solo hash de la IP). Si alguien olvida su contraseña no hay recuperación; sus datos siguen en el celular. Se puede cambiar la contraseña desde Ajustes.
+- **Correo y Google (apagados en el piloto):** el código por correo vuelve con `VITE_EMAIL_AUTH=true` cuando haya SMTP propio (Resend + dominio). Google con `VITE_GOOGLE_AUTH=true` cuando el proveedor esté configurado.
 - **La cuenta es opcional:** sin login todo sigue funcionando local. Con login se respalda en Supabase y se puede usar en otro celular.
 - **Sincronización:** cada cambio va a una cola local (outbox) en la misma transacción. Se envía al volver la señal, al abrir la app, cada 60 s y 2,5 s después de cada cambio. Gana el cambio más reciente (`updated_at`, lo hace cumplir un trigger en Postgres). Los borrados viajan como `deleted_at`.
 - **Cerrar sesión** borra los datos personales del celular, pero solo si no quedan cambios sin subir. Si no hay señal, avisa y no borra.

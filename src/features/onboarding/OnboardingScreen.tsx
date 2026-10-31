@@ -133,7 +133,7 @@ export function OnboardingScreen() {
       </div>
 
       {/* Si ya tenía cuenta, al entrar baja su perfil y el router lo lleva a la app. */}
-      <AuthSheet open={authOpen} onClose={() => setAuthOpen(false)} />
+      <AuthSheet open={authOpen} onClose={() => setAuthOpen(false)} initialMode="signin" />
 
       {/* Acciones abajo, al alcance del pulgar */}
       <div className="sticky bottom-0 -mx-5 bg-gradient-to-t from-bg from-75% to-transparent px-5 pb-[max(20px,env(safe-area-inset-bottom))] pt-5">

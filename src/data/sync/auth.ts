@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { getSupabase, hasSupabaseConfig } from './supabaseClient';
+import { usernameToEmail } from '@/domain/username';
 
 /**
  * Sesión de Supabase como store simple (sin librerías). La app funciona igual sin sesión:
@@ -47,8 +48,71 @@ export function useAuth(): AuthState {
 
 export const authAvailable = hasSupabaseConfig;
 export const googleAuthEnabled = () => import.meta.env.VITE_GOOGLE_AUTH === 'true';
+/** Entrar con código al correo. Apagado en el piloto (no hay SMTP propio); se prende con VITE_EMAIL_AUTH=true. */
+export const emailAuthEnabled = () => import.meta.env.VITE_EMAIL_AUTH === 'true';
 
 export type AuthError = 'rate_limit' | 'invalid_code' | 'network' | 'unknown';
+
+export type PasswordAuthError =
+  | 'invalid_credentials'
+  | 'username_taken'
+  | 'invalid_username'
+  | 'weak_password'
+  | 'rate_limit'
+  | 'network'
+  | 'unknown';
+
+/** Crea la cuenta en la Edge Function create-user y entra. */
+export async function signUpWithUsername(username: string, password: string): Promise<PasswordAuthError | null> {
+  const sb = await getSupabase();
+  if (!sb) return 'unknown';
+  try {
+    const { data, error } = await sb.functions.invoke<{ ok?: boolean; error?: PasswordAuthError }>('create-user', {
+      body: { username, password },
+    });
+    if (error) {
+      // FunctionsHttpError trae la respuesta con el código de error
+      const ctx = (error as { context?: Response }).context;
+      if (ctx && typeof ctx.json === 'function') {
+        const b = (await ctx.json().catch(() => null)) as { error?: PasswordAuthError } | null;
+        if (b?.error) return b.error;
+      }
+      return /fetch|network/i.test(error.message) ? 'network' : 'unknown';
+    }
+    if (!data?.ok) return data?.error ?? 'unknown';
+  } catch {
+    return 'network';
+  }
+  return signInWithUsername(username, password);
+}
+
+export async function signInWithUsername(username: string, password: string): Promise<PasswordAuthError | null> {
+  const sb = await getSupabase();
+  if (!sb) return 'unknown';
+  try {
+    const { error } = await sb.auth.signInWithPassword({ email: usernameToEmail(username), password });
+    if (!error) return null;
+    if (error.status === 429) return 'rate_limit';
+    if (error.code === 'invalid_credentials' || error.status === 400) return 'invalid_credentials';
+    if (/fetch|network/i.test(error.message)) return 'network';
+    return 'unknown';
+  } catch {
+    return 'network';
+  }
+}
+
+export async function changePassword(password: string): Promise<PasswordAuthError | null> {
+  const sb = await getSupabase();
+  if (!sb) return 'unknown';
+  try {
+    const { error } = await sb.auth.updateUser({ password });
+    if (!error) return null;
+    if (error.code === 'weak_password' || error.code === 'same_password') return 'weak_password';
+    return /fetch|network/i.test(error.message) ? 'network' : 'unknown';
+  } catch {
+    return 'network';
+  }
+}
 
 function mapError(e: { status?: number; message?: string; code?: string } | null): AuthError | null {
   if (!e) return null;
