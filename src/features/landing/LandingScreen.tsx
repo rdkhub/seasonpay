@@ -1,12 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, CalendarClock, Download, Lock, PiggyBank, Receipt, Send, ShieldCheck, Smartphone, Timer } from 'lucide-react';
+import { ArrowRight, CalendarClock, CircleHelp, Download, Lock, PiggyBank, Receipt, Send, ShieldCheck, Smartphone, Timer } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { applyLanguagePref, currentLang } from '@/shared/i18n';
 import { isIos, promptInstall, useCanInstall } from '@/shared/lib/installPrompt';
 import { Button, Card } from '@/shared/ui';
 import { LogoMark } from '@/shared/ui/Logo';
 import { LANDING_SEEN_KEY } from './landingSeen';
+import { FaqList } from '@/features/faq/FaqList';
 
 /** Página pública bilingüe: qué es SeasonPay, privacidad y cómo instalarla. */
 export function LandingScreen() {
@@ -82,6 +83,13 @@ export function LandingScreen() {
             </Card>
           ))}
         </div>
+      </section>
+
+      <section className="mt-8">
+        <h2 className="flex items-center gap-2 text-[20px] font-semibold tracking-[-0.02em] text-ink">
+          <CircleHelp className="h-5 w-5 text-accent" /> {t('faq.title')}
+        </h2>
+        <FaqList className="mt-3" />
       </section>
 
       <p className="mt-8 text-center text-[12px] leading-snug text-ink-3">{t('landing.disclaimer')}</p>

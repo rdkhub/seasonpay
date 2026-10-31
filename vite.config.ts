@@ -51,7 +51,7 @@ export default defineConfig({
         // Notificaciones (push y clic): public/push-sw.js
         importScripts: ['push-sw.js'],
         // Solo precacheamos la fuente latina; las otras escrituras no se usan.
-        globIgnores: ['**/inter-{cyrillic,cyrillic-ext,greek,greek-ext,vietnamese}-*.woff2', '**/splash/*.png'],
+        globIgnores: ['**/inter-{cyrillic,cyrillic-ext,greek,greek-ext,vietnamese}-*.woff2', '**/splash/*.png', '**/og-image.png'],
         navigateFallback: '/index.html',
         navigateFallbackDenylist: [/^\/api\//],
         cleanupOutdatedCaches: true,

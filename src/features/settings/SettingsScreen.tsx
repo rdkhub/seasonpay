@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { BarChart3, BookOpenCheck, Briefcase, FileJson, Lock, MessageCircle, MessageSquareHeart, Plus, ScrollText, Share2, ShieldCheck, Smartphone, Trash2, UserRound } from 'lucide-react';
+import { BarChart3, BookOpenCheck, Briefcase, CircleHelp, FileJson, Lock, MessageCircle, MessageSquareHeart, Plus, ScrollText, Share2, ShieldCheck, Smartphone, Trash2, UserRound } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import type { EmployerRow, LanguagePref } from '@/data/db';
 import { useAppConfig, useEmployers, useProfile, useRules } from '@/data/hooks';
@@ -9,6 +9,7 @@ import { useAuth } from '@/data/sync/auth';
 import { checkIsAdmin } from '@/features/admin/adminApi';
 import { openFeedback } from '@/features/feedback/feedbackStore';
 import { InstallSheet } from '@/features/install/InstallSheet';
+import { FaqSheet } from '@/features/faq/FaqList';
 import { installCase } from '@/features/install/installGuide';
 import { deliverFiles } from '@/shared/lib/download';
 import { track } from '@/data/telemetry';
@@ -34,6 +35,7 @@ export function SettingsScreen() {
   const { session } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
   const [installOpen, setInstallOpen] = useState(false);
+  const [faqOpen, setFaqOpen] = useState(false);
   const [exporting, setExporting] = useState(false);
   const installed = installCase() === 'installed';
 
@@ -164,6 +166,7 @@ export function SettingsScreen() {
 
       <SectionTitle>{t('pilot.section')}</SectionTitle>
       <ListGroup>
+        <ListRow icon={<CircleHelp />} title={t('faq.title')} subtitle={t('faq.rowSub')} onClick={() => setFaqOpen(true)} />
         <ListRow icon={<MessageSquareHeart />} title={t('feedback.title')} subtitle={t('feedback.rowSub')} onClick={() => void openFeedback()} />
         {config.whatsappGroupUrl && <ListRow icon={<MessageCircle />} title={t('feedback.whatsapp')} subtitle={t('feedback.whatsappSub')} href={config.whatsappGroupUrl} />}
         {!installed && <ListRow icon={<Smartphone />} title={t('install.title')} subtitle={t('install.rowSub')} onClick={() => setInstallOpen(true)} />}
@@ -231,6 +234,7 @@ export function SettingsScreen() {
       <ProfileSheet open={profileOpen} onClose={() => setProfileOpen(false)} profile={profile ?? null} />
       <RulesSheet open={rulesOpen} onClose={() => setRulesOpen(false)} rules={rules ?? []} state={profile?.workState ?? null} />
       <InstallSheet open={installOpen} onClose={() => setInstallOpen(false)} />
+      <FaqSheet open={faqOpen} onClose={() => setFaqOpen(false)} />
 
       <Sheet
         open={deleteOpen}
