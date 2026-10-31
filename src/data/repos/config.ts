@@ -12,7 +12,7 @@ export interface AppConfig {
 }
 
 /** Versión de la política incluida en la app. Debe coincidir con app_config.privacy_policy_version. */
-export const BUNDLED_POLICY_VERSION = '2026-10-17';
+export const BUNDLED_POLICY_VERSION = '2026-10-30';
 
 export const DEFAULT_CONFIG: AppConfig = {
   referralsEnabled: false,

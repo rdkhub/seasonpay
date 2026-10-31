@@ -30,7 +30,7 @@ export default defineConfig({
         id: '/',
         name: 'SeasonPay',
         short_name: 'SeasonPay',
-        description: 'Turnos, propinas y pago estimado para tu temporada.',
+        description: 'Turnos, propinas, overtime, boletas, ahorro y envíos a casa para trabajadores de temporada J-1 y H-2B.',
         lang: 'es',
         start_url: '/',
         scope: '/',

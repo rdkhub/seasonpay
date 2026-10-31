@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Download, Lock, PiggyBank, Receipt, ShieldCheck, Smartphone, Timer } from 'lucide-react';
+import { ArrowRight, CalendarClock, Download, Lock, PiggyBank, Receipt, Send, ShieldCheck, Smartphone, Timer } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { applyLanguagePref, currentLang } from '@/shared/i18n';
 import { isIos, promptInstall, useCanInstall } from '@/shared/lib/installPrompt';
@@ -59,6 +59,8 @@ export function LandingScreen() {
         <Feature icon={<Receipt />} title={t('landing.f2Title')} body={t('landing.f2Body')} />
         <Feature icon={<ShieldCheck />} title={t('landing.f3Title')} body={t('landing.f3Body')} />
         <Feature icon={<PiggyBank />} title={t('landing.f4Title')} body={t('landing.f4Body')} />
+        <Feature icon={<CalendarClock />} title={t('landing.f5Title')} body={t('landing.f5Body')} />
+        <Feature icon={<Send />} title={t('landing.f6Title')} body={t('landing.f6Body')} />
       </section>
 
       <Card tone="hero" className="mt-6 p-6">
