@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { assessFica, ficaAlertForPaystub, type FicaRules } from '../fica';
 import { pickProviderLink, sortProvidersNeutral } from '../referrals';
-import { daysUntil, federalDueDate, seasonDeadlines, seasonTaxYears, stateDueDate } from '../deadlines';
+import { daysUntil, federalDueDate, seasonDeadlines, seasonTaxYears, stateDueDate, weekendOf } from '../deadlines';
 
 const rules: FicaRules = { studentYearsLimit: 5, teacherTraineePriorYearsLimit: 2, exemptVisaClasses: ['F', 'J', 'M', 'Q'] };
 const stub = (ss: number, med: number) => ({ socialSecurityCents: ss, medicareCents: med });
@@ -79,15 +79,22 @@ describe('fechas límite de la temporada', () => {
     const years = seasonTaxYears(shifts, Date.UTC(2027, 2, 30));
     expect(years).toEqual([2026, 2027]);
     expect(seasonDeadlines(years, { federal, state })).toEqual([
-      { kind: 'federal', taxYear: 2026, date: '2027-04-15' },
-      { kind: 'state', taxYear: 2026, date: '2027-04-15' },
-      { kind: 'federal', taxYear: 2027, date: '2028-04-15' },
-      { kind: 'state', taxYear: 2027, date: '2028-04-15' },
+      { kind: 'federal', taxYear: 2026, date: '2027-04-15', weekend: null },
+      { kind: 'state', taxYear: 2026, date: '2027-04-15', weekend: null },
+      // 15-abr-2028 cae sábado: se marca para que la app avise que se corre
+      { kind: 'federal', taxYear: 2027, date: '2028-04-15', weekend: 'sat' },
+      { kind: 'state', taxYear: 2027, date: '2028-04-15', weekend: 'sat' },
     ]);
   });
 
+  it('weekendOf', () => {
+    expect(weekendOf('2028-04-15')).toBe('sat');
+    expect(weekendOf('2029-04-15')).toBe('sun');
+    expect(weekendOf('2027-04-15')).toBeNull();
+  });
+
   it('sin regla estatal solo sale la federal', () => {
-    expect(seasonDeadlines([2026], { federal })).toEqual([{ kind: 'federal', taxYear: 2026, date: '2027-04-15' }]);
+    expect(seasonDeadlines([2026], { federal })).toEqual([{ kind: 'federal', taxYear: 2026, date: '2027-04-15', weekend: null }]);
   });
 
   it('daysUntil', () => {

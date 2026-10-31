@@ -15,8 +15,19 @@ export interface DeadlineRuleInput {
 export interface Deadline {
   kind: 'federal' | 'state';
   taxYear: number;
-  /** yyyy-mm-dd */
+  /** yyyy-mm-dd: la fecha que da la regla (15 de abril, etc.) */
   date: string;
+  /**
+   * La fecha cae sábado o domingo. Según el IRS (Pub. 519), pasa al siguiente día que no sea
+   * sábado, domingo ni feriado legal. No calculamos feriados (ej. Emancipation Day en DC),
+   * así que la app muestra la fecha original como la más temprana y pide confirmarla.
+   */
+  weekend: 'sat' | 'sun' | null;
+}
+
+export function weekendOf(dateISO: string): 'sat' | 'sun' | null {
+  const d = new Date(Date.UTC(+dateISO.slice(0, 4), +dateISO.slice(5, 7) - 1, +dateISO.slice(8, 10))).getUTCDay();
+  return d === 6 ? 'sat' : d === 0 ? 'sun' : null;
 }
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -47,9 +58,9 @@ export function seasonDeadlines(taxYears: number[], rules: DeadlineRuleInput): D
   const out: Deadline[] = [];
   for (const y of taxYears) {
     const f = federalDueDate(y, rules.federal);
-    if (f) out.push({ kind: 'federal', taxYear: y, date: f });
+    if (f) out.push({ kind: 'federal', taxYear: y, date: f, weekend: weekendOf(f) });
     const s = stateDueDate(y, rules.state);
-    if (s) out.push({ kind: 'state', taxYear: y, date: s });
+    if (s) out.push({ kind: 'state', taxYear: y, date: s, weekend: weekendOf(s) });
   }
   return out;
 }

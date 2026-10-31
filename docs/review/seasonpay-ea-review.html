@@ -1,0 +1,543 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>SeasonPay · Enrolled Agent review</title>
+<style>
+@page { size: Letter; margin: 16mm 14mm; }
+body { font: 10.5pt/1.45 -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; color:#111; }
+h1 { font-size: 20pt; margin: 0 0 4px; } h2 { font-size: 14pt; margin: 22px 0 8px; border-bottom: 2px solid #1a5fd2; padding-bottom: 3px; page-break-after: avoid; }
+h3 { font-size: 11.5pt; margin: 14px 0 6px; }
+.sub { color:#555; } .box { background:#f3f6fb; border:1px solid #d6e0f0; border-radius:6px; padding:10px 12px; margin:10px 0; }
+.card { border:1px solid #ddd; border-radius:6px; padding:8px 10px; margin:8px 0; page-break-inside: avoid; }
+.hd { font-size: 10.5pt; margin-bottom: 4px; }
+pre { background:#fafafa; border:1px solid #eee; padding:6px 8px; font-size:8.5pt; white-space:pre-wrap; word-break:break-word; margin:4px 0; }
+.meta { font-size: 8.5pt; color:#444; word-break: break-all; }
+.rv { display:flex; gap:18px; font-size:9pt; margin-top:6px; } .rv .n { flex:1; border-bottom:1px solid #999; }
+table { border-collapse: collapse; width:100%; font-size: 8.5pt; } th, td { border:1px solid #ddd; padding:4px 5px; vertical-align: top; text-align:left; }
+th { background:#eef2f8; } tr { page-break-inside: avoid; } .k { font-family: Menlo, Consolas, monospace; font-size: 7.5pt; color:#333; word-break: break-all; } .c { text-align:center; width:28px; }
+a { color:#1a5fd2; } ul { margin: 4px 0 4px 18px; padding:0; }
+</style></head><body>
+<h1>SeasonPay · Rules review for an Enrolled Agent</h1>
+<div class="sub">Generated 2026-10-30 · 84 rules · 84 pending review</div>
+
+<div class="box">
+<b>What SeasonPay is.</b> A free, offline-first web app (pilot, winter season Dec 2026 to Mar 2027) for seasonal workers in the US on J-1 and H-2B visas. Users log shifts, tips and paystubs; the app estimates pay and overtime, flags possible Social Security/Medicare (FICA) withholding for nonresident J-1 workers, lists filing deadlines and an end-of-season checklist.<br><br>
+<b>What it does not do.</b> It does not prepare or file returns, does not compute income tax owed or refunds, and does not apply tax treaties (the pilot group is mostly from Peru, which has no income tax treaty with the US). Every message is phrased as information with a link to the official source and the date it was verified ("According to the IRS…, you may… Confirm with your employer, sponsor or a professional").<br><br>
+<b>How rules work.</b> No tax or labor figure is hardcoded. Each rule is a row in <code>tax_rules</code> (key, value, year, jurisdiction, source URL, verified date, reviewer). The app shows the source link and verified date next to every rule.
+</div>
+
+<div class="box">
+<b>What we ask you to review.</b>
+<ul>
+<li>Section 1 (federal) and the user-facing texts in Section 5: accuracy and wording. This is the priority.</li>
+<li>Section 2 (state returns): whether the summaries are correct for nonresident seasonal workers.</li>
+<li>Sections 3 and 4 (overtime): labor-law data from the US Department of Labor table; a quick sanity check is enough.</li>
+</ul>
+Please tick <b>OK</b> or <b>Needs change</b> and write notes. If you approve a rule, we will set <code>reviewed_by</code> to your name and the date.
+</div>
+
+<div class="box">
+<b>Known limitations (by design in the pilot).</b>
+<ul>
+<li>Federal rules use Publication 519 (2025) and the 2025 forms, the latest published as of 2026-10-30. They will be re-verified when the 2026 editions are released.</li>
+<li>Deadlines: if a date falls on a weekend, the app shows the original date, flags it and explains the next-business-day rule (Pub. 519). It does not compute legal holidays (e.g., DC Emancipation Day).</li>
+<li>Overtime: the app applies weekly overtime and daily overtime in AK, CA and CO. It does not compute CA double time, CA/KY seventh-day rules or CO 12 consecutive hours; it shows a notice instead.</li>
+<li>FICA: exemption logic covers nonresident F/J/M/Q under Pub. 519. It does not handle the student FICA exception under IRC 3121(b)(10).</li>
+<li>Alaska: no explicit official page found stating there is no individual income tax; no state rule is shown for AK.</li>
+</ul></div>
+
+<h2>1. Federal rules (9)</h2>
+
+<div class="card">
+  <div class="hd"><b>exempt_individual_student</b> · federal · 2025</div>
+  <pre>{
+  &quot;edition&quot;: &quot;Publication 519 (2025)&quot;,
+  &quot;calendar_years_limit&quot;: 5,
+  &quot;visa_classes&quot;: [
+    &quot;F&quot;,
+    &quot;J&quot;,
+    &quot;M&quot;,
+    &quot;Q&quot;
+  ],
+  &quot;exception&quot;: &quot;may remain exempt if no intent to reside permanently and substantial compliance with visa&quot;
+}</pre>
+  <div class="meta">Source: <a href="https://www.irs.gov/publications/p519">https://www.irs.gov/publications/p519</a><br>
+  Verified: 2026-10-17 · Reviewed by: pendiente Enrolled Agent</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>exempt_individual_teacher_trainee</b> · federal · 2025</div>
+  <pre>{
+  &quot;edition&quot;: &quot;Publication 519 (2025)&quot;,
+  &quot;preceding_years_window&quot;: 6,
+  &quot;max_prior_years&quot;: 2,
+  &quot;visa_classes&quot;: [
+    &quot;J&quot;,
+    &quot;Q&quot;
+  ],
+  &quot;exception&quot;: &quot;foreign employer paid all compensation (3 or fewer of 6 preceding years)&quot;
+}</pre>
+  <div class="meta">Source: <a href="https://www.irs.gov/publications/p519">https://www.irs.gov/publications/p519</a><br>
+  Verified: 2026-10-17 · Reviewed by: pendiente Enrolled Agent</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>fica_exemption_nonresident_fjmq</b> · federal · 2025</div>
+  <pre>{
+  &quot;edition&quot;: &quot;Publication 519 (2025)&quot;,
+  &quot;visa_classes&quot;: [
+    &quot;F&quot;,
+    &quot;J&quot;,
+    &quot;M&quot;,
+    &quot;Q&quot;
+  ],
+  &quot;requires_nonresident_alien&quot;: true,
+  &quot;requires_purpose_of_visa&quot;: true,
+  &quot;j_requires_sponsor_authorization_letter&quot;: true,
+  &quot;not_covered&quot;: [
+    &quot;F-2&quot;,
+    &quot;J-2&quot;,
+    &quot;M-2&quot;,
+    &quot;Q-3&quot;
+  ]
+}</pre>
+  <div class="meta">Source: <a href="https://www.irs.gov/publications/p519">https://www.irs.gov/publications/p519</a><br>
+  Verified: 2026-10-17 · Reviewed by: pendiente Enrolled Agent</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>fica_refund_procedure</b> · federal · 2025</div>
+  <pre>{
+  &quot;edition&quot;: &quot;Publication 519 (2025)&quot;,
+  &quot;steps&quot;: [
+    &quot;ask_employer&quot;,
+    &quot;form_843&quot;
+  ],
+  &quot;attachments&quot;: [
+    &quot;form_w2&quot;,
+    &quot;visa_copy&quot;,
+    &quot;form_i94&quot;,
+    &quot;form_ds2019_if_j1&quot;,
+    &quot;employer_statement_or_form_8316&quot;,
+    &quot;pay_statements_if_partial_year&quot;
+  ],
+  &quot;mail_to&quot;: &quot;Department of the Treasury, Internal Revenue Service Center, Ogden, UT 84201-0038&quot;,
+  &quot;form_843_url&quot;: &quot;https://www.irs.gov/forms-pubs/about-form-843&quot;,
+  &quot;form_8316_url&quot;: &quot;https://www.irs.gov/forms-pubs/about-form-8316&quot;
+}</pre>
+  <div class="meta">Source: <a href="https://www.irs.gov/publications/p519">https://www.irs.gov/publications/p519</a><br>
+  Verified: 2026-10-17 · Reviewed by: pendiente Enrolled Agent</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>form_1040nr_due_date</b> · federal · 2025</div>
+  <pre>{
+  &quot;employee_with_withholding&quot;: {
+    &quot;month_after_tax_year&quot;: 4,
+    &quot;day&quot;: 15,
+    &quot;calendar_year&quot;: &quot;04-15&quot;
+  },
+  &quot;others&quot;: {
+    &quot;month_after_tax_year&quot;: 6,
+    &quot;day&quot;: 15,
+    &quot;calendar_year&quot;: &quot;06-15&quot;
+  },
+  &quot;example_tax_year_2025&quot;: &quot;2026-04-15&quot;,
+  &quot;weekend_holiday_rule_verified&quot;: true,
+  &quot;weekend_holiday_rule&quot;: &quot;If the regular due date falls on a Saturday, Sunday, or legal holiday, the due date is the next day that is not a Saturday, Sunday, or legal holiday.&quot;,
+  &quot;weekend_holiday_source&quot;: &quot;https://www.irs.gov/publications/p519&quot;
+}</pre>
+  <div class="meta">Source: <a href="https://www.irs.gov/individuals/international-taxpayers/taxation-of-nonresident-aliens">https://www.irs.gov/individuals/international-taxpayers/taxation-of-nonresident-aliens</a><br>
+  Verified: 2026-10-30 · Reviewed by: pendiente Enrolled Agent</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>form_1040nr_purpose</b> · federal · 2025</div>
+  <pre>{
+  &quot;who&quot;: &quot;nonresident alien individuals, estates, and trusts file a U.S. income tax return&quot;
+}</pre>
+  <div class="meta">Source: <a href="https://www.irs.gov/forms-pubs/about-form-1040-nr">https://www.irs.gov/forms-pubs/about-form-1040-nr</a><br>
+  Verified: 2026-10-17 · Reviewed by: pendiente Enrolled Agent</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>form_8843_filing</b> · federal · 2025</div>
+  <pre>{
+  &quot;edition&quot;: &quot;Form 8843 (2025)&quot;,
+  &quot;who&quot;: &quot;alien individuals who were exempt individuals (or unable to leave due to a medical condition)&quot;,
+  &quot;with_1040nr&quot;: &quot;attach to Form 1040-NR&quot;,
+  &quot;without_return_mail_to&quot;: &quot;Department of the Treasury, Internal Revenue Service Center, Austin, TX 73301-0215&quot;,
+  &quot;deadline&quot;: &quot;due date (including extensions) for filing Form 1040-NR&quot;
+}</pre>
+  <div class="meta">Source: <a href="https://www.irs.gov/pub/irs-pdf/f8843.pdf">https://www.irs.gov/pub/irs-pdf/f8843.pdf</a><br>
+  Verified: 2026-10-17 · Reviewed by: pendiente Enrolled Agent</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>overtime_seasonal_exemption_notice</b> · federal · 2026</div>
+  <pre>{
+  &quot;flsa_section&quot;: &quot;13(a)(3)&quot;,
+  &quot;applies_to&quot;: &quot;seasonal amusement or recreational establishments&quot;,
+  &quot;effect&quot;: &quot;employees may be exempt from federal minimum wage and overtime&quot;,
+  &quot;show_as&quot;: &quot;notice&quot;
+}</pre>
+  <div class="meta">Source: <a href="https://www.dol.gov/agencies/whd/fact-sheets/18-flsa-seasonal-amusement">https://www.dol.gov/agencies/whd/fact-sheets/18-flsa-seasonal-amusement</a><br>
+  Verified: 2026-10-17 · Reviewed by: pendiente Enrolled Agent</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>overtime_weekly</b> · federal · 2026</div>
+  <pre>{
+  &quot;threshold_hours&quot;: 40,
+  &quot;multiplier&quot;: 1.5,
+  &quot;averaging_allowed&quot;: false,
+  &quot;workweek&quot;: &quot;fixed 168-hour period (7 consecutive 24-hour periods); may start on any day and hour&quot;
+}</pre>
+  <div class="meta">Source: <a href="https://www.dol.gov/agencies/whd/overtime">https://www.dol.gov/agencies/whd/overtime</a><br>
+  Verified: 2026-10-17 · Reviewed by: pendiente Enrolled Agent</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+
+<h2>2. State return rules (20)</h2>
+
+<div class="card">
+  <div class="hd"><b>state_return_due_date</b> · CA · 2026</div>
+  <pre>{
+  &quot;calendar_year&quot;: &quot;04-15&quot;,
+  &quot;extension&quot;: &quot;10-15&quot;,
+  &quot;note&quot;: &quot;Extension is automatic to file, not to pay&quot;
+}</pre>
+  <div class="meta">Source: <a href="https://www.ftb.ca.gov/file/when-to-file/due-dates-personal.html">https://www.ftb.ca.gov/file/when-to-file/due-dates-personal.html</a><br>
+  Verified: 2026-10-30 · Reviewed by: pendiente Enrolled Agent</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>state_return_nonresident</b> · CA · 2026</div>
+  <pre>{
+  &quot;must_file_if&quot;: &quot;generally, nonresident who receives income from a source in California (FTB filing thresholds apply)&quot;,
+  &quot;summary&quot;: {
+    &quot;es&quot;: &quot;Según el Franchise Tax Board, en general un no residente debe declarar si recibe ingresos de fuente de California. Hay montos mínimos: revísalos en la fuente.&quot;,
+    &quot;en&quot;: &quot;According to the Franchise Tax Board, a nonresident generally must file if they receive income from a source in California. Minimum amounts apply: check the source.&quot;
+  }
+}</pre>
+  <div class="meta">Source: <a href="https://www.ftb.ca.gov/file/personal/do-you-need-to-file.html">https://www.ftb.ca.gov/file/personal/do-you-need-to-file.html</a><br>
+  Verified: 2026-10-30 · Reviewed by: pendiente Enrolled Agent</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>state_return_due_date</b> · CO · 2026</div>
+  <pre>{
+  &quot;calendar_year&quot;: &quot;04-15&quot;,
+  &quot;extension&quot;: &quot;10-15&quot;
+}</pre>
+  <div class="meta">Source: <a href="https://tax.colorado.gov/index.php/income-tax-due-dates-filing-extension">https://tax.colorado.gov/index.php/income-tax-due-dates-filing-extension</a><br>
+  Verified: 2026-10-30 · Reviewed by: pendiente Enrolled Agent</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>state_return_nonresident</b> · CO · 2026</div>
+  <pre>{
+  &quot;must_file_if&quot;: &quot;nonresident with Colorado source income AND (required to file a federal return OR Colorado income tax liability)&quot;,
+  &quot;summary&quot;: {
+    &quot;es&quot;: &quot;Según el Colorado Department of Revenue, los no residentes con ingresos de fuente de Colorado declaran si tienen que presentar declaración federal o si tienen impuesto de Colorado por pagar.&quot;,
+    &quot;en&quot;: &quot;According to the Colorado Department of Revenue, nonresidents with Colorado-source income must file if they are required to file a federal return or have a Colorado tax liability.&quot;
+  }
+}</pre>
+  <div class="meta">Source: <a href="https://tax.colorado.gov/individual-income-tax-filing-requirements">https://tax.colorado.gov/individual-income-tax-filing-requirements</a><br>
+  Verified: 2026-10-30 · Reviewed by: pendiente Enrolled Agent</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>state_return_nonresident</b> · FL · 2026</div>
+  <pre>{
+  &quot;no_wage_tax&quot;: true,
+  &quot;agency&quot;: &quot;the Florida Department of Revenue&quot;,
+  &quot;quote&quot;: &quot;Florida does not impose a personal income tax, so there are no filing requirements.&quot;,
+  &quot;summary&quot;: {
+    &quot;es&quot;: &quot;Según el Florida Department of Revenue, el estado no cobra impuesto a los sueldos, así que por tu sueldo ahí no tendrías declaración estatal. Confírmalo en la fuente.&quot;,
+    &quot;en&quot;: &quot;According to the Florida Department of Revenue, the state doesn’t tax wages, so you wouldn’t have a state return for your wages there. Confirm it at the source.&quot;
+  }
+}</pre>
+  <div class="meta">Source: <a href="https://floridarevenue.com/faq/Pages/FAQDetails.aspx?FAQID=1466">https://floridarevenue.com/faq/Pages/FAQDetails.aspx?FAQID=1466</a><br>
+  Verified: 2026-10-30 · Reviewed by: pendiente Enrolled Agent<br>Notes: Cita textual: &quot;Florida does not impose a personal income tax, so there are no filing requirements.&quot;</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>state_return_due_date</b> · ID · 2026</div>
+  <pre>{
+  &quot;calendar_year&quot;: &quot;04-15&quot;,
+  &quot;note&quot;: &quot;Extensions do not extend time to pay&quot;
+}</pre>
+  <div class="meta">Source: <a href="https://tax.idaho.gov/taxes/income-tax/individual-income/filing-and-paying/">https://tax.idaho.gov/taxes/income-tax/individual-income/filing-and-paying/</a><br>
+  Verified: 2026-10-30 · Reviewed by: pendiente Enrolled Agent</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>state_return_nonresident</b> · ID · 2026</div>
+  <pre>{
+  &quot;must_file_if&quot;: &quot;nonresident with total gross income from Idaho sources over 2500 USD&quot;,
+  &quot;gross_income_threshold_usd&quot;: 2500,
+  &quot;form&quot;: &quot;Form 43&quot;,
+  &quot;summary&quot;: {
+    &quot;es&quot;: &quot;Según la Idaho State Tax Commission, los no residentes declaran (Form 43) si sus ingresos brutos de fuente de Idaho pasan de $2,500.&quot;,
+    &quot;en&quot;: &quot;According to the Idaho State Tax Commission, nonresidents file (Form 43) if their gross income from Idaho sources is more than $2,500.&quot;
+  }
+}</pre>
+  <div class="meta">Source: <a href="https://tax.idaho.gov/taxes/income-tax/individual-income/online-guide/">https://tax.idaho.gov/taxes/income-tax/individual-income/online-guide/</a><br>
+  Verified: 2026-10-30 · Reviewed by: pendiente Enrolled Agent</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>state_return_due_date</b> · MT · 2026</div>
+  <pre>{
+  &quot;calendar_year&quot;: &quot;04-15&quot;,
+  &quot;extension&quot;: &quot;10-15&quot;,
+  &quot;form&quot;: &quot;Form 2&quot;
+}</pre>
+  <div class="meta">Source: <a href="https://revenue.mt.gov/taxes/individual-income-tax">https://revenue.mt.gov/taxes/individual-income-tax</a><br>
+  Verified: 2026-10-17 · Reviewed by: pendiente Enrolled Agent</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>state_return_nonresident</b> · MT · 2024</div>
+  <pre>{
+  &quot;must_file_if&quot;: &quot;federal filing requirement and Montana source income&quot;,
+  &quot;nonresident_wages_are_montana_source&quot;: true,
+  &quot;exclusion&quot;: &quot;nonresidents who earned only wages for services performed in Montana for 30 days or less and worked in more than one state&quot;,
+  &quot;seasonal_worker_is_not_part_year_resident&quot;: true,
+  &quot;summary&quot;: {
+    &quot;es&quot;: &quot;Según el Montana Department of Revenue, los no residentes con ingresos de fuente de Montana y obligación de declarar a nivel federal también declaran en Montana. Hay una excepción si solo ganaste sueldo por trabajar ahí 30 días o menos y trabajaste en más de un estado.&quot;,
+    &quot;en&quot;: &quot;According to the Montana Department of Revenue, nonresidents with Montana-source income and a federal filing requirement also file in Montana. There is an exception if you only earned wages for 30 days or less there and worked in more than one state.&quot;
+  }
+}</pre>
+  <div class="meta">Source: <a href="https://revenue.mt.gov/taxes/individual-income-tax/filing-requirements">https://revenue.mt.gov/taxes/individual-income-tax/filing-requirements</a><br>
+  Verified: 2026-10-17 · Reviewed by: pendiente Enrolled Agent</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>state_return_nonresident</b> · NH · 2026</div>
+  <pre>{
+  &quot;no_wage_tax&quot;: true,
+  &quot;agency&quot;: &quot;the New Hampshire Department of Revenue Administration&quot;,
+  &quot;quote&quot;: &quot;The State of New Hampshire does not have an income tax on an individual&#x27;s reported W-2 wages.&quot;,
+  &quot;summary&quot;: {
+    &quot;es&quot;: &quot;Según el New Hampshire Department of Revenue Administration, el estado no cobra impuesto a los sueldos, así que por tu sueldo ahí no tendrías declaración estatal. Confírmalo en la fuente.&quot;,
+    &quot;en&quot;: &quot;According to the New Hampshire Department of Revenue Administration, the state doesn’t tax wages, so you wouldn’t have a state return for your wages there. Confirm it at the source.&quot;
+  }
+}</pre>
+  <div class="meta">Source: <a href="https://www.revenue.nh.gov/taxes-glance/interest-dividends-tax">https://www.revenue.nh.gov/taxes-glance/interest-dividends-tax</a><br>
+  Verified: 2026-10-30 · Reviewed by: pendiente Enrolled Agent<br>Notes: Cita textual: &quot;The State of New Hampshire does not have an income tax on an individual&#x27;s reported W-2 wages.&quot;</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>state_return_nonresident</b> · NV · 2026</div>
+  <pre>{
+  &quot;no_wage_tax&quot;: true,
+  &quot;agency&quot;: &quot;the Nevada Department of Taxation&quot;,
+  &quot;quote&quot;: &quot;While Nevada does not have an individual income tax, it does levy other types of taxes, such as sales tax and property tax.&quot;,
+  &quot;summary&quot;: {
+    &quot;es&quot;: &quot;Según el Nevada Department of Taxation, el estado no cobra impuesto a los sueldos, así que por tu sueldo ahí no tendrías declaración estatal. Confírmalo en la fuente.&quot;,
+    &quot;en&quot;: &quot;According to the Nevada Department of Taxation, the state doesn’t tax wages, so you wouldn’t have a state return for your wages there. Confirm it at the source.&quot;
+  }
+}</pre>
+  <div class="meta">Source: <a href="https://tax.nv.gov/about-nevada-department-of-taxation/income-tax-in-nevada/">https://tax.nv.gov/about-nevada-department-of-taxation/income-tax-in-nevada/</a><br>
+  Verified: 2026-10-30 · Reviewed by: pendiente Enrolled Agent<br>Notes: Cita textual: &quot;While Nevada does not have an individual income tax, it does levy other types of taxes, such as sales tax and property tax.&quot;</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>state_return_nonresident</b> · SD · 2026</div>
+  <pre>{
+  &quot;no_wage_tax&quot;: true,
+  &quot;agency&quot;: &quot;the South Dakota Department of Revenue&quot;,
+  &quot;quote&quot;: &quot;South Dakota is one of seven states that does not impose a state income tax.&quot;,
+  &quot;summary&quot;: {
+    &quot;es&quot;: &quot;Según el South Dakota Department of Revenue, el estado no cobra impuesto a los sueldos, así que por tu sueldo ahí no tendrías declaración estatal. Confírmalo en la fuente.&quot;,
+    &quot;en&quot;: &quot;According to the South Dakota Department of Revenue, the state doesn’t tax wages, so you wouldn’t have a state return for your wages there. Confirm it at the source.&quot;
+  }
+}</pre>
+  <div class="meta">Source: <a href="https://dor.sd.gov/individuals/taxes/">https://dor.sd.gov/individuals/taxes/</a><br>
+  Verified: 2026-10-30 · Reviewed by: pendiente Enrolled Agent<br>Notes: Cita textual: &quot;South Dakota is one of seven states that does not impose a state income tax.&quot;</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>state_return_nonresident</b> · TN · 2026</div>
+  <pre>{
+  &quot;no_wage_tax&quot;: true,
+  &quot;agency&quot;: &quot;the Tennessee Department of Revenue&quot;,
+  &quot;quote&quot;: &quot;The tax is fully repealed beginning January 1, 2021.&quot;,
+  &quot;summary&quot;: {
+    &quot;es&quot;: &quot;Según el Tennessee Department of Revenue, el estado no cobra impuesto a los sueldos, así que por tu sueldo ahí no tendrías declaración estatal. El único impuesto a la renta que tenía (Hall, sobre intereses y dividendos) se eliminó desde 2021. Confírmalo en la fuente.&quot;,
+    &quot;en&quot;: &quot;According to the Tennessee Department of Revenue, the state doesn’t tax wages, so you wouldn’t have a state return for your wages there. Its only income tax (Hall, on interest and dividends) was repealed starting in 2021. Confirm it at the source.&quot;
+  }
+}</pre>
+  <div class="meta">Source: <a href="https://revenue.support.tn.gov/hc/en-us/articles/360057828631-HIT-3-Hall-Income-Tax-Repealed-Beginning-January-1-2021">https://revenue.support.tn.gov/hc/en-us/articles/360057828631-HIT-3-Hall-Income-Tax-Repealed-Beginning-January-1-2021</a><br>
+  Verified: 2026-10-30 · Reviewed by: pendiente Enrolled Agent<br>Notes: Cita textual: &quot;The tax is fully repealed beginning January 1, 2021.&quot;</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>state_return_nonresident</b> · TX · 2026</div>
+  <pre>{
+  &quot;no_wage_tax&quot;: true,
+  &quot;agency&quot;: &quot;the Texas Economic Development Corporation (partner of the Texas Governor’s office)&quot;,
+  &quot;quote&quot;: &quot;With no corporate or personal income tax, Texas has one of the lowest tax burdens in the nation.&quot;,
+  &quot;summary&quot;: {
+    &quot;es&quot;: &quot;Según la Texas Economic Development Corporation (socia de la oficina del gobernador de Texas), el estado no cobra impuesto a los sueldos, así que por tu sueldo ahí no tendrías declaración estatal. Confírmalo en la fuente.&quot;,
+    &quot;en&quot;: &quot;According to the Texas Economic Development Corporation (partner of the Texas Governor’s office), the state doesn’t tax wages, so you wouldn’t have a state return for your wages there. Confirm it at the source.&quot;
+  }
+}</pre>
+  <div class="meta">Source: <a href="https://businessintexas.com/why-texas/taxes-incentives/taxes/">https://businessintexas.com/why-texas/taxes-incentives/taxes/</a><br>
+  Verified: 2026-10-30 · Reviewed by: pendiente Enrolled Agent<br>Notes: Cita textual: &quot;With no corporate or personal income tax, Texas has one of the lowest tax burdens in the nation.&quot;</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>state_return_due_date</b> · UT · 2026</div>
+  <pre>{
+  &quot;calendar_year&quot;: &quot;04-15&quot;,
+  &quot;extension&quot;: &quot;10-15&quot;,
+  &quot;form&quot;: &quot;TC-40&quot;,
+  &quot;note&quot;: &quot;Automatic 6-month extension to file, not to pay; Saturday/Sunday/legal holiday moves to next business day&quot;
+}</pre>
+  <div class="meta">Source: <a href="https://incometax.utah.gov/general-instructions/">https://incometax.utah.gov/general-instructions/</a><br>
+  Verified: 2026-10-30 · Reviewed by: pendiente Enrolled Agent<br>Notes: Utah State Tax Commission, General Instructions (When to File and Pay).</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>state_return_nonresident</b> · UT · 2026</div>
+  <pre>{
+  &quot;must_file_if&quot;: &quot;nonresident with income from Utah sources who must file a federal return&quot;,
+  &quot;form&quot;: &quot;TC-40&quot;,
+  &quot;summary&quot;: {
+    &quot;es&quot;: &quot;Según la Utah State Tax Commission, los no residentes con ingresos de fuente de Utah que deben presentar declaración federal presentan el Form TC-40.&quot;,
+    &quot;en&quot;: &quot;According to the Utah State Tax Commission, nonresidents with income from Utah sources who must file a federal return file Form TC-40.&quot;
+  }
+}</pre>
+  <div class="meta">Source: <a href="https://incometax.utah.gov/instructions/who-must-file">https://incometax.utah.gov/instructions/who-must-file</a><br>
+  Verified: 2026-10-30 · Reviewed by: pendiente Enrolled Agent</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>state_return_due_date</b> · VT · 2026</div>
+  <pre>{
+  &quot;calendar_year&quot;: &quot;04-15&quot;,
+  &quot;extension&quot;: &quot;10-15&quot;
+}</pre>
+  <div class="meta">Source: <a href="https://tax.vermont.gov/individuals/personal-income-tax">https://tax.vermont.gov/individuals/personal-income-tax</a><br>
+  Verified: 2026-10-30 · Reviewed by: pendiente Enrolled Agent</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>state_return_nonresident</b> · VT · 2026</div>
+  <pre>{
+  &quot;must_file_if&quot;: &quot;nonresident with Vermont net income over 100 USD or gross income over 1000 USD&quot;,
+  &quot;net_income_threshold_usd&quot;: 100,
+  &quot;gross_income_threshold_usd&quot;: 1000,
+  &quot;form&quot;: &quot;IN-111 + Schedule IN-113&quot;,
+  &quot;summary&quot;: {
+    &quot;es&quot;: &quot;Según el Vermont Department of Taxes, los no residentes declaran (Form IN-111 con Schedule IN-113) si su ingreso neto de Vermont pasa de $100 o su ingreso bruto pasa de $1,000.&quot;,
+    &quot;en&quot;: &quot;According to the Vermont Department of Taxes, nonresidents file (Form IN-111 with Schedule IN-113) if their Vermont net income is more than $100 or gross income more than $1,000.&quot;
+  }
+}</pre>
+  <div class="meta">Source: <a href="https://tax.vermont.gov/individuals/who-should-file/nonresident">https://tax.vermont.gov/individuals/who-should-file/nonresident</a><br>
+  Verified: 2026-10-30 · Reviewed by: pendiente Enrolled Agent</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>state_return_nonresident</b> · WA · 2026</div>
+  <pre>{
+  &quot;no_wage_tax&quot;: true,
+  &quot;agency&quot;: &quot;the Washington Department of Revenue&quot;,
+  &quot;quote&quot;: &quot;Washington does not currently have an individual income tax.&quot;,
+  &quot;summary&quot;: {
+    &quot;es&quot;: &quot;Según el Washington Department of Revenue, el estado no cobra impuesto a los sueldos, así que por tu sueldo ahí no tendrías declaración estatal. Desde 2028 habrá un impuesto solo para ingresos de más de 1 millón de dólares al año. Confírmalo en la fuente.&quot;,
+    &quot;en&quot;: &quot;According to the Washington Department of Revenue, the state doesn’t tax wages, so you wouldn’t have a state return for your wages there. Starting in 2028 there will be a tax only on income over 1 million dollars a year. Confirm it at the source.&quot;
+  }
+}</pre>
+  <div class="meta">Source: <a href="https://dor.wa.gov/taxes-rates/income-tax">https://dor.wa.gov/taxes-rates/income-tax</a><br>
+  Verified: 2026-10-30 · Reviewed by: pendiente Enrolled Agent<br>Notes: Cita textual: &quot;Washington does not currently have an individual income tax.&quot;</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>state_return_nonresident</b> · WY · 2026</div>
+  <pre>{
+  &quot;no_wage_tax&quot;: true,
+  &quot;agency&quot;: &quot;the Wyoming Business Council (state agency, Why Wyoming magazine, Sept. 2025)&quot;,
+  &quot;quote&quot;: &quot;Businesses and individuals operating in Wyoming are not subject to state income taxes.&quot;,
+  &quot;summary&quot;: {
+    &quot;es&quot;: &quot;Según el Wyoming Business Council (agencia del estado, revista Why Wyoming de sept. 2025), el estado no cobra impuesto a los sueldos, así que por tu sueldo ahí no tendrías declaración estatal. Confírmalo en la fuente.&quot;,
+    &quot;en&quot;: &quot;According to the Wyoming Business Council (state agency, Why Wyoming magazine, Sept. 2025), the state doesn’t tax wages, so you wouldn’t have a state return for your wages there. Confirm it at the source.&quot;
+  }
+}</pre>
+  <div class="meta">Source: <a href="https://wyomingbusiness.org/wp-content/uploads/2025/09/25_WhyWyoming_Mag_Digital.pdf">https://wyomingbusiness.org/wp-content/uploads/2025/09/25_WhyWyoming_Mag_Digital.pdf</a><br>
+  Verified: 2026-10-30 · Reviewed by: pendiente Enrolled Agent<br>Notes: Cita textual: &quot;Businesses and individuals operating in Wyoming are not subject to state income taxes.&quot;</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+
+<h2>3. State overtime (51 jurisdictions)</h2>
+<p class="meta">Source for all rows unless noted: US DOL, State Minimum Wage Laws, "Premium Pay After Designated Hours" (updated Jul 1, 2026). Daily overtime confirmed in the state source for AK, CA, CO, NV.</p>
+<table><thead><tr><th>State</th><th>Rule loaded</th><th>Notes shown</th><th>Source</th><th>OK</th></tr></thead><tbody>
+<tr><td>AK</td><td>&gt;40 h/week, &gt;8 h/day (all employers) · 1.5x</td><td class="k">ak_small_employers</td><td class="k"><a href="https://labor.alaska.gov/lss/forms/Summary_of_Alaska_Wage_and_Hour_Act__Rev_01-25.pdf">source</a></td><td class="c">☐</td></tr><tr><td>AL</td><td>No state minimum wage law</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>AR</td><td>&gt;40 h/week · 1.5x</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>AZ</td><td>No state overtime provision</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>CA</td><td>&gt;40 h/week, &gt;8 h/day (all employers), 2x &gt;12 h/day, 7th day · 1.5x</td><td class="k">ca_double_time, ca_seventh_day</td><td class="k"><a href="https://www.dir.ca.gov/dlse/faq_overtime.htm">source</a></td><td class="c">☐</td></tr><tr><td>CO</td><td>&gt;40 h/week, &gt;12 h/day (all employers) · 1.5x</td><td class="k">co_12_consecutive</td><td class="k"><a href="https://cdle.colorado.gov/sites/cdle/files/INFO%20%231%20COMPS%20Order%20%2339%20(2024)%2012.8.23%20%5Baccessible%5D.pdf">source</a></td><td class="c">☐</td></tr><tr><td>CT</td><td>&gt;40 h/week · 1.5x</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>DC</td><td>&gt;40 h/week · 1.5x</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>DE</td><td>No state overtime provision</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>FL</td><td>No state overtime provision</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>GA</td><td>State law excludes FLSA-covered employment</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>HI</td><td>&gt;40 h/week · 1.5x</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>IA</td><td>No state overtime provision</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>ID</td><td>No state overtime provision</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>IL</td><td>&gt;40 h/week · 1.5x</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>IN</td><td>&gt;40 h/week · 1.5x</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>KS</td><td>State law excludes FLSA-covered employment</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>KY</td><td>&gt;40 h/week, 7th day · 1.5x</td><td class="k">ky_seventh_day</td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>LA</td><td>No state minimum wage law</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>MA</td><td>&gt;40 h/week · 1.5x</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>MD</td><td>&gt;40 h/week · 1.5x</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>ME</td><td>&gt;40 h/week · 1.5x</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>MI</td><td>&gt;40 h/week · 1.5x</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>MN</td><td>&gt;48 h/week · 1.5x</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>MO</td><td>&gt;40 h/week, seasonal recreation: &gt;52 h/week · 1.5x</td><td class="k">seasonal_recreation_weekly</td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>MS</td><td>No state minimum wage law</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>MT</td><td>&gt;40 h/week · 1.5x</td><td class="k">mt_student_48</td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>NC</td><td>&gt;40 h/week, seasonal recreation: &gt;45 h/week · 1.5x</td><td class="k">seasonal_recreation_weekly</td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>ND</td><td>&gt;40 h/week · 1.5x</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>NE</td><td>No state overtime provision</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>NH</td><td>&gt;40 h/week · 1.5x</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>NJ</td><td>&gt;40 h/week · 1.5x</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>NM</td><td>&gt;40 h/week · 1.5x</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>NV</td><td>&gt;40 h/week, &gt;8 h/day (conditional) · 1.5x</td><td class="k">nv_wage_condition</td><td class="k"><a href="https://www.leg.state.nv.us/nrs/nrs-608.html">source</a></td><td class="c">☐</td></tr><tr><td>NY</td><td>&gt;40 h/week · 1.5x</td><td class="k">ny_live_in_44</td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>OH</td><td>&gt;40 h/week · 1.5x</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>OK</td><td>State law excludes FLSA-covered employment</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>OR</td><td>&gt;40 h/week · 1.5x</td><td class="k">or_industries_10</td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>PA</td><td>&gt;40 h/week · 1.5x</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>RI</td><td>&gt;40 h/week · 1.5x</td><td class="k">ri_sunday_holiday</td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>SC</td><td>No state minimum wage law</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>SD</td><td>No state overtime provision</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>TN</td><td>No state minimum wage law</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>TX</td><td>State law excludes FLSA-covered employment</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>UT</td><td>State law excludes FLSA-covered employment</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>VA</td><td>No state overtime provision</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>VT</td><td>&gt;40 h/week · 1.5x</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>WA</td><td>&gt;40 h/week · 1.5x</td><td class="k">wa_comp_time</td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>WI</td><td>&gt;40 h/week · 1.5x</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>WV</td><td>&gt;40 h/week · 1.5x</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr><tr><td>WY</td><td>No state overtime provision</td><td class="k"></td><td class="k"><a href="https://www.dol.gov/agencies/whd/minimum-wage/state">source</a></td><td class="c">☐</td></tr>
+</tbody></table>
+
+<h2>4. Other state-specific rules (4)</h2>
+
+<div class="card">
+  <div class="hd"><b>overtime_seasonal_student_notice</b> · MT · 2026</div>
+  <pre>{
+  &quot;statute&quot;: &quot;MCA 39-3-405(3)&quot;,
+  &quot;threshold_hours&quot;: 48,
+  &quot;multiplier&quot;: 1.5,
+  &quot;applies_to&quot;: &quot;students employed at an amusement or recreational area that operates on a seasonal basis, when the employer furnishes board, lodging or other facilities&quot;,
+  &quot;show_as&quot;: &quot;notice&quot;
+}</pre>
+  <div class="meta">Source: <a href="https://mca.legmt.gov/bills/mca/title_0390/chapter_0030/part_0040/section_0050/0390-0030-0040-0050.html">https://mca.legmt.gov/bills/mca/title_0390/chapter_0030/part_0040/section_0050/0390-0030-0040-0050.html</a><br>
+  Verified: 2026-10-17 · Reviewed by: pendiente Enrolled Agent</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>overtime_weekly</b> · MT · 2026</div>
+  <pre>{
+  &quot;threshold_hours&quot;: 40,
+  &quot;multiplier&quot;: 1.5,
+  &quot;statute&quot;: &quot;MCA 39-3-405(1)&quot;
+}</pre>
+  <div class="meta">Source: <a href="https://mca.legmt.gov/bills/mca/title_0390/chapter_0030/part_0040/section_0050/0390-0030-0040-0050.html">https://mca.legmt.gov/bills/mca/title_0390/chapter_0030/part_0040/section_0050/0390-0030-0040-0050.html</a><br>
+  Verified: 2026-10-17 · Reviewed by: pendiente Enrolled Agent</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>fx_usd_pen_series</b> · PE · 2026</div>
+  <pre>{
+  &quot;provider&quot;: &quot;BCRP&quot;,
+  &quot;series&quot;: &quot;PD04638PD&quot;,
+  &quot;name&quot;: &quot;TC Interbancario (S/ por US$) - Venta&quot;,
+  &quot;frequency&quot;: &quot;daily&quot;,
+  &quot;api&quot;: &quot;https://estadisticas.bcrp.gob.pe/estadisticas/series/api/{series}/json/{from}/{to}/esp&quot;
+}</pre>
+  <div class="meta">Source: <a href="https://estadisticas.bcrp.gob.pe/estadisticas/series/diarias/tipo-de-cambio">https://estadisticas.bcrp.gob.pe/estadisticas/series/diarias/tipo-de-cambio</a><br>
+  Verified: 2026-10-17 · Reviewed by: not reviewed</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+<div class="card">
+  <div class="hd"><b>fx_usd_pen_fallback</b> · PE · 2026</div>
+  <pre>{
+  &quot;provider&quot;: &quot;sunat&quot;,
+  &quot;format&quot;: &quot;dd/mm/yyyy|compra|venta&quot;,
+  &quot;use&quot;: &quot;venta&quot;,
+  &quot;reason&quot;: &quot;BCRP API devuelve una página anti-bots a consultas automáticas desde oct-2026&quot;
+}</pre>
+  <div class="meta">Source: <a href="https://www.sunat.gob.pe/a/txt/tipoCambio.txt">https://www.sunat.gob.pe/a/txt/tipoCambio.txt</a><br>
+  Verified: 2026-10-30 · Reviewed by: pendiente Enrolled Agent</div>
+  <div class="rv"><span>☐ OK</span><span>☐ Needs change</span><span class="n">Notes:</span></div>
+</div>
+
+<h2>5. Texts the user sees</h2>
+<h3>Social Security and Medicare (FICA)</h3>
+<table class="tx"><thead><tr><th>Key</th><th>English (shown in app)</th><th>Spanish (shown in app)</th><th>OK</th></tr></thead><tbody><tr><td class="k">fica.cardTitle</td><td>Social Security and Medicare</td><td>Social Security y Medicare</td><td class="c">☐</td></tr><tr><td class="k">fica.possibly_exempt</td><td>You may be exempt</td><td>Podrías estar exento</td><td class="c">☐</td></tr><tr><td class="k">fica.may_be_resident</td><td>You may be a resident for tax purposes</td><td>Podrías ser residente fiscal</td><td class="c">☐</td></tr><tr><td class="k">fica.no_exemption_found</td><td>No exemption for your visa</td><td>Sin exención para tu visa</td><td class="c">☐</td></tr><tr><td class="k">fica.unknown</td><td>Complete your details</td><td>Completa tus datos</td><td class="c">☐</td></tr><tr><td class="k">fica.possibly_exemptBody</td><td>According to IRS Publication 519, if you are a nonresident on a J visa working as your program allows, with your sponsor’s authorization letter, Social Security and Medicare shouldn’t be withheld. This is your year {{year}} in the US on a J or F visa.</td><td>Según la Publication 519 del IRS, si eres no residente con visa J y trabajas en lo que permite tu programa, con la carta de autorización de tu sponsor, no te deberían retener Social Security ni Medicare. Estás en tu año {{year}} en EE. UU. con visa J o F.</td><td class="c">☐</td></tr><tr><td class="k">fica.may_be_residentBody</td><td>According to Publication 519, after a certain number of years in the US on a J or F visa you may stop counting as an &quot;exempt individual&quot; and owe Social Security and Medicare. There are exceptions. This is your year {{year}}.</td><td>Según la Publication 519, pasado cierto número de años en EE. UU. con visa J o F podrías dejar de contar como &quot;exempt individual&quot; y pasar a pagar Social Security y Medicare. Hay excepciones. Estás en tu año {{year}}.</td><td class="c">☐</td></tr><tr><td class="k">fica.no_exemption_foundBody</td><td>Publication 519 doesn’t describe a Social Security and Medicare exemption for your visa type. They are normally withheld.</td><td>La Publication 519 no describe una exención de Social Security y Medicare para tu tipo de visa. Lo normal es que te las retengan.</td><td class="c">☐</td></tr><tr><td class="k">fica.unknownBody</td><td>Tell us your visa type and how many years you’ve been in the US so we can check your case.</td><td>Dinos tu tipo de visa y cuántos años has estado en EE. UU. para revisar tu caso.</td><td class="c">☐</td></tr><tr><td class="k">fica.withheld</td><td>{{amount}} was withheld on this year’s paystubs.</td><td>Te retuvieron {{amount}} en las boletas de este año.</td><td class="c">☐</td></tr><tr><td class="k">fica.noneWithheld</td><td>No Social Security or Medicare withheld on your paystubs so far.</td><td>Por ahora no hay retenciones de Social Security ni Medicare en tus boletas.</td><td class="c">☐</td></tr><tr><td class="k">fica.seeRefund</td><td>How to request a refund</td><td>Ver cómo pedir el reembolso</td><td class="c">☐</td></tr><tr><td class="k">fica.seeDetails</td><td>Details and sources</td><td>Ver detalle y fuentes</td><td class="c">☐</td></tr><tr><td class="k">fica.disclaimer</td><td>SeasonPay informs, it doesn’t advise. Confirm with your employer, sponsor or a professional (for example, an Enrolled Agent).</td><td>SeasonPay informa, no asesora. Confírmalo con tu empleador, tu sponsor o un profesional (por ejemplo, un Enrolled Agent).</td><td class="c">☐</td></tr><tr><td class="k">fica.sheetTitle</td><td>Social Security and Medicare (FICA)</td><td>Social Security y Medicare (FICA)</td><td class="c">☐</td></tr><tr><td class="k">fica.priorYears</td><td>Prior years in the US on a J or F visa</td><td>Años anteriores en EE. UU. con visa J o F</td><td class="c">☐</td></tr><tr><td class="k">fica.priorYearsHint</td><td>Count the calendar years before this one when you were in J, F, M or Q status, even for a few weeks. Don’t count this year.</td><td>Cuenta los años calendario antes de este en los que estuviste con visa J, F, M o Q, aunque haya sido unas semanas. No cuentes este año.</td><td class="c">☐</td></tr><tr><td class="k">fica.priorYearsFormat_one</td><td>{{count}} year</td><td>{{count}} año</td><td class="c">☐</td></tr><tr><td class="k">fica.priorYearsFormat_other</td><td>{{count}} years</td><td>{{count}} años</td><td class="c">☐</td></tr><tr><td class="k">fica.savedYears</td><td>Saved</td><td>Guardado</td><td class="c">☐</td></tr><tr><td class="k">fica.conditionsTitle</td><td>What the source says</td><td>Lo que dice la fuente</td><td class="c">☐</td></tr><tr><td class="k">fica.condNonresident</td><td>Only applies if you are a nonresident for tax purposes.</td><td>Aplica solo si eres no residente fiscal.</td><td class="c">☐</td></tr><tr><td class="k">fica.condPurpose</td><td>The work must be what your J-1 program allows.</td><td>El trabajo tiene que ser el que permite tu programa J-1.</td><td class="c">☐</td></tr><tr><td class="k">fica.condSponsor</td><td>You need work permission and your sponsor’s authorization letter.</td><td>Necesitas permiso de trabajo y la carta de autorización de tu sponsor.</td><td class="c">☐</td></tr><tr><td class="k">fica.condDependents</td><td>It doesn’t cover family members on J-2, F-2, M-2 or Q-3 visas.</td><td>No cubre a familiares con visa J-2, F-2, M-2 o Q-3.</td><td class="c">☐</td></tr><tr><td class="k">fica.refundTitle</td><td>How to request a refund</td><td>Cómo pedir el reembolso</td><td class="c">☐</td></tr><tr><td class="k">fica.step1Title</td><td>Ask your employer first</td><td>Pídeselo primero a tu empleador</td><td class="c">☐</td></tr><tr><td class="k">fica.step1Body</td><td>Talk to payroll or HR. Tell them you are a nonresident on a J-1 visa and Social Security and Medicare were withheld. They can refund it on a later paystub.</td><td>Habla con payroll o recursos humanos. Diles que eres no residente con visa J-1 y que te retuvieron Social Security y Medicare. Pueden devolvértelo en una próxima boleta.</td><td class="c">☐</td></tr><tr><td class="k">fica.step2Title</td><td>If they don’t refund all of it: Form 843</td><td>Si no te devuelven todo: Form 843</td><td class="c">☐</td></tr><tr><td class="k">fica.step2Body</td><td>Fill out Form 843 (Claim for Refund) and attach:</td><td>Llena el Form 843 (Claim for Refund) y adjunta:</td><td class="c">☐</td></tr><tr><td class="k">fica.att.form_w2</td><td>A copy of your Form W-2 (shows what was withheld)</td><td>Copia de tu Form W-2 (muestra lo retenido)</td><td class="c">☐</td></tr><tr><td class="k">fica.att.visa_copy</td><td>A copy of your visa</td><td>Copia de tu visa</td><td class="c">☐</td></tr><tr><td class="k">fica.att.form_i94</td><td>Form I-94 or other proof of your arrival or departure date</td><td>Form I-94 o algo que muestre tu fecha de llegada o salida</td><td class="c">☐</td></tr><tr><td class="k">fica.att.form_ds2019_if_j1</td><td>A copy of your Form DS-2019 (J-1 visa)</td><td>Copia de tu Form DS-2019 (visa J-1)</td><td class="c">☐</td></tr><tr><td class="k">fica.att.employer_statement_or_form_8316</td><td>A statement from your employer with what they refunded, or Form 8316 if they won’t give one</td><td>Carta del empleador con lo que te devolvió, o el Form 8316 si no te la da</td><td class="c">☐</td></tr><tr><td class="k">fica.att.pay_statements_if_partial_year</td><td>If you were exempt for only part of the year: paystubs for that period</td><td>Si fuiste exento solo parte del año: boletas de ese periodo</td><td class="c">☐</td></tr><tr><td class="k">fica.step3Title</td><td>Mail it</td><td>Envíalo por correo</td><td class="c">☐</td></tr><tr><td class="k">fica.mailTo</td><td>Address per Publication 519:</td><td>Dirección según la Publication 519:</td><td class="c">☐</td></tr><tr><td class="k">fica.form843</td><td>Form 843 (IRS)</td><td>Form 843 (IRS)</td><td class="c">☐</td></tr><tr><td class="k">fica.form8316</td><td>Form 8316 (IRS)</td><td>Form 8316 (IRS)</td><td class="c">☐</td></tr><tr><td class="k">fica.pub519</td><td>Publication 519 (IRS)</td><td>Publication 519 (IRS)</td><td class="c">☐</td></tr></tbody></table>
+<h3>End-of-season checklist</h3>
+<table class="tx"><thead><tr><th>Key</th><th>English (shown in app)</th><th>Spanish (shown in app)</th><th>OK</th></tr></thead><tbody><tr><td class="k">checklist.last_paystub.title</td><td>Check your last paystub</td><td>Revisa tu última boleta</td><td class="c">☐</td></tr><tr><td class="k">checklist.last_paystub.body</td><td>Compare it with your shifts before you leave, while you can still talk to payroll.</td><td>Compárala con tus turnos antes de irte, cuando todavía puedes hablar con payroll.</td><td class="c">☐</td></tr><tr><td class="k">checklist.w2_address.title</td><td>Confirm where your W-2 will go</td><td>Confirma a dónde llegará tu W-2</td><td class="c">☐</td></tr><tr><td class="k">checklist.w2_address.body</td><td>Ask payroll to keep your address or email up to date so you get your W-2 after the season.</td><td>Pídele a payroll que tenga tu dirección o correo actualizado para recibir el W-2 después de la temporada.</td><td class="c">☐</td></tr><tr><td class="k">checklist.fica_check.title</td><td>Check Social Security and Medicare</td><td>Revisa Social Security y Medicare</td><td class="c">☐</td></tr><tr><td class="k">checklist.fica_check.body</td><td>See if they were withheld and, if it applies, the steps to request a refund.</td><td>Mira si te retuvieron y, si aplica, los pasos para pedir el reembolso.</td><td class="c">☐</td></tr><tr><td class="k">checklist.form_8843.title</td><td>Form 8843</td><td>Form 8843</td><td class="c">☐</td></tr><tr><td class="k">checklist.form_8843.body</td><td>According to the IRS, it is filed by alien individuals who were exempt individuals. If you file Form 1040-NR, attach it; if not, mail it to: {{address}}.</td><td>Según el IRS, lo presentan las personas extranjeras que fueron exempt individuals. Si presentas el 1040-NR, va adjunto; si no, se envía por correo a: {{address}}.</td><td class="c">☐</td></tr><tr><td class="k">checklist.form_1040nr.title</td><td>Check whether you need Form 1040-NR</td><td>Revisa si te toca el Form 1040-NR</td><td class="c">☐</td></tr><tr><td class="k">checklist.form_1040nr.body</td><td>It’s the tax return for nonresidents. See the deadline above and confirm with a professional based on your income.</td><td>Es la declaración de impuestos de los no residentes. Mira la fecha límite arriba y confírmalo con un profesional según tus ingresos.</td><td class="c">☐</td></tr><tr><td class="k">checklist.state_return.title</td><td>State return, if it applies</td><td>Declaración estatal, si aplica</td><td class="c">☐</td></tr><tr><td class="k">checklist.state_return.body</td><td>According to the {{state}} revenue department, nonresidents with income earned in the state and a federal filing requirement also file a state return. There’s an exception if you worked there 30 days or less and in more than one state.</td><td>Según el departamento de impuestos de {{state}}, los no residentes con ingresos ganados en el estado y obligación de declarar a nivel federal también declaran en el estado. Hay una excepción si trabajaste ahí 30 días o menos y en más de un estado.</td><td class="c">☐</td></tr><tr><td class="k">checklist.state_return.bodyNoRule</td><td>Some states require a return from nonresidents who worked there. SeasonPay doesn’t have the {{state}} rule yet: check the state revenue department’s website.</td><td>Algunos estados piden declaración a los no residentes que trabajaron ahí. SeasonPay todavía no tiene la regla de {{state}}: revisa la web del departamento de impuestos del estado.</td><td class="c">☐</td></tr><tr><td class="k">checklist.documents.title</td><td>Keep your documents</td><td>Guarda tus documentos</td><td class="c">☐</td></tr><tr><td class="k">checklist.documents.body</td><td>Copies of your paystubs, W-2, I-94 and DS-2019. You’ll need them for a return or a refund.</td><td>Copias de tus boletas, W-2, I-94 y DS-2019. Los vas a necesitar para la declaración o un reembolso.</td><td class="c">☐</td></tr><tr><td class="k">checklist.bank.title</td><td>Decide what to do with your US bank account</td><td>Decide qué hacer con tu cuenta de EE. UU.</td><td class="c">☐</td></tr><tr><td class="k">checklist.bank.body</td><td>Whether you close it or keep it open, do it before you travel.</td><td>Si la vas a cerrar o dejar abierta, hazlo antes de viajar.</td><td class="c">☐</td></tr><tr><td class="k">checklist.savings.title</td><td>Log your final savings</td><td>Anota tu ahorro final</td><td class="c">☐</td></tr><tr><td class="k">checklist.savings.body</td><td>Record what you have to see the total in dollars and soles.</td><td>Registra lo que llevas para ver el total en dólares y soles.</td><td class="c">☐</td></tr><tr><td class="k">checklist.export.title</td><td>Export your summary</td><td>Exporta tu resumen</td><td class="c">☐</td></tr><tr><td class="k">checklist.export.body</td><td>Download the PDF and CSV files for your season.</td><td>Descarga el PDF y los CSV de tu temporada.</td><td class="c">☐</td></tr><tr><td class="k">checklist.open</td><td>Open</td><td>Abrir</td><td class="c">☐</td></tr><tr><td class="k">checklist.source</td><td>Source</td><td>Fuente</td><td class="c">☐</td></tr></tbody></table>
+<h3>Deadlines</h3>
+<table class="tx"><thead><tr><th>Key</th><th>English (shown in app)</th><th>Spanish (shown in app)</th><th>OK</th></tr></thead><tbody><tr><td class="k">deadlines.section</td><td>Deadlines</td><td>Fechas límite</td><td class="c">☐</td></tr><tr><td class="k">deadlines.title</td><td>Tax returns</td><td>Declaraciones de impuestos</td><td class="c">☐</td></tr><tr><td class="k">deadlines.twoYears</td><td>Your season spans two tax years ({{years}}): each year is filed separately.</td><td>Tu temporada cruza dos años tributarios ({{years}}): cada año se declara por separado.</td><td class="c">☐</td></tr><tr><td class="k">deadlines.federal</td><td>Form 1040-NR (federal)</td><td>Form 1040-NR (federal)</td><td class="c">☐</td></tr><tr><td class="k">deadlines.state</td><td>{{state}} return</td><td>Declaración de {{state}}</td><td class="c">☐</td></tr><tr><td class="k">deadlines.taxYear</td><td>Tax year {{year}}</td><td>Año tributario {{year}}</td><td class="c">☐</td></tr><tr><td class="k">deadlines.inDays_one</td><td>in {{count}} day</td><td>en {{count}} día</td><td class="c">☐</td></tr><tr><td class="k">deadlines.inDays_other</td><td>in {{count}} days</td><td>en {{count}} días</td><td class="c">☐</td></tr><tr><td class="k">deadlines.passed</td><td>passed</td><td>ya pasó</td><td class="c">☐</td></tr><tr><td class="k">deadlines.note</td><td>Per the IRS, wage earners with withholding file by the 15th day of the 4th month after the year (April 15).</td><td>Según el IRS, quien cobró sueldo con retención declara el 15 del 4.º mes después del año (15 de abril).</td><td class="c">☐</td></tr><tr><td class="k">deadlines.weekend.sat</td><td>Falls on a Saturday</td><td>Cae sábado</td><td class="c">☐</td></tr><tr><td class="k">deadlines.weekend.sun</td><td>Falls on a Sunday</td><td>Cae domingo</td><td class="c">☐</td></tr><tr><td class="k">deadlines.weekendNote</td><td>Per the IRS (Publication 519), if the date falls on a Saturday, Sunday or legal holiday, it moves to the next business day. A holiday like Emancipation Day (April 16, in Washington, D.C.) can push it one more day. We show the original date so you don’t miss it; confirm the final one on irs.gov or your state’s website.</td><td>Según el IRS (Publication 519), si la fecha cae sábado, domingo o feriado, pasa al siguiente día hábil. Un feriado como Emancipation Day (16 de abril, en Washington D. C.) puede correrla un día más. Te mostramos la fecha original para que no se te pase; confirma la definitiva en irs.gov o en la web de tu estado.</td><td class="c">☐</td></tr><tr><td class="k">deadlines.stateSource</td><td>{{state}} source</td><td>Fuente de {{state}}</td><td class="c">☐</td></tr></tbody></table>
+<h3>Disclaimers</h3>
+<table class="tx"><thead><tr><th>Key</th><th>English (shown in app)</th><th>Spanish (shown in app)</th><th>OK</th></tr></thead><tbody><tr><td class="k">tax.disclaimerTitle</td><td>Informational estimates, not tax advice.</td><td>Estimaciones informativas, no es asesoría tributaria.</td><td class="c">☐</td></tr><tr><td class="k">tax.disclaimerBody</td><td>Each rule links to its official source. Confirm your case with your employer, your sponsor or a professional.</td><td>Cada regla enlaza a su fuente oficial. Confirma tu caso con tu empleador, tu sponsor o un profesional.</td><td class="c">☐</td></tr></tbody></table>
+<h3>Overtime notices</h3>
+<table class="tx"><thead><tr><th>Key</th><th>English (shown in app)</th><th>Spanish (shown in app)</th><th>OK</th></tr></thead><tbody><tr><td class="k">employer.overtimeNoticeTitle</td><td>Heads up for seasonal jobs</td><td>Ojo con los trabajos de temporada</td><td class="c">☐</td></tr><tr><td class="k">employer.overtimeNoticeBody</td><td>According to the Department of Labor, some seasonal or recreational businesses may be exempt from federal overtime. Confirm with your employer or sponsor.</td><td>Según el Departamento de Trabajo, algunos negocios recreativos o de temporada pueden estar exentos del overtime federal. Confírmalo con tu empleador o tu sponsor.</td><td class="c">☐</td></tr><tr><td class="k">employer.stateStudentNoticeTitle</td><td>Students in {{state}}</td><td>Estudiantes en {{state}}</td><td class="c">☐</td></tr><tr><td class="k">employer.stateStudentNoticeBody</td><td>Under Montana law, if you are a student at a seasonal recreational area and your employer provides housing, meals or other facilities, overtime may start after {{hours}} h per week. Confirm with your employer or sponsor.</td><td>Según la ley de Montana, si eres estudiante en un área recreativa de temporada y tu empleador te da alojamiento, comida u otras facilidades, el overtime podría empezar después de {{hours}} h por semana. Confírmalo con tu empleador o tu sponsor.</td><td class="c">☐</td></tr><tr><td class="k">stateOt.title</td><td>Overtime in {{state}}</td><td>Overtime en {{state}}</td><td class="c">☐</td></tr><tr><td class="k">stateOt.noStateLaw</td><td>According to the U.S. Department of Labor (DOL), {{state}} has no state minimum wage or overtime law. The federal rule applies: over 40 h a week at 1.5x.</td><td>Según el Departamento de Trabajo de EE. UU. (DOL), {{state}} no tiene ley estatal de salario mínimo ni de overtime. Aplica la regla federal: más de 40 h por semana a 1.5x.</td><td class="c">☐</td></tr><tr><td class="k">stateOt.flsaExcluded</td><td>According to the DOL, {{state}} law doesn’t cover jobs already covered by federal law (FLSA). In practice the federal rule applies: over 40 h a week at 1.5x.</td><td>Según el DOL, la ley de {{state}} no cubre los empleos que ya cubre la ley federal (FLSA). En la práctica aplica la regla federal: más de 40 h por semana a 1.5x.</td><td class="c">☐</td></tr><tr><td class="k">stateOt.noOvertime</td><td>According to the DOL, {{state}} has no overtime rule of its own. The federal rule applies: over 40 h a week at 1.5x.</td><td>Según el DOL, {{state}} no tiene una regla propia de overtime. Aplica la regla federal: más de 40 h por semana a 1.5x.</td><td class="c">☐</td></tr><tr><td class="k">stateOt.weekly</td><td>According to the DOL, {{state}} pays overtime after {{weekly}} h a week at 1.5x.</td><td>Según el DOL, {{state}} paga overtime después de {{weekly}} h por semana a 1.5x.</td><td class="c">☐</td></tr><tr><td class="k">stateOt.dailyWeekly</td><td>Under {{state}} law, overtime is paid at 1.5x after {{daily}} h in a day or {{weekly}} h in a week.</td><td>Según la ley de {{state}}, se paga overtime a 1.5x después de {{daily}} h en un día o {{weekly}} h en la semana.</td><td class="c">☐</td></tr><tr><td class="k">stateOt.appliedDaily</td><td>SeasonPay calculates the {{daily}} h daily overtime automatically. You can change it in Settings → Employers.</td><td>SeasonPay calcula el overtime diario de {{daily}} h automáticamente. Lo puedes cambiar en Ajustes → Empleadores.</td><td class="c">☐</td></tr><tr><td class="k">stateOt.manualDaily</td><td>SeasonPay doesn’t apply it automatically because it depends on your pay. If it applies to you, set it in Settings → Employers → &quot;Daily overtime after&quot;.</td><td>SeasonPay no lo aplica solo porque depende de tu salario. Si te corresponde, ponlo en Ajustes → Empleadores → &quot;Overtime diario después de&quot;.</td><td class="c">☐</td></tr><tr><td class="k">stateOt.federalNote</td><td>Federal law (FLSA, 40 h a week) also applies if your employer is covered. There are exceptions by type of business, such as seasonal recreation: confirm with your employer.</td><td>La ley federal (FLSA, 40 h por semana) también aplica si tu empleador está cubierto. Hay excepciones por tipo de negocio, como los recreativos de temporada: confírmalo con tu empleador.</td><td class="c">☐</td></tr><tr><td class="k">stateOt.stateSource</td><td>{{state}} law</td><td>ley de {{state}}</td><td class="c">☐</td></tr><tr><td class="k">stateOt.sumFederalOnly</td><td>No state rule: federal applies</td><td>Sin regla estatal: aplica la federal</td><td class="c">☐</td></tr><tr><td class="k">stateOt.weekShort</td><td>wk</td><td>sem</td><td class="c">☐</td></tr><tr><td class="k">stateOt.notes.ak_small_employers</td><td>It doesn’t apply to employers with 3 or fewer employees.</td><td>No aplica a empleadores con 3 trabajadores o menos.</td><td class="c">☐</td></tr><tr><td class="k">stateOt.notes.ca_double_time</td><td>After {{dt}} h in a day, double time (2x) applies. SeasonPay doesn’t calculate double time yet; check your paystub if you work long days.</td><td>Después de {{dt}} h en un día se paga doble (2x). SeasonPay todavía no calcula el doble; revisa tu boleta si haces jornadas largas.</td><td class="c">☐</td></tr><tr><td class="k">stateOt.notes.ca_seventh_day</td><td>On the 7th consecutive workday of the week: the first 8 h at 1.5x and hours over 8 at double time. SeasonPay doesn’t calculate it yet.</td><td>El 7.º día seguido de trabajo en la semana: las primeras 8 h a 1.5x y lo que pase de 8 h al doble. SeasonPay todavía no lo calcula.</td><td class="c">☐</td></tr><tr><td class="k">stateOt.notes.co_12_consecutive</td><td>Hours past 12 consecutive hours are also overtime even across midnight, and whichever rule pays more is used.</td><td>También es overtime lo que pase de 12 horas seguidas aunque cruce la medianoche, y se usa la regla que te pague más.</td><td class="c">☐</td></tr><tr><td class="k">stateOt.notes.nv_wage_condition</td><td>Overtime after 8 h a day only applies if you earn less than 1.5 times the Nevada minimum wage. If you earn more, only the 40 h weekly rule counts.</td><td>El overtime después de 8 h al día solo aplica si ganas menos de 1.5 veces el salario mínimo de Nevada. Si ganas más, solo cuenta el de 40 h por semana.</td><td class="c">☐</td></tr><tr><td class="k">stateOt.notes.ky_seventh_day</td><td>Kentucky also has an overtime rule for the 7th workday in a week.</td><td>Kentucky también tiene una regla de overtime por el 7.º día de trabajo en la semana.</td><td class="c">☐</td></tr><tr><td class="k">stateOt.notes.seasonal_recreation_weekly</td><td>In seasonal recreation businesses, state law requires overtime after {{seasonal}} h a week.</td><td>En negocios recreativos de temporada, la ley estatal pide overtime después de {{seasonal}} h por semana.</td><td class="c">☐</td></tr><tr><td class="k">stateOt.notes.ny_live_in_44</td><td>Residential (live-in) workers get overtime after 44 h a week.</td><td>Quien vive en la casa donde trabaja (residential/live-in) recibe overtime después de 44 h por semana.</td><td class="c">☐</td></tr><tr><td class="k">stateOt.notes.or_industries_10</td><td>Certain manufacturing, cannery and packing plants also owe overtime after 10 h a day.</td><td>En ciertas fábricas, enlatadoras y empacadoras también hay overtime después de 10 h al día.</td><td class="c">☐</td></tr><tr><td class="k">stateOt.notes.ri_sunday_holiday</td><td>In retail and some other businesses, Sundays and holidays are paid at 1.5x under separate laws.</td><td>En comercios y otros negocios, domingos y feriados se pagan a 1.5x por leyes aparte.</td><td class="c">☐</td></tr><tr><td class="k">stateOt.notes.wa_comp_time</td><td>If you ask for compensating time off instead of premium pay, overtime isn’t paid.</td><td>Si tú pides tiempo libre compensatorio en lugar del pago extra, no se paga overtime.</td><td class="c">☐</td></tr><tr><td class="k">stateOt.notes.mt_student_48</td><td>Students at seasonal recreation areas with employer-provided lodging or meals: overtime after 48 h (see the notice above).</td><td>Estudiantes en áreas recreativas de temporada con alojamiento o comida del empleador: overtime después de 48 h (ver el aviso de arriba).</td><td class="c">☐</td></tr></tbody></table>
+
+<p class="meta" style="margin-top:20px">Contact: through the app (Settings → Send feedback) or directly with the project owner. Thank you for your time.</p>
+</body></html>

@@ -319,6 +319,7 @@ const en: Resources = {
     pub519: 'Publication 519 (IRS)',
   },
   season: {
+    federalEdition: 'Federal rules use the {{edition}} edition of the IRS publications and forms, the latest one published. When the {{year}} edition comes out, we’ll review it and update it here.',
     title: 'Season',
     saved: 'Saved',
     inPen: '≈ {{amount}} at each day’s exchange rate',
@@ -696,7 +697,10 @@ const en: Resources = {
     inDays_one: 'in {{count}} day',
     inDays_other: 'in {{count}} days',
     passed: 'passed',
-    note: 'Per the IRS, wage earners with withholding file by the 15th day of the 4th month after the year (April 15). If it falls on a weekend or holiday, confirm the date at the source.',
+    note: 'Per the IRS, wage earners with withholding file by the 15th day of the 4th month after the year (April 15).',
+    weekend: { sat: 'Falls on a Saturday', sun: 'Falls on a Sunday' },
+    weekendNote: 'Per the IRS (Publication 519), if the date falls on a Saturday, Sunday or legal holiday, it moves to the next business day. A holiday like Emancipation Day (April 16, in Washington, D.C.) can push it one more day. We show the original date so you don’t miss it; confirm the final one on irs.gov or your state’s website.',
+    stateSource: '{{state}} source',
   },
   reminders: {
     enable: 'Remind me with notifications',

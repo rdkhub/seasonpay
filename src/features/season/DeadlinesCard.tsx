@@ -89,16 +89,18 @@ export function DeadlinesCard({ rules, workState }: { rules: TaxRuleRow[]; workS
                 <span className="tnum block text-[12px] text-ink-3">
                   {days >= 0 ? t('deadlines.inDays', { count: days }) : t('deadlines.passed')}
                 </span>
+                {d.weekend && <span className="block text-[12px] font-semibold text-warn">{t(`deadlines.weekend.${d.weekend}`)}</span>}
               </span>
             </li>
           );
         })}
       </ul>
       <p className="mt-2 text-[12px] leading-snug text-ink-3">{t('deadlines.note')}</p>
+      {deadlines.some((d) => d.weekend) && <p className="mt-1.5 text-[12px] leading-snug text-ink-2">{t('deadlines.weekendNote')}</p>}
       <div className="mt-2 flex flex-wrap gap-x-4">
         {[fedRule, stateRule].filter(Boolean).map((r) => (
           <a key={r!.id} href={r!.sourceUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 py-1.5 text-[13px] font-semibold text-accent">
-            {r!.jurisdiction === 'federal' ? 'IRS' : `${r!.jurisdiction} DOR`} <ExternalLink className="h-3.5 w-3.5" />
+            {r!.jurisdiction === 'federal' ? 'IRS' : t('deadlines.stateSource', { state: r!.jurisdiction })} <ExternalLink className="h-3.5 w-3.5" />
           </a>
         ))}
       </div>

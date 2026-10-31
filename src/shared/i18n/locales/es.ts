@@ -318,6 +318,7 @@ const es = {
     pub519: 'Publication 519 (IRS)',
   },
   season: {
+    federalEdition: 'Las reglas federales usan la edición {{edition}} de las publicaciones y formularios del IRS, la última publicada. Cuando salga la de {{year}}, la revisamos y la actualizamos aquí.',
     title: 'Temporada',
     saved: 'Ahorrado',
     inPen: '≈ {{amount}} con el tipo de cambio de cada día',
@@ -695,7 +696,10 @@ const es = {
     inDays_one: 'en {{count}} día',
     inDays_other: 'en {{count}} días',
     passed: 'ya pasó',
-    note: 'Según el IRS, quien cobró sueldo con retención declara el 15 del 4.º mes después del año (15 de abril). Si cae fin de semana o feriado, confirma la fecha en la fuente.',
+    note: 'Según el IRS, quien cobró sueldo con retención declara el 15 del 4.º mes después del año (15 de abril).',
+    weekend: { sat: 'Cae sábado', sun: 'Cae domingo' },
+    weekendNote: 'Según el IRS (Publication 519), si la fecha cae sábado, domingo o feriado, pasa al siguiente día hábil. Un feriado como Emancipation Day (16 de abril, en Washington D. C.) puede correrla un día más. Te mostramos la fecha original para que no se te pase; confirma la definitiva en irs.gov o en la web de tu estado.',
+    stateSource: 'Fuente de {{state}}',
   },
   reminders: {
     enable: 'Recordármelo con notificaciones',

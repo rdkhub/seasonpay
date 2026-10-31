@@ -61,6 +61,9 @@ export function SeasonScreen() {
           .filter((r) => r.key === key && (!stateRule || r.jurisdiction === profile?.workState))
           .sort((a, b) => b.year - a.year)[0]
       : undefined;
+  // Edición federal usada: si el IRS aún no publica la del año en curso, se avisa.
+  const fedEdition = (ruleOf('form_8843_filing') ?? ruleOf('fica_exemption_nonresident_fjmq'))?.year;
+  const currentTaxYear = new Date().getFullYear();
   const addr8843 = (ruleOf('form_8843_filing')?.value as { without_return_mail_to?: string } | undefined)?.without_return_mail_to ?? '—';
 
   const saveGoal = async () => {
@@ -158,6 +161,9 @@ export function SeasonScreen() {
       <SectionTitle>{t('deadlines.section')}</SectionTitle>
       <DeadlinesCard rules={rules ?? []} workState={profile?.workState ?? null} />
       <TaxDisclaimer className="mt-3" />
+      {fedEdition !== undefined && fedEdition < currentTaxYear && (
+        <p className="mt-2 px-1 text-[12px] leading-snug text-ink-3">{t('season.federalEdition', { edition: fedEdition, year: currentTaxYear })}</p>
+      )}
 
       <SectionTitle action={<span className="tnum text-[13px] font-medium text-ink-3">{t('season.checklistProgress', { done: CHECKLIST.filter((c) => done.has(c.id)).length, total: CHECKLIST.length })}</span>}>
         {t('season.checklist')}
